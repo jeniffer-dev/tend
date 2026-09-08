@@ -26,7 +26,9 @@ the completed task.**
   pure black.
 - Business logic lives in `lib/`, never in components. A duration or
   percentage computed inside a React component is a defect.
-- Five UI primitives only: Card, Button, Badge, Input, Tabs.
+- Six UI primitives only: Card, Button, Badge, Input, Textarea, Tabs.
+  Textarea is for prose the user re-reads (task notes, progress notes);
+  a single line belongs in an Input.
 - `transition-colors` only. No spinners — change the verb instead.
 - No new runtime dependencies without written justification in the plan.
 

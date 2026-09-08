@@ -119,11 +119,14 @@ real device is faster and more honest than the DevTools emulator.
 | Brand green | `hsl(155 35% 55%)`, unified | Constitution IV |
 | Dark mode | Not in v1, light-only | Constitution IV |
 | Container | `max-w-[720px]` single column, no multi-column grids | Constitution IV |
+| Touch target | 44x44px minimum | Constitution IV |
+| Primitives | Six: Card, Button, Badge, Input, Textarea, Tabs | Constitution VI |
+| Week starts | Monday | Product spec §4.4 |
 
 ---
 
 ## Still open
 
-- Does the week start Monday or Sunday?
-- What happens to a session abandoned mid-run (app closed)?
+- What happens to a session abandoned mid-run (app closed)? Deferred to
+  feature 003, alongside the persistence that would make it detectable.
 - Persistence: local only, or sync later?

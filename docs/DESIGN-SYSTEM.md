@@ -1,9 +1,22 @@
 # Design System — the CURRENT look
 
+**Version:** 1.1.0
+**Amended:** 2026-09-09 — adopted for Tend
+**Status:** Active
+
 Extracted from the CURRENT codebase, not from memory: every value here was
 read out of `globals.css`, `components/ui/*`, or counted across the app's
 pages. Drop this beside a new project's `CLAUDE.md` and the result will
 feel like the same family.
+
+> **Amended for Tend (2026-09-09).** The three open items in §9 are now
+> resolved, and the layout, stack and component sections carry Tend's
+> mobile-web overrides. Where this document and
+> `.specify/memory/constitution.md` disagree, the constitution wins and
+> this file is the defect. Changes in 1.1.0: the green is unified at
+> `hsl(155 35% 55%)`; the base container is `max-w-[720px]`, single
+> column; the 44x44px minimum touch target is documented; Textarea is the
+> sixth primitive; Recharts is out of the stack.
 
 > **The one-line brief:** calm elite performance. A quiet high-performance
 > workspace, not a workout entertainment app.
@@ -47,7 +60,7 @@ They are deliberately soft; none of them is a signal color.
 ```css
 --current-soft:     #ADEEE3;  /* pale aqua   — base / early phase   */
 --current-recovery: #86DEB7;  /* mint        — recovery, resolved   */
---current-primary:  #63B995;  /* green       — the brand's anchor   */
+--current-primary:  #64B493;  /* green       — the brand's anchor   */
 --current-load:     #F5A65B;  /* warm orange — load, effort         */
 --current-peak:     #FCD581;  /* soft gold   — peak, intensity      */
 ```
@@ -67,7 +80,7 @@ shadcn/ui-style HSL triplets. Hex resolved for portability.
   --card:                40 25% 99%;   /* #FDFDFC  lighter than page */
   --card-foreground:    222 18% 16%;
 
-  --primary:            155 34% 54%;   /* #62B290                   */
+  --primary:            155 35% 55%;   /* #64B493  == --current-primary */
   --primary-foreground:   0  0% 100%;
 
   --secondary:           40 12% 93%;   /* #EFEEEB                   */
@@ -78,7 +91,7 @@ shadcn/ui-style HSL triplets. Hex resolved for portability.
   --destructive:          0 72% 58%;   /* #E14747                   */
   --border:              40 10% 90%;   /* #E8E6E3                   */
   --input:               40 10% 90%;
-  --ring:               155 34% 54%;
+  --ring:               155 35% 55%;
 
   --radius: 0.5rem;
 }
@@ -97,6 +110,11 @@ palette reading as generic grey UI.
 
 **3 · Cards separate by lightness, not by shadow.** `shadow-sm` and a
 `1px` border, nothing heavier.
+
+**4 · There is one green.** `--current-primary` and `--primary` are both
+`hsl(155 35% 55%)` / `#64B493`. Brand hex for bars and dots, semantic
+token for buttons and rings — same color, two vocabularies. The historical
+drift between `#63B995` and `#62B290` is resolved and MUST NOT return.
 
 ### Category tints
 
@@ -171,27 +189,41 @@ Opacity is a real tier in this system. `text-muted-foreground` at `/45`,
 ### The page container, verbatim
 
 ```tsx
-<div className="w-full max-w-[1120px] mx-auto px-5 pt-6 pb-8 sm:px-8 sm:pt-7 md:px-10 md:pt-8 space-y-4">
+<div className="w-full max-w-[720px] mx-auto px-5 pt-6 pb-8 sm:px-8 sm:pt-7 space-y-4">
 ```
 
 This exact string appears on every top-level page. Copy it; don't
-re-derive it. `1120px` is wide enough for a three-column grid and narrow
-enough that text never sprawls.
+re-derive it. `720px` is a single column that never sprawls, and it is the
+base for every screen — not a narrow variant reserved for wizards.
 
-For a focused single-column flow (a wizard, a form), narrow to
-`max-w-[720px]`.
+**Design at 390px first.** Wider viewports get more breathing room, never
+more columns and never more content.
+
+> The `max-w-[1120px]` container this document shipped with was
+> desktop-derived. It is withdrawn.
 
 ### Grids
 
-Rows of cards, never a dense dashboard:
+Rows of cards, stacked. One column, always:
 
 ```tsx
-<div className="grid grid-cols-1 md:grid-cols-2 gap-3">   {/* pairs   */}
-<div className="grid grid-cols-1 md:grid-cols-3 gap-3">   {/* 2 + 1   */}
+<div className="grid grid-cols-1 gap-3">
 ```
 
 `gap-3` between cards, `space-y-4` between sections. Cards use `p-5`
 (compact) or `p-6` (roomy). Stay on that ladder.
+
+> `md:grid-cols-2` and `md:grid-cols-3` are withdrawn along with the
+> `1120px` container. A second column is more content, not more
+> breathing room.
+
+### Touch targets
+
+**Minimum 44x44px for anything tappable.** This overrides the `h-8`
+button height below for any primary tap target: use `h-11` (44px) or
+larger, and give icon-only controls the same footprint even when the glyph
+inside stays `h-4 w-4`. Primary actions sit within thumb reach at the
+bottom of the viewport, using the sticky footer pattern below.
 
 ### Sticky footer for multi-step flows
 
@@ -208,13 +240,14 @@ looks like it does nothing.
 
 ## 5. Components
 
-Five primitives, all shadcn/ui. Resist adding more.
+Six primitives, all shadcn/ui. Resist adding more.
 
 **Card** — `rounded-xl border border-border bg-card shadow-sm`. Header
 `p-6 space-y-1.5`, content `p-5` or `p-6`.
 
 **Button** — `rounded-md`, heights `h-8` (sm) / `h-9` (default) / `h-10`
-(lg), `gap-2`, `transition-colors`. Variants: `default · destructive ·
+(lg) / `h-11` (touch — the floor for any primary tap target, see §4),
+`gap-2`, `transition-colors`. Variants: `default · destructive ·
 outline · secondary · ghost · link`. **`ghost` is the workhorse** for
 secondary actions; `outline` for "New thing"; `default` only for the one
 real action on the page.
@@ -224,6 +257,18 @@ real action on the page.
 
 **Input** — `h-9`, border `--input`, focus ring `--ring`. For inline
 editing inside a card: `h-7 border-transparent bg-muted px-2 text-xs`.
+
+**Textarea** — the Input's conventions, unrolled to multiple lines:
+`min-h-[80px] w-full rounded-md border border-input bg-background px-3
+py-2 text-sm` with the same `--ring` focus treatment and
+`transition-colors`. Same `text-sm` body size, same border token, same
+radius — it should read as an Input that got taller, not as a new
+control. Grows with `rows`, never with a drag handle: `resize-none`. For
+the muted inline variant, mirror the Input's:
+`border-transparent bg-muted px-2 text-xs`.
+
+Reach for it only where the content is genuinely prose the user will
+re-read later. A single line of text belongs in an Input.
 
 **Tabs** — for switching views inside a page, never for primary nav.
 
@@ -291,7 +336,7 @@ colors do.
   :root {
     --current-soft:     #ADEEE3;
     --current-recovery: #86DEB7;
-    --current-primary:  #63B995;
+    --current-primary:  #64B493;
     --current-load:     #F5A65B;
     --current-peak:     #FCD581;
 
@@ -301,7 +346,7 @@ colors do.
     --card-foreground: 222 18% 16%;
     --popover: 40 25% 99%;
     --popover-foreground: 222 18% 16%;
-    --primary: 155 34% 54%;
+    --primary: 155 35% 55%;
     --primary-foreground: 0 0% 100%;
     --secondary: 40 12% 93%;
     --secondary-foreground: 222 15% 25%;
@@ -313,7 +358,7 @@ colors do.
     --destructive-foreground: 0 0% 100%;
     --border: 40 10% 90%;
     --input: 40 10% 90%;
-    --ring: 155 34% 54%;
+    --ring: 155 35% 55%;
     --radius: 0.5rem;
   }
 }
@@ -330,8 +375,12 @@ colors do.
 ### Stack
 
 Next.js App Router · TypeScript · TailwindCSS · shadcn/ui · lucide-react ·
-Recharts · Geist. Server Components by default; client only where there is
-real interactivity.
+Geist. Server Components by default; client only where there is real
+interactivity.
+
+> Recharts is withdrawn. It served the charts this document was extracted
+> from; a product with no statistics dashboard has nothing to plot, and an
+> unused charting library is a dependency waiting to justify a chart.
 
 ### File conventions
 
@@ -342,16 +391,19 @@ Feature components in `features/<domain>/`, shared visuals in
 
 ---
 
-## 9. Fix these before reusing this
+## 9. Fixed before reusing this — RESOLVED
 
-Three things found while writing this document. They are reported rather
-than smoothed over, and deliberately left unfixed here — a new project
-should start from the resolved version, and this repo should decide about
-them on purpose rather than inherit them by accident.
+Three things found while writing this document. They were reported rather
+than smoothed over and left unfixed, so that the next project would decide
+about them on purpose rather than inherit them by accident.
 
-**Treat this as a checklist for the next app.**
+**All three are now resolved for Tend**, by
+`.specify/memory/constitution.md` Article IV and applied throughout this
+document in v1.1.0. The findings are kept below with their resolutions
+attached: the reasoning is why the decisions hold, and deleting it would
+invite the same drift back in.
 
-### ☐ The background is documented wrong
+### ☑ The background is documented wrong — RESOLVED
 
 `frontend/CLAUDE.md` says the preferred background is `#FAFAF8`. The token
 in `globals.css` — `hsl(60 18% 97%)` — resolves to **`#F9F9F6`**. Nothing
@@ -362,7 +414,11 @@ instructions are stale.
 token, correct `CLAUDE.md`; a wrong value in an instructions file gets
 read every session and eventually gets built.
 
-### ☐ `--primary` drifts from the brand green
+> **Resolved:** the token is canonical. The background is **`#F9F9F6`** —
+> `hsl(60 18% 97%)`. `#FAFAF8` is stale and MUST NOT be used. Tend's
+> `CLAUDE.md` carries the corrected value.
+
+### ☑ `--primary` drifts from the brand green — RESOLVED
 
 The brand token `--current-primary` is `#63B995`. The semantic
 `--primary`, at `hsl(155 34% 54%)`, resolves to `#62B290`.
@@ -372,7 +428,11 @@ for bars and dots, semantic token for buttons and rings. But they are
 meant to be the same green, so the drift is an accident, not a decision.
 `hsl(155 35% 55%)` lands closer if you want them identical.
 
-### ☐ Dark mode — decide on day one or never
+> **Resolved:** unified at **`hsl(155 35% 55%)`** / **`#64B493`**. Both
+> `--current-primary` and `--primary` resolve to it, throughout §2 and the
+> §8 starter. Neither `#63B995` nor `#62B290` carries over. See §2 rule 4.
+
+### ☑ Dark mode — decide on day one or never — RESOLVED
 
 There is no `.dark` block anywhere and no theme toggle. The app is
 light-only, and that was a choice rather than an oversight: warm off-white
@@ -384,3 +444,32 @@ component.** Retrofitting is not a token swap here. The opacity tiers —
 hierarchy, and they do not survive an inversion unexamined: what reads as
 a quiet label on warm off-white reads as unreadable mud on near-black.
 Every one of them has to be revisited by hand, and there are dozens.
+
+> **Resolved:** Tend v1 is **light-only**. No `.dark` block, no theme
+> toggle. If dark is ever added, both palettes are defined before the
+> first component of that version — the opacity tiers are revisited by
+> hand, not swapped.
+
+---
+
+## 10. Tend's overrides — index
+
+This document was extracted from a desktop app. Tend is mobile web. Every
+decision below is already applied in the section named, and binding via
+`.specify/memory/constitution.md` Article IV.
+
+**This is an index, not a second copy of the values.** The sections are
+where the hex codes, classes and measurements live. Carrying them here too
+would give every one of them two homes, which is the drift §9 documents:
+one copy goes stale, and the stale one gets built.
+
+| Decision | Where |
+|---|---|
+| Base container 720px, single column | §4 |
+| No multi-column grids | §4 |
+| Designed at 390px first | §4 |
+| Minimum touch target of 44x44px | §4, §5 |
+| One green for brand token and semantic token alike | §2 |
+| Textarea as the sixth primitive | §5 |
+| No charting library | §8 |
+| Light-only by decision, not by habit | §9 |

@@ -1,8 +1,10 @@
 # Tend — Especificación de producto
 
 **Estado:** Borrador
-**Versión:** 0.2
+**Versión:** 0.3
 **Fecha:** 2026-09-07
+**Última enmienda:** 2026-09-09 — la semana empieza el lunes; `abandoned`
+sale del enum de `Session.outcome`
 
 ---
 
@@ -99,11 +101,13 @@ Un bloque de tiempo trabajado contra una tarea.
 | `actual_minutes` | int | Lo que realmente gasté (ej. 120) |
 | `started_at` | datetime | |
 | `ended_at` | datetime | |
-| `outcome` | enum | `completed`, `progressed`, `abandoned` |
+| `outcome` | enum | `completed`, `progressed` |
 | `progress_note` | text \| null | Qué avancé y qué falta |
 | `spawned_task_id` | uuid \| null | Si el cierre generó una tarea nueva |
 
 `planned_minutes` y `actual_minutes` son campos **separados y ambos obligatorios**. La diferencia entre los dos es el dato central del sistema.
+
+**Sobre `abandoned`:** el enum lo incluía en la v0.2, pero ningún flujo de la RF-19 lo produce — una sesión se cierra como `completed` o como `progressed`, y "no avancé nada" es `progressed` con una nota que lo dice. Se retira. Si la feature 003 descubre sesiones huérfanas (la app se cerró a mitad y nadie registró un resultado), se reconsidera ahí, con el caso real a la vista y no por anticipado.
 
 ---
 
@@ -119,7 +123,7 @@ Un bloque de tiempo trabajado contra una tarea.
 
 - **RF-04** El usuario DEBE poder crear, editar y archivar áreas.
 - **RF-05** Cada área DEBE tener un presupuesto semanal en minutos.
-- **RF-06** CUANDO la suma de `actual_minutes` de un área en la semana en curso supere su `weekly_budget_minutes`, el sistema DEBE mostrar un aviso visible.
+- **RF-06** CUANDO la suma de `actual_minutes` de un área en la semana en curso (lunes 00:00 a domingo 23:59, hora local) supere su `weekly_budget_minutes`, el sistema DEBE mostrar un aviso visible.
 - **RF-07** El sistema NO DEBE bloquear la creación ni la ejecución de sesiones por exceso de presupuesto. Solo avisa y sigue registrando.
 
 ### 4.3 Tareas y subdivisión
@@ -133,6 +137,8 @@ Un bloque de tiempo trabajado contra una tarea.
 > Justificación de RF-12: "jubilarme a los 60" no es accionable en 15 minutos. La app obliga a bajarla a un siguiente paso concreto.
 
 ### 4.4 Lista semanal
+
+**La semana empieza el lunes.** El presupuesto semanal de cada área se corta el lunes a las 00:00 hora local, y la revisión semanal cierra la semana que termina el domingo. Este corte es único para todo el sistema: no hay semanas por área ni semana configurable.
 
 - **RF-13** El usuario DEBE poder marcar tareas como prioridad de la semana.
 - **RF-14** El sistema DEBE ofrecer un flujo de revisión semanal que: (a) muestre el inbox para clasificar, (b) muestre el resumen de la semana que termina, (c) permita armar la lista de la semana entrante.
@@ -181,7 +187,7 @@ sigue el Artículo II de la constitución: *Tend*, *Session*, *Area*,
 
 ## 7. Preguntas abiertas
 
-- ¿La semana empieza lunes o domingo? (Afecta el corte del presupuesto y la revisión semanal.)
+- ~~¿La semana empieza lunes o domingo?~~ **Resuelto (2026-09-09):** lunes. Ver §4.4.
 - ~~¿Plataforma?~~ **Resuelto:** web móvil primero, 390px de base, Next.js.
 - ¿Persistencia: local (IndexedDB) o con backend? Fuera de alcance de la feature 001.
-- ¿Qué pasa con una sesión que se abandona sin cerrar (la app se cierra a mitad)?
+- ¿Qué pasa con una sesión que se abandona sin cerrar (la app se cierra a mitad)? Se decide en la feature 003, junto con la persistencia que la haría detectable. Hasta entonces el enum no lleva `abandoned`.

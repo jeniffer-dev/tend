@@ -1,7 +1,8 @@
 # Tend — Constitution
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Ratified:** 2026-09-07
+**Last amended:** 2026-09-09
 **Status:** Active
 
 These are the immutable principles that govern how specifications become
@@ -98,8 +99,10 @@ amended first, in its own commit, before the component is written.
 
 ### Resolved inheritance decisions
 
-The design system ships with three open items (§9). They are resolved here
-and MUST be applied on first write:
+The design system shipped with three open items (§9). They are resolved
+here, and as of design system v1.1.0 they are applied throughout that
+document; §9 records them as resolved rather than open. They MUST be
+applied on first write:
 
 1. **Background is `#F9F9F6`** — `hsl(60 18% 97%)`. The `#FAFAF8` value in
    the legacy instructions file is stale and MUST NOT be used.
@@ -173,8 +176,21 @@ justification in the plan naming what it replaces and why hand-rolling is
 worse. Date handling, state management, and animation libraries are
 presumed rejected.
 
-Only five UI primitives are in use: Card, Button, Badge, Input, Tabs.
-Adding a sixth requires the same justification.
+Only six UI primitives are in use: Card, Button, Badge, Input, Textarea,
+Tabs. Adding a seventh requires the same justification.
+
+**Textarea (added 1.1.0) — justification.** It replaces a single-line
+`Input` for the two fields the product spec types as `text`: `Task.notes`
+and `Session.progress_note`. The progress note is load-bearing — a session
+closed as `progressed` is only useful if the note explaining what is left
+is legible when the task comes back around, and a one-line input that
+scrolls its own content horizontally hides exactly that. Hand-rolling is
+worse than adopting the shadcn/ui primitive: a bare `<textarea>` inherits
+none of the `--input` border, `--ring` focus treatment or `text-sm` body
+size, so every use site would re-declare them and drift. Its styling
+mirrors the Input's by construction (design system §5). It is admitted for
+prose the user will re-read, and for nothing else; a single line of text
+still belongs in an Input.
 
 ---
 
