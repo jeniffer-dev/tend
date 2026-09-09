@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #F1F0EE; font-feature-settings: "rlig" 1, "calt" 1; }
+  a { color: #64B493; text-decoration: none; }
+  a:hover { color: #4E9E7D; }
+  ::placeholder { color: rgba(117,124,138,0.55); }
+  textarea { font-family: inherit; }
+</style>
+</helmet>
+<section style="font-family: Geist, system-ui, sans-serif; color: #212630; padding: 48px 40px 72px; display: flex; flex-direction: column; gap: 28px">
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Tend · Round 1</p>
+    <h1 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.02em">First run, Areas, Area, Home, Picker, Session, Capture, Inbox, Week, Review</h1>
+    <p style="margin: 0; font-size: 14px; color: #757C8A; max-width: 560px; text-wrap: pretty">Ten screens at 390px, plus the three states of the session clock. Areas, colors and rhythms are the user’s own — the names here are one person’s example.</p>
+  </div>
+
+  <div id="1a" style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+
+    <!-- FIRST RUN -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">First run</span>
+        <span style="font-size: 12px; color: rgba(117,124,138,0.6)">Where do I start?</span>
+      </div>
+      <div style="width: 390px; height: 844px; background: #F9F9F6; border: 1px solid #E8E6E3; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column">
+        <div style="flex: 1; overflow: hidden; padding: 28px 20px 8px; display: flex; flex-direction: column; justify-content: center; gap: 24px">
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Tend</p>
+            <h2 style="margin: 0; font-size: 30px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.15; text-wrap: pretty">This is where your areas will live.</h2>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #757C8A; text-wrap: pretty">An area is a part of your life you come back to. Your health, your money, the hour you write in. It is never finished — you tend it.</p>
+            <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #757C8A; text-wrap: pretty">Name one. Two or three is a whole practice; you can add more whenever.</p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px">
+            <span style="width: 8px; height: 8px; border-radius: 999px; background: #ADEEE3"></span>
+            <span style="width: 8px; height: 8px; border-radius: 999px; background: #64B493"></span>
+            <span style="width: 8px; height: 8px; border-radius: 999px; background: #FCD581"></span>
+            <span style="width: 8px; height: 8px; border-radius: 999px; background: #F5A65B"></span>
+            <span style="font-size: 12px; color: rgba(117,124,138,0.5)">Each area carries a color you choose.</span>
+          </div>
+        </div>
+        <div style="padding: 28px 20px 24px; display: flex; flex-direction: column; gap: 8px; background: linear-gradient(to top, #F9F9F6 60%, rgba(249,249,246,0))">
+          <button type="button" style="height: 44px; border: none; border-radius: 8px; background: #64B493; color: #FDFDFC; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms" style-hover="background: #55A283">Name your first area</button>
+          <p style="margin: 0; text-align: center; font-size: 12px; color: rgba(117,124,138,0.5)">Nothing is set up in advance, and nothing is suggested for you.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AREAS -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Areas</span>
+        <span style="font-size: 12px; color: rgba(117,124,138,0.6)">What am I paying attention to?</span>
+      </div>
+      <div style="width: 390px; height: 844px; background: #F9F9F6; border: 1px solid #E8E6E3; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column">
+        <div style="flex: 1; overflow-y: auto; padding: 28px 20px 8px; display: flex; flex-direction: column; gap: 20px">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Your areas</p>
+            <h2 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.02em">Five, in your order</h2>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr; gap: 10px">
+
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 14px 8px 14px 16px; display: flex; align-items: center; gap: 10px">
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #FCD581"></span>
+                  <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Morning pages</span>
+                </div>
+                <span style="font-size: 14px; color: #757C8A">Three sessions a week · in Home daily</span>
+              </div>
+              <button type="button" aria-label="Reorder Morning pages" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; border-radius: 8px; cursor: grab; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; transition: background-color 150ms" style-hover="background: #F1F0EE">
+                <span style="width: 14px; height: 1px; background: #757C8A"></span>
+                <span style="width: 14px; height: 1px; background: #757C8A"></span>
+                <span style="width: 14px; height: 1px; background: #757C8A"></span>
+              </button>
+            </div>
+
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 14px 8px 14px 16px; display: flex; align-items: center; gap: 10px">
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #64B493"></span>
+                  <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Health</span>
+                </div>
+                <span style="font-size: 14px; color: #757C8A">Three sessions a week · in Home daily</span>
+              </div>
+              <button type="button" aria-label="Reorder Health" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; border-radius: 8px; cursor: grab; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; transition: background-color 150ms" style-hover="background: #F1F0EE">
+                <span style="width: 14px; height: 1px; background: #757C8A"></span>
+                <span style="width: 14px; height: 1px; background: #757C8A"></span>
+                <span style="width: 14px; height: 1px; background: #757C8A"></span>
+              </button>
+            </div>
+
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 14px 8px 14px 16px; display: flex; align-items: center; gap: 10px">
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #ADEEE3"></span>
+                  <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Home</span>
+                </div>
+                <span style="font-size: 14px; color: #757C8A">Two sessions a week · in Home daily</span>
+              </div>
+              <button type="button" aria-label="Reorder Home" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; border-radius: 8px; cursor: grab; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; transition: background-color 150ms" style-hover="background: #F1F0EE">
+                <span style="width: 14px; height: 1px; background: #757C8A"></span>
+                <span style="width: 14px; height: 1px; background: #757C8A"></span>
+                <span style="width: 14px; height: 1px; background: #757C8A"></span>
+              </button>
+            </div>
+
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 14px 8px 14px 16px; display: flex; align-items: center; gap: 10px">
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #86DEB7"></span>
+                  <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">People</span>
+                </div>
+                <span style="font-size: 14px; color: #757C8A">One session a week · not in Home daily</span>
+              </div>
+              <button type="button" aria-label="Reorder People" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; border-radius: 8px; cursor: grab; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; transition: background-color 150ms" style-hover="background: #F1F0EE">
+                <span style="width: 14px; height: 1px; background: #757C8A"></span>
+                <span style="width: 14px; height: 1px; background: #757C8A"></span>
+                <span style="width: 14px; height: 1px; background: #757C8A"></span>
+              </button>
+            </div>
+
+            <div style="background: #FDFDFC; border: 1px solid #212630; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 16px; display: flex; flex-direction: column; gap: 14px">
+              <div style="display: flex; flex-direction: column; gap: 4px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #F5A65B"></span>
+                  <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Money</span>
+                </div>
+                <span style="font-size: 14px; color: #757C8A">Two sessions a week · in Home daily</span>
+              </div>
+              <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #757C8A; text-wrap: pretty">Removing Money keeps its five tasks. They move to the inbox carrying the name, and its eleven past sessions stay in Review.</p>
+              <div style="display: flex; gap: 8px">
+                <button type="button" style="flex: 1; height: 44px; border: 1px solid #E8E6E3; border-radius: 8px; background: transparent; color: #212630; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms" style-hover="background: #F1F0EE">Remove the area</button>
+                <button type="button" style="flex: 1; height: 44px; border: none; border-radius: 8px; background: transparent; color: #757C8A; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms, color 150ms" style-hover="background: #F1F0EE; color: #212630">Keep it</button>
+              </div>
+            </div>
+
+          </div>
+
+          <p style="margin: 0; font-size: 12px; color: rgba(117,124,138,0.5); text-wrap: pretty">Drag to reorder. Home shows them in this order. Tap an area to change its name, color or rhythm.</p>
+        </div>
+
+        <div style="padding: 24px 20px; background: linear-gradient(to top, #F9F9F6 60%, rgba(249,249,246,0))">
+          <button type="button" style="width: 100%; height: 44px; border: 1px solid #E8E6E3; border-radius: 8px; background: transparent; color: #212630; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms" style-hover="background: #F1F0EE">New area</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AREA · EDIT -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Area</span>
+        <span style="font-size: 12px; color: rgba(117,124,138,0.6)">What is this area, and how often?</span>
+      </div>
+      <div style="width: 390px; height: 844px; background: #F9F9F6; border: 1px solid #E8E6E3; border-radius: 20px; overflow-y: auto; display: flex; flex-direction: column">
+        <div style="flex: 1; padding: 28px 20px 8px; display: flex; flex-direction: column; gap: 26px">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Area</p>
+            <button type="button" style="height: 44px; margin-right: -10px; padding: 0 10px; border: none; border-radius: 8px; background: transparent; color: #757C8A; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms, color 150ms" style-hover="background: #F1F0EE; color: #212630">Done</button>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <label for="areaName" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Name</label>
+            <input id="areaName" type="text" defaultValue="Morning pages" placeholder="Morning pages" style="width: 100%; box-sizing: border-box; height: 48px; border: 1px solid #E8E6E3; border-radius: 8px; background: #FDFDFC; padding: 0 14px; font-family: inherit; font-size: 18px; letter-spacing: -0.01em; color: #212630; outline: none; transition: border-color 150ms" style-focus="border-color: #64B493">
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Color</p>
+            <div style="display: flex; gap: 10px">
+              <button type="button" onClick="{{ pickColor }}" data-color="0" aria-label="Pale aqua" style="width: 44px; height: 44px; border-radius: 999px; border: 2px solid #E8E6E3; border-color: {{ swatch0 }}; background: #FDFDFC; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 150ms">
+                <span style="width: 24px; height: 24px; border-radius: 999px; background: #ADEEE3"></span></button>
+              <button type="button" onClick="{{ pickColor }}" data-color="1" aria-label="Mint" style="width: 44px; height: 44px; border-radius: 999px; border: 2px solid #E8E6E3; border-color: {{ swatch1 }}; background: #FDFDFC; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 150ms">
+                <span style="width: 24px; height: 24px; border-radius: 999px; background: #86DEB7"></span></button>
+              <button type="button" onClick="{{ pickColor }}" data-color="2" aria-label="Green" style="width: 44px; height: 44px; border-radius: 999px; border: 2px solid #E8E6E3; border-color: {{ swatch2 }}; background: #FDFDFC; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 150ms">
+                <span style="width: 24px; height: 24px; border-radius: 999px; background: #64B493"></span></button>
+              <button type="button" onClick="{{ pickColor }}" data-color="3" aria-label="Warm orange" style="width: 44px; height: 44px; border-radius: 999px; border: 2px solid #E8E6E3; border-color: {{ swatch3 }}; background: #FDFDFC; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 150ms">
+                <span style="width: 24px; height: 24px; border-radius: 999px; background: #F5A65B"></span></button>
+              <button type="button" onClick="{{ pickColor }}" data-color="4" aria-label="Soft gold" style="width: 44px; height: 44px; border-radius: 999px; border: 2px solid #212630; border-color: {{ swatch4 }}; background: #FDFDFC; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 150ms">
+                <span style="width: 24px; height: 24px; border-radius: 999px; background: #FCD581"></span></button>
+            </div>
+            <p style="margin: 0; font-size: 12px; color: rgba(117,124,138,0.5)">The color marks the area wherever it appears. It carries no meaning of its own.</p>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Sessions a week</p>
+            <div style="display: flex; gap: 8px">
+              <button type="button" onClick="{{ pickRhythm }}" data-n="1" style="flex: 1; height: 44px; border: 1px solid #E8E6E3; border-color: {{ rBorder1 }}; border-radius: 8px; background: #FDFDFC; color: #212630; background: {{ rBg1 }}; color: {{ rFg1 }}; font-family: inherit; font-size: 16px; font-weight: 500; cursor: pointer; transition: background-color 150ms, border-color 150ms, color 150ms">1</button>
+              <button type="button" onClick="{{ pickRhythm }}" data-n="2" style="flex: 1; height: 44px; border: 1px solid #E8E6E3; border-color: {{ rBorder2 }}; border-radius: 8px; background: #FDFDFC; color: #212630; background: {{ rBg2 }}; color: {{ rFg2 }}; font-family: inherit; font-size: 16px; font-weight: 500; cursor: pointer; transition: background-color 150ms, border-color 150ms, color 150ms">2</button>
+              <button type="button" onClick="{{ pickRhythm }}" data-n="3" style="flex: 1; height: 44px; border: 1px solid #212630; border-color: {{ rBorder3 }}; border-radius: 8px; background: #212630; color: #F9F9F6; background: {{ rBg3 }}; color: {{ rFg3 }}; font-family: inherit; font-size: 16px; font-weight: 500; cursor: pointer; transition: background-color 150ms, border-color 150ms, color 150ms">3</button>
+              <button type="button" onClick="{{ pickRhythm }}" data-n="4" style="flex: 1; height: 44px; border: 1px solid #E8E6E3; border-color: {{ rBorder4 }}; border-radius: 8px; background: #FDFDFC; color: #212630; background: {{ rBg4 }}; color: {{ rFg4 }}; font-family: inherit; font-size: 16px; font-weight: 500; cursor: pointer; transition: background-color 150ms, border-color 150ms, color 150ms">4</button>
+              <button type="button" onClick="{{ pickRhythm }}" data-n="5" style="flex: 1; height: 44px; border: 1px solid #E8E6E3; border-color: {{ rBorder5 }}; border-radius: 8px; background: #FDFDFC; color: #212630; background: {{ rBg5 }}; color: {{ rFg5 }}; font-family: inherit; font-size: 16px; font-weight: 500; cursor: pointer; transition: background-color 150ms, border-color 150ms, color 150ms">5</button>
+            </div>
+            <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #757C8A; text-wrap: pretty">A rhythm, not a target. Three sessions is what you are aiming to come back for; sessions beyond it are extra, and a week under it is a fact about the week.</p>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">On Home</p>
+            <div style="display: flex; gap: 8px">
+              <button type="button" onClick="{{ pickDaily }}" data-daily="1" style="flex: 1; height: 44px; border: 1px solid #212630; border-color: {{ dBorder1 }}; border-radius: 8px; background: #212630; color: #F9F9F6; background: {{ dBg1 }}; color: {{ dFg1 }}; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms, border-color 150ms, color 150ms">Every day</button>
+              <button type="button" onClick="{{ pickDaily }}" data-daily="0" style="flex: 1; height: 44px; border: 1px solid #E8E6E3; border-color: {{ dBorder0 }}; border-radius: 8px; background: #FDFDFC; color: #212630; background: {{ dBg0 }}; color: {{ dFg0 }}; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms, border-color 150ms, color 150ms">When I add it</button>
+            </div>
+            <p style="margin: 0; font-size: 12px; color: rgba(117,124,138,0.5); text-wrap: pretty">Either way it stays on the week list. This only decides whether it waits for you on Home.</p>
+          </div>
+
+          <p style="margin: 0; padding-bottom: 20px; font-size: 12px; color: rgba(117,124,138,0.5); text-wrap: pretty">Changes apply as you make them. Done takes you back to your areas.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Home</span>
+        <span style="font-size: 12px; color: rgba(117,124,138,0.6)">What am I tending right now?</span>
+      </div>
+      <div style="width: 390px; height: 844px; background: #F9F9F6; border: 1px solid #E8E6E3; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column">
+        <div style="flex: 1; overflow-y: auto; padding: 28px 20px 8px; display: flex; flex-direction: column; gap: 20px">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Tending today</p>
+            <h2 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.02em">Sunday</h2>
+            <button type="button" style="align-self: flex-start; margin-left: -10px; height: 44px; padding: 0 10px; border: none; border-radius: 8px; background: transparent; font-family: inherit; font-size: 14px; color: #757C8A; text-align: left; cursor: pointer; transition: background-color 150ms, color 150ms" style-hover="background: #F1F0EE; color: #212630">The week closes tonight. Look back on it.</button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr; gap: 12px">
+
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 20px; display: flex; flex-direction: column; gap: 14px">
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #64B493"></span>
+                  <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Health</span>
+                </div>
+                <p style="margin: 0; font-size: 14px; color: #757C8A">Two sessions this week. Last attended Monday.</p>
+              </div>
+              <button type="button" style="height: 44px; border: none; border-radius: 8px; background: #64B493; color: #FDFDFC; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms" style-hover="background: #55A283">Tend</button>
+            </div>
+
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 20px; display: flex; flex-direction: column; gap: 14px">
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #FCD581"></span>
+                  <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Morning pages</span>
+                </div>
+                <p style="margin: 0; font-size: 14px; color: #757C8A">Last attended Thursday.</p>
+              </div>
+              <button type="button" style="height: 44px; border: none; border-radius: 8px; background: #64B493; color: #FDFDFC; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms" style-hover="background: #55A283">Tend</button>
+            </div>
+
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 20px; display: flex; flex-direction: column; gap: 14px">
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #F5A65B"></span>
+                  <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Money</span>
+                </div>
+                <p style="margin: 0; font-size: 14px; color: #757C8A; text-wrap: pretty">Past the two sessions you set for this week. Tend it anyway if it is what you want.</p>
+              </div>
+              <button type="button" style="height: 44px; border: 1px solid #E8E6E3; border-radius: 8px; background: transparent; color: #212630; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms, border-color 150ms" style-hover="background: #F1F0EE">Tend</button>
+            </div>
+
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 0 16px; min-height: 44px; opacity: 0.55; display: flex; align-items: center; gap: 8px">
+              <span style="width: 8px; height: 8px; border-radius: 999px; background: #ADEEE3"></span>
+              <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Home</span>
+              <span style="font-size: 14px; color: #757C8A">Attended today, 15 minutes</span>
+            </div>
+
+          </div>
+
+          <p style="margin: 0; font-size: 12px; color: rgba(117,124,138,0.5); text-wrap: pretty">People sits outside today. It stays on the week list until you put it here.</p>
+        </div>
+
+        <div style="padding: 20px; display: flex; gap: 4px; background: linear-gradient(to top, #F9F9F6 60%, rgba(249,249,246,0))">
+          <button type="button" style="flex: 1; height: 44px; border: none; border-radius: 8px; background: transparent; color: #757C8A; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms, color 150ms" style-hover="background: #F1F0EE; color: #212630">Capture</button>
+          <button type="button" style="flex: 1; height: 44px; border: none; border-radius: 8px; background: transparent; color: #757C8A; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms, color 150ms" style-hover="background: #F1F0EE; color: #212630">Inbox</button>
+          <button type="button" style="flex: 1; height: 44px; border: none; border-radius: 8px; background: transparent; color: #757C8A; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms, color 150ms" style-hover="background: #F1F0EE; color: #212630">Week</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PICKER -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Picker</span>
+        <span style="font-size: 12px; color: rgba(117,124,138,0.6)">What do I focus on for fifteen minutes?</span>
+      </div>
+      <div style="width: 390px; height: 844px; background: #F9F9F6; border: 1px solid #E8E6E3; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column">
+        <div style="flex: 1; overflow: hidden; padding: 28px 20px 8px; display: flex; flex-direction: column; gap: 20px">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Health · this week</p>
+            <h2 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.02em">Pick one thing</h2>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr; gap: 12px">
+            <button type="button" onClick="{{ selectTask }}" data-index="0" style="text-align: left; width: 100%; background: #FDFDFC; border: 1px solid #212630; border-color: {{ border0 }}; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 18px 20px; font-family: inherit; cursor: pointer; display: flex; flex-direction: column; gap: 8px; transition: border-color 150ms, background-color 150ms">
+              <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em; color: #212630">Book the blood test</span>
+              <span style="display: flex; flex-direction: column; gap: 3px">
+                <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Last session</span>
+                <span style="font-size: 14px; color: #757C8A; text-wrap: pretty">Found the lab. Need the referral number from the clinic.</span>
+              </span>
+            </button>
+            <button type="button" onClick="{{ selectTask }}" data-index="1" style="text-align: left; width: 100%; background: #FDFDFC; border: 1px solid #E8E6E3; border-color: {{ border1 }}; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 18px 20px; font-family: inherit; cursor: pointer; display: flex; flex-direction: column; gap: 8px; transition: border-color 150ms, background-color 150ms">
+              <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em; color: #212630">Refill the prescription</span>
+              <span style="display: flex; flex-direction: column; gap: 3px">
+                <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Last session</span>
+                <span style="font-size: 14px; color: #757C8A; text-wrap: pretty">Not attended yet.</span>
+              </span>
+            </button>
+            <button type="button" onClick="{{ selectTask }}" data-index="2" style="text-align: left; width: 100%; background: #FDFDFC; border: 1px solid #E8E6E3; border-color: {{ border2 }}; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 18px 20px; font-family: inherit; cursor: pointer; display: flex; flex-direction: column; gap: 8px; transition: border-color 150ms, background-color 150ms">
+              <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em; color: #212630">Walk three mornings</span>
+              <span style="display: flex; flex-direction: column; gap: 3px">
+                <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Last session</span>
+                <span style="font-size: 14px; color: #757C8A; text-wrap: pretty">Two mornings so far. Thursday is open.</span>
+              </span>
+            </button>
+          </div>
+
+          <p style="margin: 0; font-size: 12px; color: rgba(117,124,138,0.5); text-wrap: pretty">Only what you put on the week list for Health shows here. Anything captured since sits in the inbox.</p>
+        </div>
+
+        <div style="padding: 28px 20px 24px; display: flex; flex-direction: column; gap: 8px; background: linear-gradient(to top, #F9F9F6 60%, rgba(249,249,246,0))">
+          <button type="button" style="height: 44px; border: none; border-radius: 8px; background: #64B493; color: #FDFDFC; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms" style-hover="background: #55A283">Tend for fifteen minutes</button>
+          <p style="margin: 0; text-align: center; font-size: 12px; color: rgba(117,124,138,0.5)">You can switch to another task inside the session.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSION -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Session</span>
+        <span style="font-size: 12px; color: rgba(117,124,138,0.6)">What am I doing for these fifteen minutes? · running</span>
+      </div>
+      <div style="width: 390px; height: 844px; background: #F9F9F6; border: 1px solid #E8E6E3; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column">
+        <div style="flex: 1; overflow: hidden; padding: 28px 20px 8px; display: flex; flex-direction: column; gap: 28px">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Session · Health</p>
+            <h2 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.02em; text-wrap: pretty">Book the blood test</h2>
+            <button type="button" style="align-self: flex-start; margin-left: -10px; height: 44px; padding: 0 10px; border: none; border-radius: 8px; background: transparent; color: #757C8A; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms, color 150ms" style-hover="background: #F1F0EE; color: #212630">Tend something else in Health</button>
+          </div>
+
+          <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 32px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px">
+            <span ref="{{ clockRef }}" style="font-size: 76px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; color: #212630">14:16</span>
+            <span ref="{{ noteRef }}" style="font-size: 14px; color: #757C8A; text-align: center; text-wrap: pretty">Fifteen minutes on Health.</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <label for="note" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Where you got to</label>
+            <textarea id="note" rows="5" placeholder="What moved, and what is left for next time" style="width: 100%; box-sizing: border-box; min-height: 110px; resize: none; border: 1px solid #E8E6E3; border-radius: 8px; background: #FDFDFC; padding: 12px; font-size: 14px; line-height: 1.5; color: #212630; outline: none; transition: border-color 150ms" style-focus="border-color: #64B493"></textarea>
+            <p style="margin: 0; font-size: 12px; color: rgba(117,124,138,0.5)">The note is what you read when this task comes back around.</p>
+          </div>
+        </div>
+
+        <div style="padding: 28px 20px 24px; display: flex; flex-direction: column; gap: 4px; background: linear-gradient(to top, #F9F9F6 60%, rgba(249,249,246,0))">
+          <button type="button" style="height: 44px; border: none; border-radius: 8px; background: #64B493; color: #FDFDFC; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms" style-hover="background: #55A283">Done for now</button>
+          <button type="button" style="height: 44px; border: none; border-radius: 8px; background: transparent; color: #757C8A; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms, color 150ms" style-hover="background: #F1F0EE; color: #212630">Mark it done</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSION · AT ZERO -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Session · at zero</span>
+        <span style="font-size: 12px; color: rgba(117,124,138,0.6)">The fifteen minutes are up</span>
+      </div>
+      <div style="width: 390px; height: 844px; background: #F9F9F6; border: 1px solid #E8E6E3; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column">
+        <div style="flex: 1; overflow: hidden; padding: 28px 20px 8px; display: flex; flex-direction: column; gap: 28px">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Session · Health</p>
+            <h2 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.02em; text-wrap: pretty">Book the blood test</h2>
+            <button type="button" style="align-self: flex-start; margin-left: -10px; height: 44px; padding: 0 10px; border: none; border-radius: 8px; background: transparent; color: #757C8A; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms, color 150ms" style-hover="background: #F1F0EE; color: #212630">Tend something else in Health</button>
+          </div>
+          <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 32px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px">
+            <span style="font-size: 76px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; color: #212630">0:00</span>
+            <span style="font-size: 14px; color: #757C8A; text-align: center; text-wrap: pretty">Fifteen minutes. The session keeps recording from here.</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <label style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Where you got to</label>
+            <textarea rows="5" style="width: 100%; box-sizing: border-box; min-height: 110px; resize: none; border: 1px solid #E8E6E3; border-radius: 8px; background: #FDFDFC; padding: 12px; font-size: 14px; line-height: 1.5; color: #212630; outline: none; transition: border-color 150ms" style-focus="border-color: #64B493">Called the lab. They need the referral number before they will book.</textarea>
+            <p style="margin: 0; font-size: 12px; color: rgba(117,124,138,0.5)">The note is what you read when this task comes back around.</p>
+          </div>
+        </div>
+        <div style="padding: 28px 20px 24px; display: flex; flex-direction: column; gap: 4px; background: linear-gradient(to top, #F9F9F6 60%, rgba(249,249,246,0))">
+          <button type="button" style="height: 44px; border: none; border-radius: 8px; background: #64B493; color: #FDFDFC; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms" style-hover="background: #55A283">Done for now</button>
+          <button type="button" style="height: 44px; border: none; border-radius: 8px; background: transparent; color: #757C8A; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms, color 150ms" style-hover="background: #F1F0EE; color: #212630">Mark it done</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSION · WELL PAST -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Session · well past</span>
+        <span style="font-size: 12px; color: rgba(117,124,138,0.6)">Thirty-two minutes in, same treatment</span>
+      </div>
+      <div style="width: 390px; height: 844px; background: #F9F9F6; border: 1px solid #E8E6E3; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column">
+        <div style="flex: 1; overflow: hidden; padding: 28px 20px 8px; display: flex; flex-direction: column; gap: 28px">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Session · Health</p>
+            <h2 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.02em; text-wrap: pretty">Book the blood test</h2>
+            <button type="button" style="align-self: flex-start; margin-left: -10px; height: 44px; padding: 0 10px; border: none; border-radius: 8px; background: transparent; color: #757C8A; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms, color 150ms" style-hover="background: #F1F0EE; color: #212630">Tend something else in Health</button>
+          </div>
+          <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 32px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px">
+            <span style="font-size: 76px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; color: #212630">+17:04</span>
+            <span style="font-size: 14px; color: #757C8A; text-align: center; text-wrap: pretty">Thirty-two minutes on Health. Close it when you are ready.</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <label style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Where you got to</label>
+            <textarea rows="5" style="width: 100%; box-sizing: border-box; min-height: 110px; resize: none; border: 1px solid #E8E6E3; border-radius: 8px; background: #FDFDFC; padding: 12px; font-size: 14px; line-height: 1.5; color: #212630; outline: none; transition: border-color 150ms" style-focus="border-color: #64B493">Referral number found in the old email. Booked for the 22nd, 8:40.</textarea>
+            <p style="margin: 0; font-size: 12px; color: rgba(117,124,138,0.5)">The note is what you read when this task comes back around.</p>
+          </div>
+        </div>
+        <div style="padding: 28px 20px 24px; display: flex; flex-direction: column; gap: 4px; background: linear-gradient(to top, #F9F9F6 60%, rgba(249,249,246,0))">
+          <button type="button" style="height: 44px; border: none; border-radius: 8px; background: #64B493; color: #FDFDFC; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms" style-hover="background: #55A283">Done for now</button>
+          <button type="button" style="height: 44px; border: none; border-radius: 8px; background: transparent; color: #757C8A; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms, color 150ms" style-hover="background: #F1F0EE; color: #212630">Mark it done</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAPTURE -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Capture</span>
+        <span style="font-size: 12px; color: rgba(117,124,138,0.6)">What did I just remember?</span>
+      </div>
+      <div style="width: 390px; height: 844px; background: #F9F9F6; border: 1px solid #E8E6E3; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column">
+        <div style="flex: 1; overflow: hidden; padding: 28px 20px 8px; display: flex; flex-direction: column; gap: 24px">
+          <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Capture</p>
+
+          <textarea rows="4" placeholder="One thing" style="width: 100%; box-sizing: border-box; min-height: 104px; resize: none; border: 1px solid #E8E6E3; border-radius: 12px; background: #FDFDFC; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 16px; font-size: 18px; line-height: 1.45; letter-spacing: -0.01em; color: #212630; outline: none; transition: border-color 150ms" style-focus="border-color: #64B493"></textarea>
+
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Area, if you know it</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <button type="button" onClick="{{ pickArea }}" data-area="0" style="height: 44px; padding: 0 16px; border: 1px solid #E8E6E3; border-color: {{ chipBorder0 }}; background: #FDFDFC; color: #212630; background: {{ chipBg0 }}; color: {{ chipFg0 }}; border-radius: 999px; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background-color 150ms, border-color 150ms, color 150ms">
+                <span style="width: 8px; height: 8px; border-radius: 999px; background: #64B493"></span>Health</button>
+              <button type="button" onClick="{{ pickArea }}" data-area="1" style="height: 44px; padding: 0 16px; border: 1px solid #E8E6E3; border-color: {{ chipBorder1 }}; background: #FDFDFC; color: #212630; background: {{ chipBg1 }}; color: {{ chipFg1 }}; border-radius: 999px; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background-color 150ms, border-color 150ms, color 150ms">
+                <span style="width: 8px; height: 8px; border-radius: 999px; background: #FCD581"></span>Morning pages</button>
+              <button type="button" onClick="{{ pickArea }}" data-area="2" style="height: 44px; padding: 0 16px; border: 1px solid #E8E6E3; border-color: {{ chipBorder2 }}; background: #FDFDFC; color: #212630; background: {{ chipBg2 }}; color: {{ chipFg2 }}; border-radius: 999px; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background-color 150ms, border-color 150ms, color 150ms">
+                <span style="width: 8px; height: 8px; border-radius: 999px; background: #F5A65B"></span>Money</button>
+              <button type="button" onClick="{{ pickArea }}" data-area="3" style="height: 44px; padding: 0 16px; border: 1px solid #E8E6E3; border-color: {{ chipBorder3 }}; background: #FDFDFC; color: #212630; background: {{ chipBg3 }}; color: {{ chipFg3 }}; border-radius: 999px; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background-color 150ms, border-color 150ms, color 150ms">
+                <span style="width: 8px; height: 8px; border-radius: 999px; background: #ADEEE3"></span>Home</button>
+            </div>
+            <p style="margin: 0; font-size: 12px; color: rgba(117,124,138,0.5); text-wrap: pretty">With no area it goes to the inbox, where you can sort it later.</p>
+          </div>
+        </div>
+
+        <div style="padding: 28px 20px 24px; background: linear-gradient(to top, #F9F9F6 60%, rgba(249,249,246,0))">
+          <button type="button" style="width: 100%; height: 44px; border: none; border-radius: 8px; background: #64B493; color: #FDFDFC; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms" style-hover="background: #55A283">Capture</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- INBOX -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Inbox</span>
+        <span style="font-size: 12px; color: rgba(117,124,138,0.6)">What have I not sorted yet?</span>
+      </div>
+      <div style="width: 390px; height: 844px; background: #F9F9F6; border: 1px solid #E8E6E3; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column">
+        <div style="flex: 1; overflow: hidden; padding: 28px 20px 8px; display: flex; flex-direction: column; gap: 20px">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Inbox</p>
+            <h2 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.02em">Three unsorted</h2>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr; gap: 12px">
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 18px 20px; display: flex; flex-direction: column; gap: 10px">
+              <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em; text-wrap: pretty">Ask the dentist about the night guard</span>
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px">
+                <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45); min-width: 0">Captured Monday</span>
+                <button type="button" style="height: 44px; padding: 0 14px; border: 1px solid #E8E6E3; border-radius: 8px; background: transparent; color: #212630; font-family: inherit; font-size: 14px; font-weight: 500; white-space: nowrap; flex-shrink: 0; cursor: pointer; transition: background-color 150ms" style-hover="background: #F1F0EE">Give it an area</button>
+              </div>
+            </div>
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 18px 20px; display: flex; flex-direction: column; gap: 10px">
+              <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em; text-wrap: pretty">Look up the bike shop that does tune-ups</span>
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px">
+                <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45); min-width: 0">Captured Monday</span>
+                <button type="button" style="height: 44px; padding: 0 14px; border: 1px solid #E8E6E3; border-radius: 8px; background: transparent; color: #212630; font-family: inherit; font-size: 14px; font-weight: 500; white-space: nowrap; flex-shrink: 0; cursor: pointer; transition: background-color 150ms" style-hover="background: #F1F0EE">Give it an area</button>
+              </div>
+            </div>
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 18px 20px; display: flex; flex-direction: column; gap: 10px">
+              <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em; text-wrap: pretty">Read back the notes from the workshop</span>
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px">
+                <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45); min-width: 0">Captured last Thursday</span>
+                <button type="button" style="height: 44px; padding: 0 14px; border: 1px solid #E8E6E3; border-radius: 8px; background: transparent; color: #212630; font-family: inherit; font-size: 14px; font-weight: 500; white-space: nowrap; flex-shrink: 0; cursor: pointer; transition: background-color 150ms" style-hover="background: #F1F0EE">Give it an area</button>
+              </div>
+            </div>
+          </div>
+
+          <p style="margin: 0; font-size: 12px; color: rgba(117,124,138,0.5); text-wrap: pretty">An item stays here until it has an area. Nothing here expires.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEK -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Week</span>
+        <span style="font-size: 12px; color: rgba(117,124,138,0.6)">What am I committing to?</span>
+      </div>
+      <div style="width: 390px; height: 844px; background: #F9F9F6; border: 1px solid #E8E6E3; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column">
+        <div style="flex: 1; overflow: hidden; padding: 28px 20px 8px; display: flex; flex-direction: column; gap: 20px">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">This week</p>
+            <h2 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.02em">Four areas, ten sessions</h2>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr; gap: 12px">
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 20px; display: flex; flex-direction: column; gap: 14px">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #64B493"></span>
+                  <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Health</span>
+                </div>
+                <span style="font-size: 14px; color: #757C8A">Three sessions</span>
+              </div>
+              <div style="height: 2px; border-radius: 999px; background: #F1F0EE; overflow: hidden">
+                <div style="width: 66%; height: 100%; background: #64B493"></div>
+              </div>
+              <p style="margin: 0; font-size: 14px; color: #757C8A">Three tasks on the list. Two sessions attended.</p>
+            </div>
+
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 20px; display: flex; flex-direction: column; gap: 14px">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #FCD581"></span>
+                  <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Morning pages</span>
+                </div>
+                <span style="font-size: 14px; color: #757C8A">Three sessions</span>
+              </div>
+              <div style="height: 2px; border-radius: 999px; background: #F1F0EE; overflow: hidden">
+                <div style="width: 33%; height: 100%; background: #FCD581"></div>
+              </div>
+              <p style="margin: 0; font-size: 14px; color: #757C8A">One session attended. Wednesday and Friday are open.</p>
+            </div>
+
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 20px; display: flex; flex-direction: column; gap: 14px">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #F5A65B"></span>
+                  <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Money</span>
+                </div>
+                <span style="font-size: 14px; color: #757C8A">Two sessions</span>
+              </div>
+              <div style="height: 2px; border-radius: 999px; background: #F1F0EE; overflow: hidden">
+                <div style="width: 100%; height: 100%; background: #F5A65B"></div>
+              </div>
+              <p style="margin: 0; font-size: 14px; color: #757C8A; text-wrap: pretty">Both sessions attended. Anything further is extra.</p>
+            </div>
+
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 20px; display: flex; flex-direction: column; gap: 14px">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #ADEEE3"></span>
+                  <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Home</span>
+                </div>
+                <span style="font-size: 14px; color: #757C8A">Two sessions</span>
+              </div>
+              <div style="height: 2px; border-radius: 999px; background: #F1F0EE; overflow: hidden">
+                <div style="width: 50%; height: 100%; background: #ADEEE3"></div>
+              </div>
+              <p style="margin: 0; font-size: 14px; color: #757C8A">Two tasks on the list. One session attended.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding: 24px 20px; background: linear-gradient(to top, #F9F9F6 60%, rgba(249,249,246,0))">
+          <button type="button" style="width: 100%; height: 44px; border: 1px solid #E8E6E3; border-radius: 8px; background: transparent; color: #212630; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms" style-hover="background: #F1F0EE">Change the rhythm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVIEW -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Review</span>
+        <span style="font-size: 12px; color: rgba(117,124,138,0.6)">What did I attend, and what went unattended?</span>
+      </div>
+      <div style="width: 390px; height: 844px; background: #F9F9F6; border: 1px solid #E8E6E3; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column">
+        <div style="flex: 1; overflow: hidden; padding: 28px 20px 8px; display: flex; flex-direction: column; gap: 24px">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Week of 7 September</p>
+            <h2 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.02em">Six sessions</h2>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Attended</p>
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 18px 20px; display: flex; flex-direction: column; gap: 6px">
+              <div style="display: flex; align-items: center; justify-content: space-between">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #64B493"></span>
+                  <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Health</span>
+                </div>
+                <span style="font-size: 14px; color: #757C8A">Three sessions</span>
+              </div>
+              <p style="margin: 0; font-size: 14px; color: #757C8A; text-wrap: pretty">52 minutes. Last note: found the lab, need the referral number.</p>
+            </div>
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 18px 20px; display: flex; flex-direction: column; gap: 6px">
+              <div style="display: flex; align-items: center; justify-content: space-between">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #F5A65B"></span>
+                  <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Money</span>
+                </div>
+                <span style="font-size: 14px; color: #757C8A">Two sessions</span>
+              </div>
+              <p style="margin: 0; font-size: 14px; color: #757C8A; text-wrap: pretty">31 minutes. Last note: statements sorted through August.</p>
+            </div>
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 18px 20px; display: flex; align-items: center; justify-content: space-between">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <span style="width: 8px; height: 8px; border-radius: 999px; background: #ADEEE3"></span>
+                <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Home</span>
+              </div>
+              <span style="font-size: 14px; color: #757C8A">One session, 15 minutes</span>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px">
+            <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(117,124,138,0.45)">Unattended</p>
+            <div style="background: #FDFDFC; border: 1px solid #E8E6E3; border-radius: 12px; box-shadow: 0 1px 2px rgba(33,38,48,0.04); padding: 18px 20px; opacity: 0.55; display: flex; flex-direction: column; gap: 6px">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <span style="width: 8px; height: 8px; border-radius: 999px; background: #FCD581"></span>
+                <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Morning pages</span>
+              </div>
+              <p style="margin: 0; font-size: 14px; color: #757C8A">No sessions this week. The pages are where you left them.</p>
+            </div>
+            <p style="margin: 0; font-size: 12px; color: rgba(117,124,138,0.5); text-wrap: pretty">Unattended is a fact about the week, not about you. Next week starts with the same areas.</p>
+          </div>
+        </div>
+
+        <div style="padding: 24px 20px; background: linear-gradient(to top, #F9F9F6 60%, rgba(249,249,246,0))">
+          <button type="button" style="width: 100%; height: 44px; border: none; border-radius: 8px; background: #64B493; color: #FDFDFC; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms" style-hover="background: #55A283">Set this week's rhythm</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;sessionStartSeconds&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:900,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:30,&quot;max&quot;:1800,&quot;step&quot;:30,&quot;unit&quot;:&quot;s&quot;,&quot;section&quot;:&quot;Session&quot;},&quot;timerRunning&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Session&quot;}}">
+class Component extends DCLogic {
+  state = { selected: 0, area: null };
+  clockRef = React.createRef();
+  noteRef = React.createRef();
+
+  componentDidMount() {
+    this.elapsed = 44;
+    this.paint();
+    if (this.props.timerRunning === false) return;
+    this._t = setInterval(() => { this.elapsed += 1; this.paint(); }, 1000);
+  }
+  componentDidUpdate() { this.paint(); }
+  componentWillUnmount() { clearInterval(this._t); }
+
+  paint() {
+    const left = (this.props.sessionStartSeconds ?? 900) - (this.elapsed || 0);
+    const m = Math.floor(Math.abs(left) / 60), s = Math.abs(left) % 60;
+    const t = m + ":" + String(s).padStart(2, "0");
+    if (this.clockRef.current) this.clockRef.current.textContent = left >= 0 ? t : "+" + t;
+    if (this.noteRef.current) this.noteRef.current.textContent = left >= 0
+      ? "Fifteen minutes on Health."
+      : "Fifteen minutes passed. The session keeps recording.";
+  }
+
+  renderVals() {
+    const bc = i => (i === this.state.selected ? "#212630" : "#E8E6E3");
+    const color = this.state.color ?? 4;
+    const rhythm = this.state.rhythm ?? 3;
+    const daily = this.state.daily ?? 1;
+    const edit = {};
+    [0, 1, 2, 3, 4].forEach(i => { edit["swatch" + i] = i === color ? "#212630" : "#E8E6E3"; });
+    [1, 2, 3, 4, 5].forEach(n => {
+      const sel = n === rhythm;
+      edit["rBorder" + n] = sel ? "#212630" : "#E8E6E3";
+      edit["rBg" + n] = sel ? "#212630" : "#FDFDFC";
+      edit["rFg" + n] = sel ? "#F9F9F6" : "#212630";
+    });
+    [0, 1].forEach(d => {
+      const sel = d === daily;
+      edit["dBorder" + d] = sel ? "#212630" : "#E8E6E3";
+      edit["dBg" + d] = sel ? "#212630" : "#FDFDFC";
+      edit["dFg" + d] = sel ? "#F9F9F6" : "#212630";
+    });
+    const on = i => i === this.state.area;
+    const chip = {};
+    [0, 1, 2, 3].forEach(i => {
+      chip["chipBorder" + i] = on(i) ? "#212630" : "#E8E6E3";
+      chip["chipBg" + i] = on(i) ? "#212630" : "#FDFDFC";
+      chip["chipFg" + i] = on(i) ? "#F9F9F6" : "#212630";
+    });
+    return {
+      ...chip,
+      ...edit,
+      pickColor: e => this.setState({ color: Number(e.currentTarget.dataset.color) }),
+      pickRhythm: e => this.setState({ rhythm: Number(e.currentTarget.dataset.n) }),
+      pickDaily: e => this.setState({ daily: Number(e.currentTarget.dataset.daily) }),
+      pickArea: e => {
+        const i = Number(e.currentTarget.dataset.area);
+        this.setState(s => ({ area: s.area === i ? null : i }));
+      },
+      border0: bc(0), border1: bc(1), border2: bc(2),
+      selectTask: e => this.setState({ selected: Number(e.currentTarget.dataset.index) }),
+      clockRef: this.clockRef,
+      noteRef: this.noteRef
+    };
+  }
+}
+</script>
+</body>
+</html>
