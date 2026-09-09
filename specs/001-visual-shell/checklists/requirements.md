@@ -65,6 +65,26 @@ The Q3 replacement is the only string in the feature that is not
 transcribed from the design file. It is recorded in spec.md §"The one
 string that is not transcribed", with the reasoning for the wording.
 
+**Iteration 3 — 2026-09-09, after `/speckit-clarify`. All 18 still pass.**
+The scan found one genuinely unresolved area — navigation — which the
+design file does not describe at all (it contains no links between
+screens). Resolving it surfaced two further gaps:
+
+| Found | Resolution |
+|---|---|
+| No route to Areas, and no back rule | FR-028 – FR-031. Areas opens from the two rhythm links already drawn; every non-Home screen returns to its opener; Home is the root |
+| First run had no path to Areas — Week and Review are empty at that point | FR-032. `Name your first area` opens the empty Area edit and lands on Areas, which is a root in that case |
+| The empty Area edit state is not drawn anywhere in the design | FR-033 plus a copy note. Defaults taken from the prototype script in the design file, not invented |
+
+Also corrected during the scan: the Area edit name field carries
+`Morning pages` as a **value**, not only as a placeholder. The first
+transcription recorded only the placeholder, which made the drawn screen
+look like the creating state when it is the editing state.
+
+All other taxonomy categories came back Clear. Performance, scalability,
+reliability, observability, security and integrations are inapplicable —
+no network, no storage, no accounts.
+
 **Status: ready for `/speckit-plan`.**
 
 ## Notes

@@ -49,6 +49,14 @@ line on Home.
 This is a change from `docs/PRODUCT-SPEC.md`, which types the budget as
 `weekly_budget_minutes`. See Assumptions.
 
+## Clarifications
+
+### Session 2026-09-09
+
+- Q: When someone is on a screen that is not Home, how do they get back — and how do they reach Areas in the first place? → A: Areas is reached through the two rhythm links already drawn (`Change the rhythm` on Week, `Set this week's rhythm` on Review). Home's bottom navigation stays as approved. Every non-Home screen returns to the screen that opened it; Home is the root and has no back control.
+- Q: Is Areas reachable from First run, when Week and Review have nothing to show? → A: No — the edge was missing. Resolved: First run's `Name your first area` opens Area edit with an empty name, and leaving it lands on Areas. Areas reached this way is a root and shows no back control, because First run is a state that no longer exists once an area is named.
+- Q: What does Area edit look like when creating an area rather than editing one? → A: The design draws only the editing state. The empty state reuses the same screen with the name field empty, and takes the defaults the design's own prototype carries: rhythm 3, On Home `Every day`, and the fifth palette color preselected.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Sit down and tend something (Priority: P1)
@@ -200,6 +208,11 @@ screen; it is testable entirely on its own.
    exclamation mark and no emoji.
 2. **Given** the First run screen, **When** the person looks for suggested
    or sample areas, **Then** none are offered, and the screen says so.
+3. **Given** the First run screen, **When** the person taps `Name your first
+   area`, **Then** Area edit opens with an empty name field, rhythm 3 and
+   On Home set to `Every day`.
+4. **Given** Area edit was opened from First run, **When** the person leaves
+   it, **Then** they land on Areas, and Areas shows no back control.
 
 ---
 
@@ -226,6 +239,13 @@ screen; it is testable entirely on its own.
   ellipsis, and the row grows to fit.
 - **A reload mid-flow.** Everything returns to the fixture state. This is
   expected and is not an error; no screen claims anything was saved.
+- **The very first area.** From First run there is no Week and no Review to
+  pass through, so `Name your first area` opens the empty Area edit
+  directly and lands on Areas afterwards. Areas shows no back control in
+  this case — there is nowhere behind it to go.
+- **Areas opened from two different places.** Reached from Week or Review it
+  returns there; reached from First run it is a root. The screen is the
+  same either way; only the back control differs.
 
 ## Requirements *(mandatory)*
 
@@ -300,6 +320,23 @@ screen; it is testable entirely on its own.
 - **FR-024**: **Review** MUST describe an unattended area as a fact about
   the week and not about the person.
 
+#### Navigation
+
+- **FR-028**: Every screen other than Home MUST return to the screen that
+  opened it. Home is the root and MUST NOT show a back control.
+- **FR-029**: Areas MUST be reachable from Week's `Change the rhythm` and
+  from Review's `Set this week's rhythm`. Home's bottom navigation MUST
+  remain `Capture · Inbox · Week` and MUST NOT gain an Areas entry.
+- **FR-030**: Area edit MUST return to Areas. Areas MUST return to whichever
+  screen opened it — Week, Review, or First run.
+- **FR-031**: When Areas was reached from First run, it MUST show no back
+  control and MUST behave as a root, because First run describes a state
+  that no longer exists once an area has been named.
+- **FR-032**: First run's `Name your first area` MUST open Area edit with an
+  empty name field. Leaving that screen MUST land on Areas.
+- **FR-033**: Areas' `New area` MUST open the same empty Area edit as
+  FR-032.
+
 #### Copy
 
 - **FR-025**: Every user-facing string MUST match the approved copy in
@@ -351,6 +388,7 @@ Strings are reproduced exactly, including em dashes (—) and middots (·).
 | Eyebrow | `Area` |
 | Top action | `Back to areas` |
 | Field label | `Name` |
+| Field value (editing an area) | `Morning pages` |
 | Field placeholder | `Morning pages` |
 | Section label | `Color` |
 | Section note | `The color marks the area wherever it appears. It carries no meaning of its own.` |
@@ -361,6 +399,13 @@ Strings are reproduced exactly, including em dashes (—) and middots (·).
 | Options | `Every day` / `When I add it` |
 | Section note | `Either way it stays on the week list. This only decides whether it waits for you on Home.` |
 | Footer note | `Changes apply as you make them.` |
+
+**Editing vs. creating.** The design draws only the editing state: the name
+field carries the value `Morning pages`, not just the placeholder. The
+creating state is the same screen with the name field empty and the
+placeholder showing. Its defaults are taken from the design's own
+prototype rather than invented: rhythm **3**, On Home **`Every day`**, and
+the fifth palette color preselected. All other copy is identical.
 
 #### 4. Home
 
@@ -516,6 +561,9 @@ relationships enforced, no rules applied.
   question would no longer be answered.
 - **SC-010**: A person shown Home on a phone, without instruction, taps an
   area's Tend button as their first action.
+- **SC-011**: Every screen can be left without using the browser's back
+  button, and every screen is reachable from First run or from Home in at
+  most three taps.
 
 ## Assumptions
 
@@ -539,10 +587,13 @@ relationships enforced, no rules applied.
 - **Review's week is "Week of 7 September"**, matching the fixture. Since
   the week starts Monday (product spec §4.4, as amended 2026-09-09) and
   7 September 2026 is a Monday, the fixture is consistent with that rule.
-- **Navigation between screens is not specified in the design.** The bottom
-  navigation (Capture, Inbox, Week) is drawn on Home only. This feature
-  assumes it appears on Home and that the other screens return to where
-  they were opened from.
+- **Navigation is not drawn in the design and was decided in clarification.**
+  The design file contains no links between screens at all. The topology is
+  now specified in FR-028 through FR-033 rather than assumed.
+- **The empty Area edit state is not drawn.** The design's only Area edit is
+  prefilled with `Morning pages` as a value. Its creating-state defaults
+  come from the prototype script embedded in the same design file — the
+  designer's own values — not from a fresh judgement call.
 - **Testing at 320px is additive.** The constitution requires 390px
   verification; 320px was requested for this feature and is treated as a
   second required width, not a replacement.
