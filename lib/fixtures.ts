@@ -336,6 +336,17 @@ export const reviewRows: ReviewRow[] = [
   },
 ];
 
+/** Home renders its cards in the order set on the Areas screen (FR-013).
+ *  The sort lives here rather than in the component: ordering by a stored
+ *  field is not a calculation, but it is still a rule, and Article VI keeps
+ *  rules out of components. It also makes FR-013 structural — Home cannot
+ *  render in a different order than Areas without this file changing. */
+export const homeCardsInSortOrder: HomeCard[] = [...homeCards].sort(
+  (a, b) =>
+    (areas.find((x) => x.id === a.areaId)?.sortOrder ?? 0) -
+    (areas.find((x) => x.id === b.areaId)?.sortOrder ?? 0)
+);
+
 /* --------------------------------------------------------------- access */
 /* Plain lookups over arrays. Not a query layer, and nothing here derives a
    displayed value — each returns fixture rows as they are stored. */
