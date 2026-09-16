@@ -27,7 +27,10 @@ export function AreaCard({ area, card }: { area: Area; card: HomeCard }) {
        for a finished thing (design system §6): no strikethrough, no grey
        palette swap. It wraps rather than truncating at 320px. */
     return (
-      <Card className="flex min-h-11 flex-wrap items-center gap-x-2 gap-y-1 px-4 py-2 opacity-55">
+      <Card
+        data-testid="area-card"
+        className="flex min-h-11 flex-wrap items-center gap-x-2 gap-y-1 px-4 py-2 opacity-55"
+      >
         <AreaDot color={area.color} />
         <span className="text-base font-semibold tracking-tight">{area.name}</span>
         <span className="text-sm text-muted-foreground">{card.line}</span>
@@ -36,7 +39,7 @@ export function AreaCard({ area, card }: { area: Area; card: HomeCard }) {
   }
 
   return (
-    <Card className="flex flex-col gap-3.5 p-5">
+    <Card data-testid="area-card" className="flex flex-col gap-3.5 p-5">
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center gap-2">
           <AreaDot color={area.color} />

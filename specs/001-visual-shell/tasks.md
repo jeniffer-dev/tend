@@ -30,12 +30,12 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 
 **Purpose**: Get a Next.js project standing with the design system's values in place before any screen exists.
 
-- [ ] T001 Initialize Next.js 15 App Router project with TypeScript at repository root — `package.json`, `tsconfig.json`, `next.config.ts`, `app/`
-- [ ] T002 Install and configure TailwindCSS in `tailwind.config.ts` and `postcss.config.mjs`, with `content` covering `app/`, `components/` and `features/`
-- [ ] T003 Create `app/globals.css` from design system v1.1.0 §8 verbatim — brand tokens with `--current-primary: #64B493`, semantic tokens with `--primary: 155 35% 55%` and `--ring: 155 35% 55%`, the `border-border` and `body` base layers. No `.dark` block and no theme toggle (Constitution Article IV). Add the `prefers-reduced-motion: reduce` block that removes transitions — Article V requires it be honoured
-- [ ] T004 Create `app/layout.tsx` — Geist via `next/font/google` as `--font-geist`, `font-sans antialiased` on `<body>`, and the page container `w-full max-w-[720px] mx-auto px-5 pt-6 pb-8 sm:px-8 sm:pt-7 space-y-4` from design system §4. No `1120px` container, no `md:grid-cols-*`
-- [ ] T005 [P] Configure Playwright in `playwright.config.ts` with two projects, `390` (viewport 390x844) and `320` (viewport 320x568), both naming the width in the project name so failures identify it
-- [ ] T006 [P] Configure Vitest in `vitest.config.ts` and add `test` and `test:e2e` scripts to `package.json`
+- [X] T001 Initialize Next.js 15 App Router project with TypeScript at repository root — `package.json`, `tsconfig.json`, `next.config.ts`, `app/`
+- [X] T002 Install and configure TailwindCSS in `tailwind.config.ts` and `postcss.config.mjs`, with `content` covering `app/`, `components/` and `features/`
+- [X] T003 Create `app/globals.css` from design system v1.1.0 §8 verbatim — brand tokens with `--current-primary: #64B493`, semantic tokens with `--primary: 155 35% 55%` and `--ring: 155 35% 55%`, the `border-border` and `body` base layers. No `.dark` block and no theme toggle (Constitution Article IV). Add the `prefers-reduced-motion: reduce` block that removes transitions — Article V requires it be honoured
+- [X] T004 Create `app/layout.tsx` — Geist via `next/font/google` as `--font-geist`, `font-sans antialiased` on `<body>`, and the page container `w-full max-w-[720px] mx-auto px-5 pt-6 pb-8 sm:px-8 sm:pt-7 space-y-4` from design system §4. No `1120px` container, no `md:grid-cols-*`
+- [X] T005 [P] Configure Playwright in `playwright.config.ts` with two projects, `390` (viewport 390x844) and `320` (viewport 320x568), both naming the width in the project name so failures identify it
+- [X] T006 [P] Configure Vitest in `vitest.config.ts` and add `test` and `test:e2e` scripts to `package.json`
 
 ---
 
@@ -45,13 +45,13 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete. Every screen imports from `lib/copy.ts` and `lib/fixtures.ts`.
 
-- [ ] T007 Define fixture types in `lib/fixtures.ts` per data-model.md — `AreaColor` (union of `'soft' | 'recovery' | 'primary' | 'load' | 'peak'`), `Area`, `HomeTreatment` (union of `'to-tend' | 'past-rhythm' | 'attended'`), `HomeCard`, `Task`, `InboxItem`, `SessionState` (union of `'running' | 'zero' | 'past'`), `SessionFixture`, `WeekRow`, `ReviewRow`
-- [ ] T008 Populate the fixture set in `lib/fixtures.ts` per data-model.md — the five areas in `sortOrder` (morning-pages/peak/3/daily, health/primary/3/daily, home/soft/2/daily, people/recovery/1/**not** daily, money/load/2/daily); Health's three week-list tasks plus one each for Morning pages and Money; three inbox items; three session states; four week rows; four review rows. Store every displayed value as a literal string — never the inputs a component would reduce (data-model.md §"The rule that governs every shape below"). `Task.lastSessionNote` is `'Not attended yet.'` when there is none, never an empty string. This fixture shape is what upholds FR-002
-- [ ] T009 [P] Transcribe every user-facing string into `lib/copy.ts`, one export per screen, character-exact from spec.md §"Screen copy" — including the em dashes (—) and middots (·). No user-facing string may be written inline in a component
-- [ ] T010 [P] Create `lib/routes.ts` — the route table and the back rule from contracts/screens.md. Area edit always returns to `/areas`; `/areas` returns to its opener (Week, Review) and returns nothing when opened from First run; Home and First run are roots
-- [ ] T011 Initialize shadcn/ui and add only Button, Card, Input and Textarea into `components/ui/`. Do not scaffold Badge or Tabs — they are permitted but unused (research.md §4)
-- [ ] T012 [P] Create `components/back-link.tsx` rendering the conditional back control by reading `lib/routes.ts`, and rendering nothing when the route has no opener (FR-031)
-- [ ] T013 [P] Write `tests/unit/copy.test.ts` — scan every export of `lib/copy.ts` for Article II's forbidden terms (start task, timer, pomodoro, category, bucket, project, overdue, missed, failed, behind, streak), for emoji, and for exclamation marks. Covers FR-026, FR-027, SC-005
+- [X] T007 Define fixture types in `lib/fixtures.ts` per data-model.md — `AreaColor` (union of `'soft' | 'recovery' | 'primary' | 'load' | 'peak'`), `Area`, `HomeTreatment` (union of `'to-tend' | 'past-rhythm' | 'attended'`), `HomeCard`, `Task`, `InboxItem`, `SessionState` (union of `'running' | 'zero' | 'past'`), `SessionFixture`, `WeekRow`, `ReviewRow`
+- [X] T008 Populate the fixture set in `lib/fixtures.ts` per data-model.md — the five areas in `sortOrder` (morning-pages/peak/3/daily, health/primary/3/daily, home/soft/2/daily, people/recovery/1/**not** daily, money/load/2/daily); Health's three week-list tasks plus one each for Morning pages and Money; three inbox items; three session states; four week rows; four review rows. Store every displayed value as a literal string — never the inputs a component would reduce (data-model.md §"The rule that governs every shape below"). `Task.lastSessionNote` is `'Not attended yet.'` when there is none, never an empty string. This fixture shape is what upholds FR-002
+- [X] T009 [P] Transcribe every user-facing string into `lib/copy.ts`, one export per screen, character-exact from spec.md §"Screen copy" — including the em dashes (—) and middots (·). No user-facing string may be written inline in a component
+- [X] T010 [P] Create `lib/routes.ts` — the route table and the back rule from contracts/screens.md. Area edit always returns to `/areas`; `/areas` returns to its opener (Week, Review) and returns nothing when opened from First run; Home and First run are roots
+- [X] T011 Initialize shadcn/ui and add only Button, Card, Input and Textarea into `components/ui/`. Do not scaffold Badge or Tabs — they are permitted but unused (research.md §4)
+- [X] T012 [P] Create `components/back-link.tsx` rendering the conditional back control by reading `lib/routes.ts`, and rendering nothing when the route has no opener (FR-031)
+- [X] T013 [P] Write `tests/unit/copy.test.ts` — scan every export of `lib/copy.ts` for Article II's forbidden terms (start task, timer, pomodoro, category, bucket, project, overdue, missed, failed, behind, streak), for emoji, and for exclamation marks. Covers FR-026, FR-027, SC-005
 
 **Checkpoint**: `lib/` is complete and the copy lint passes. Screens can now be built in any order.
 
@@ -63,16 +63,16 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 
 **Independent test**: Open `/` at 390px, tap Tend on an area, tap into the session, and read all three session states. Delivers the product's core loop with no other screen built.
 
-- [ ] T014 [US1] Create `features/home/area-card.tsx` rendering the three treatments per FR-014 — `to-tend` with a solid Tend button, `past-rhythm` with an outline Tend button plus its line, `attended` collapsed to one line with no button. The treatment comes from the fixture's own field; nothing compares a count against a rhythm
-- [ ] T015 [P] [US1] Create `features/home/review-entry.tsx` — the tappable line `The week closes tonight. Look back on it.`, rendered at the top of the screen above the areas, never as a badge or notification (FR-016)
-- [ ] T016 [US1] Create `app/page.tsx` (Home) — the four daily areas in `sortOrder`, the People absence note, the bottom navigation `Capture · Inbox · Week` with no Areas entry (FR-013, FR-015, FR-029). Nothing else on the screen
-- [ ] T017 [P] [US1] Create `features/session/picker-list.tsx` — the area's week-list tasks, each with its `Last session` row and note, first task selected on arrival (FR-017)
-- [ ] T018 [US1] Create `app/tend/[areaId]/page.tsx` (Picker) — eyebrow with the area name, the scope note, the primary action, the footer note about switching inside the session
-- [ ] T019 [P] [US1] Create `features/session/session-clock.tsx` — renders the fixture's clock string and clock note. No ticking (FR-004), no red, no pulsing, no countdown framing (FR-006)
-- [ ] T020 [P] [US1] Create `features/session/session-note.tsx` — Textarea with the label `Where you got to`, its placeholder and its note
-- [ ] T021 [US1] Create `app/session/[taskId]/page.tsx` (Session) — reads `?state=running|zero|past`, defaulting to `running`. One component renders all three states with identical layout and treatment (FR-018, FR-019). No visible state switcher, no pause or stop control
-- [ ] T022 [US1] Write `tests/e2e/home-picker-session.spec.ts` — required and forbidden elements for the three screens per contracts/screens.md, covering FR-013 through FR-019. Include a two-tap assertion: from `/`, tapping an area's Tend button and then the Picker's primary action reaches `/session/*` with no interaction in between (SC-001)
-- [ ] T023 [P] [US1] Write `tests/e2e/session-states.spec.ts` — the three states differ only in the clock string, the clock note and the note content; layout and treatment are identical. Covers FR-019 and SC-007
+- [X] T014 [US1] Create `features/home/area-card.tsx` rendering the three treatments per FR-014 — `to-tend` with a solid Tend button, `past-rhythm` with an outline Tend button plus its line, `attended` collapsed to one line with no button. The treatment comes from the fixture's own field; nothing compares a count against a rhythm
+- [X] T015 [P] [US1] Create `features/home/review-entry.tsx` — the tappable line `The week closes tonight. Look back on it.`, rendered at the top of the screen above the areas, never as a badge or notification (FR-016)
+- [X] T016 [US1] Create `app/page.tsx` (Home) — the four daily areas in `sortOrder`, the People absence note, the bottom navigation `Capture · Inbox · Week` with no Areas entry (FR-013, FR-015, FR-029). Nothing else on the screen
+- [X] T017 [P] [US1] Create `features/session/picker-list.tsx` — the area's week-list tasks, each with its `Last session` row and note, first task selected on arrival (FR-017)
+- [X] T018 [US1] Create `app/tend/[areaId]/page.tsx` (Picker) — eyebrow with the area name, the scope note, the primary action, the footer note about switching inside the session
+- [X] T019 [P] [US1] Create `features/session/session-clock.tsx` — renders the fixture's clock string and clock note. No ticking (FR-004), no red, no pulsing, no countdown framing (FR-006)
+- [X] T020 [P] [US1] Create `features/session/session-note.tsx` — Textarea with the label `Where you got to`, its placeholder and its note
+- [X] T021 [US1] Create `app/session/[taskId]/page.tsx` (Session) — reads `?state=running|zero|past`, defaulting to `running`. One component renders all three states with identical layout and treatment (FR-018, FR-019). No visible state switcher, no pause or stop control
+- [X] T022 [US1] Write `tests/e2e/home-picker-session.spec.ts` — required and forbidden elements for the three screens per contracts/screens.md, covering FR-013 through FR-019. Include a two-tap assertion: from `/`, tapping an area's Tend button and then the Picker's primary action reaches `/session/*` with no interaction in between (SC-001)
+- [X] T023 [P] [US1] Write `tests/e2e/session-states.spec.ts` — the three states differ only in the clock string, the clock note and the note content; layout and treatment are identical. Covers FR-019 and SC-007
 
 **Checkpoint**: The MVP is demonstrable on a phone.
 

@@ -21,6 +21,7 @@ export function BackLink({ target, className }: { target: BackTarget | null; cla
 
   return (
     <Link
+      data-testid="back-link"
       href={target.href}
       className={cn(
         '-ml-2.5 inline-flex h-11 items-center rounded-md px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground',

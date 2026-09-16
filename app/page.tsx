@@ -47,7 +47,7 @@ export default function HomePage() {
         <p className="text-xs text-muted-foreground/50 text-pretty">{copy.absenceNote}</p>
       </div>
 
-      <StickyFooter className="flex gap-1">
+      <StickyFooter data-testid="bottom-nav" className="flex gap-1">
         <Button asChild variant="ghost" className="flex-1">
           <Link href="/capture">{copy.nav.capture}</Link>
         </Button>

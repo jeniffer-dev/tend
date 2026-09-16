@@ -25,7 +25,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${geist.variable} font-sans antialiased min-h-dvh flex flex-col`}>
         {/* Design system §4, the page container verbatim. Never the 1120px
             container, never a md:grid-cols-* layout. */}
-        <div className="w-full max-w-[720px] mx-auto px-5 pt-6 pb-8 sm:px-8 sm:pt-7 space-y-4 flex-1 flex flex-col">
+        <div
+          data-testid="screen"
+          className="w-full max-w-[720px] mx-auto px-5 pt-6 pb-8 sm:px-8 sm:pt-7 space-y-4 flex-1 flex flex-col"
+        >
           {children}
         </div>
       </body>
