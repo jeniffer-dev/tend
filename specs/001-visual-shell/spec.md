@@ -257,7 +257,8 @@ screen; it is testable entirely on its own.
   another screen by tapping, with no dead ends.
 - **FR-002**: The system MUST derive every displayed value from a hardcoded
   fixture. No screen may compute a duration, a total, a percentage or a
-  remaining count at render time.
+  remaining count at render time. **Verified by code review, not by test** —
+  see §"How FR-002, SC-004 and SC-010 are verified".
 - **FR-003**: The system MUST NOT persist anything. A reload returns every
   screen to its fixture state.
 - **FR-004**: The session clock MUST be a static display of the fixture's
@@ -351,6 +352,16 @@ screen; it is testable entirely on its own.
 ### Screen copy *(verbatim — transcribed from `docs/design/Tend.dc.html`)*
 
 Strings are reproduced exactly, including em dashes (—) and middots (·).
+
+**The handoff contains more than this feature builds.** As of the Round 2
+update (2026-09-16) `docs/design/Tend.dc.html` holds eighteen screens. The
+twelve that matter here are First run, Areas, Area edit, Home, Picker,
+Session in its three states, Capture, Inbox, Week and Review. The other
+eight — Reminder, Not now (first and fourth time), Set a reminder, Review
+postponed (with and without postponed tasks), Home postponed and Week
+postponed — belong to a future reminders feature and are **out of scope**.
+Do not build them, and do not take copy from them. Their open notes live in
+`docs/PRODUCT-SPEC.md` §8.
 
 #### 1. First run
 
@@ -547,7 +558,7 @@ relationships enforced, no rules applied.
   widths.
 - **SC-004**: Every user-facing string on every screen matches the approved
   copy character for character. **Verified by review, not by test** — see
-  §"How SC-004 and SC-010 are verified".
+  §"How FR-002, SC-004 and SC-010 are verified".
 - **SC-005**: No screen contains a word from the forbidden lexicon, an
   emoji, an exclamation mark, or an apology.
 - **SC-006**: Minutes appear only on Review, on the session clock, and on
@@ -562,16 +573,26 @@ relationships enforced, no rules applied.
   question would no longer be answered.
 - **SC-010**: A person shown Home on a phone, without instruction, taps an
   area's Tend button as their first action. **Verified by observation, not
-  by test** — see §"How SC-004 and SC-010 are verified".
+  by test** — see §"How FR-002, SC-004 and SC-010 are verified".
 - **SC-011**: Every screen can be left without using the browser's back
   button, and every screen is reachable from First run or from Home in at
   most three taps.
 
-## How SC-004 and SC-010 are verified
+## How FR-002, SC-004 and SC-010 are verified
 
 Article VII requires every acceptance criterion to have at least one test
-naming it. Two criteria here cannot be satisfied that way, and saying so is
+naming it. Three items here cannot be satisfied that way, and saying so is
 better than writing a test that only appears to check them.
+
+**FR-002 — nothing is computed at render time.** This is a property of how
+the code is written, not of what it renders, so no assertion against a
+running page can establish it. It is enforced by construction: `lib/fixtures.ts`
+stores the displayed string rather than the inputs a component would reduce
+(data-model.md §"The rule that governs every shape below"), so there is
+nothing in a fixture for a component to compute *from*. **FR-002 is verified
+by code review** against that rule. `tests/e2e/no-pressure.spec.ts` catches
+the most likely symptom — a percentage reaching the screen — but the
+requirement itself is upheld by the fixture shape.
 
 **SC-004 — copy matches character for character.** `lib/copy.ts` *is* the
 transcription of the approved copy, so a test comparing the two compares a
