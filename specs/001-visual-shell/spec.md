@@ -546,7 +546,8 @@ relationships enforced, no rules applied.
 - **SC-003**: Every tappable control measures at least 44x44px at both
   widths.
 - **SC-004**: Every user-facing string on every screen matches the approved
-  copy character for character.
+  copy character for character. **Verified by review, not by test** — see
+  §"How SC-004 and SC-010 are verified".
 - **SC-005**: No screen contains a word from the forbidden lexicon, an
   emoji, an exclamation mark, or an apology.
 - **SC-006**: Minutes appear only on Review, on the session clock, and on
@@ -560,10 +561,42 @@ relationships enforced, no rules applied.
   nothing else on it — verified by removing any element and confirming the
   question would no longer be answered.
 - **SC-010**: A person shown Home on a phone, without instruction, taps an
-  area's Tend button as their first action.
+  area's Tend button as their first action. **Verified by observation, not
+  by test** — see §"How SC-004 and SC-010 are verified".
 - **SC-011**: Every screen can be left without using the browser's back
   button, and every screen is reachable from First run or from Home in at
   most three taps.
+
+## How SC-004 and SC-010 are verified
+
+Article VII requires every acceptance criterion to have at least one test
+naming it. Two criteria here cannot be satisfied that way, and saying so is
+better than writing a test that only appears to check them.
+
+**SC-004 — copy matches character for character.** `lib/copy.ts` *is* the
+transcription of the approved copy, so a test comparing the two compares a
+file against itself and proves nothing. Extracting the strings from
+`docs/design/Tend.dc.html` at test time was considered and rejected: the
+design file carries three strings this spec has deliberately overruled
+(clarifications Q1, Q2, Q3), so the test would need a documented exception
+list, and an exception list is where such a test rots.
+
+The transcription was made with a parser rather than by eye, and diffed
+against the Round 2 handoff on 2026-09-16 with zero differences across all
+twelve artboards. **SC-004 is verified by that review.** What a test *can*
+check, and does, is that the strings obey the rules: `tests/unit/copy.test.ts`
+covers the lexicon, emoji and punctuation constraints (FR-026, FR-027,
+SC-005).
+
+If this recurs in feature 002, the better answer is to generate `lib/copy.ts`
+from the spec's copy tables so the spec becomes the machine-readable source.
+
+**SC-010 — an unprompted person taps Tend first.** This is a usability
+observation about a real person, not an assertion about the build. It is
+recorded because it is the truest statement of whether Home works, and it is
+verified by watching someone open the app. SC-001 (two taps to a session)
+and SC-009 (each screen answers its question with nothing else) carry the
+buildable half of the same intent and both have tests.
 
 ## Assumptions
 

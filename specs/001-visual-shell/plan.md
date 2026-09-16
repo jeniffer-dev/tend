@@ -120,7 +120,8 @@ app/
 ├── first-run/page.tsx          # First run
 ├── areas/
 │   ├── page.tsx                # Areas
-│   └── [areaId]/page.tsx       # Area edit (editing and creating)
+│   ├── new/page.tsx            # Area edit — creating
+│   └── [areaId]/page.tsx       # Area edit — editing
 ├── tend/[areaId]/page.tsx      # Picker
 ├── session/[taskId]/page.tsx   # Session — 3 states via ?state=
 ├── capture/page.tsx            # Capture
@@ -156,6 +157,10 @@ shared visuals under `components/`, everything non-visual under `lib/`.
 Routes are named for the screens rather than the domain nouns (`tend/` for
 the Picker, `session/` for the Session) because the URL is user-facing text
 and Article II binds it: `/tend/health` reads correctly, `/picker` does not.
+
+`app/areas/new/page.tsx` is a static segment and Next.js resolves it ahead
+of `[areaId]`, so `/areas/new` never reaches the dynamic route. Both render
+the same form; only the name field's initial value and the defaults differ.
 
 The three session states hang off a query parameter rather than three
 routes, so one component renders all three and the states cannot drift

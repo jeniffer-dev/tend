@@ -32,7 +32,7 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 
 - [ ] T001 Initialize Next.js 15 App Router project with TypeScript at repository root — `package.json`, `tsconfig.json`, `next.config.ts`, `app/`
 - [ ] T002 Install and configure TailwindCSS in `tailwind.config.ts` and `postcss.config.mjs`, with `content` covering `app/`, `components/` and `features/`
-- [ ] T003 Create `app/globals.css` from design system v1.1.0 §8 verbatim — brand tokens with `--current-primary: #64B493`, semantic tokens with `--primary: 155 35% 55%` and `--ring: 155 35% 55%`, the `border-border` and `body` base layers. No `.dark` block and no theme toggle (Constitution Article IV)
+- [ ] T003 Create `app/globals.css` from design system v1.1.0 §8 verbatim — brand tokens with `--current-primary: #64B493`, semantic tokens with `--primary: 155 35% 55%` and `--ring: 155 35% 55%`, the `border-border` and `body` base layers. No `.dark` block and no theme toggle (Constitution Article IV). Add the `prefers-reduced-motion: reduce` block that removes transitions — Article V requires it be honoured
 - [ ] T004 Create `app/layout.tsx` — Geist via `next/font/google` as `--font-geist`, `font-sans antialiased` on `<body>`, and the page container `w-full max-w-[720px] mx-auto px-5 pt-6 pb-8 sm:px-8 sm:pt-7 space-y-4` from design system §4. No `1120px` container, no `md:grid-cols-*`
 - [ ] T005 [P] Configure Playwright in `playwright.config.ts` with two projects, `390` (viewport 390x844) and `320` (viewport 320x568), both naming the width in the project name so failures identify it
 - [ ] T006 [P] Configure Vitest in `vitest.config.ts` and add `test` and `test:e2e` scripts to `package.json`
@@ -71,7 +71,7 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 - [ ] T019 [P] [US1] Create `features/session/session-clock.tsx` — renders the fixture's clock string and clock note. No ticking (FR-004), no red, no pulsing, no countdown framing (FR-006)
 - [ ] T020 [P] [US1] Create `features/session/session-note.tsx` — Textarea with the label `Where you got to`, its placeholder and its note
 - [ ] T021 [US1] Create `app/session/[taskId]/page.tsx` (Session) — reads `?state=running|zero|past`, defaulting to `running`. One component renders all three states with identical layout and treatment (FR-018, FR-019). No visible state switcher, no pause or stop control
-- [ ] T022 [US1] Write `tests/e2e/home-picker-session.spec.ts` — required and forbidden elements for the three screens per contracts/screens.md, covering FR-013 through FR-019
+- [ ] T022 [US1] Write `tests/e2e/home-picker-session.spec.ts` — required and forbidden elements for the three screens per contracts/screens.md, covering FR-013 through FR-019. Include a two-tap assertion: from `/`, tapping an area's Tend button and then the Picker's primary action reaches `/session/*` with no interaction in between (SC-001)
 - [ ] T023 [P] [US1] Write `tests/e2e/session-states.spec.ts` — the three states differ only in the clock string, the clock note and the note content; layout and treatment are identical. Covers FR-019 and SC-007
 
 **Checkpoint**: The MVP is demonstrable on a phone.
@@ -140,9 +140,11 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 - [ ] T043 Write `tests/e2e/dimensions.spec.ts` — walk every route from `lib/routes.ts` and assert, at both widths: every `button`, `a`, `input`, `textarea` and `[role=button]` has a bounding box of at least 44x44; `documentElement.scrollWidth <= clientWidth`; no text container clips; no two interactive controls overlap. Covers FR-007, FR-008, SC-002, SC-003
 - [ ] T044 [P] Write `tests/e2e/navigation.spec.ts` — walk `lib/routes.ts`, assert no dead ends and that the conditional back rule holds, including `/areas` rendering no back control when opened from First run. Covers FR-001, FR-028 through FR-033, SC-011
 - [ ] T045 [P] Write `tests/e2e/minutes.spec.ts` — minutes appear on `/review`, on the session clock, and in Home's `Attended today, 15 minutes`, and nowhere else. Covers SC-006
-- [ ] T046 [P] Write `tests/e2e/motion.spec.ts` — no element declares a transition or animation on any property other than color. Covers Constitution Article V
+- [ ] T046 [P] Write `tests/e2e/motion.spec.ts` — no element declares a transition or animation on any property other than color, and under an emulated `prefers-reduced-motion: reduce` no element declares a transition duration above zero. Covers Constitution Article V
 - [ ] T047 Verify all ten screens on a real device at 390px and 320px per quickstart.md, using `npm run dev -- --host`. Article VII requires device or emulator verification; the README is right that the device is more honest
 - [ ] T048 Run Article III's addition test over all ten screens — for each screen, remove one element at a time and confirm its question from contracts/screens.md can no longer be answered. Anything that survives removal comes out. This is the check that cannot be automated and is the reason the feature exists
+- [ ] T049 [P] Write `tests/e2e/persistence.spec.ts` — on every route, interact with what is interactive (select a Picker task, toggle a Capture chip, change an Area edit control, drag an area), reload, and assert the screen returns to its fixture state. Assert no screen renders any word claiming something was saved, and that `localStorage`, `sessionStorage`, `indexedDB` and `document.cookie` are untouched. Covers FR-003 and SC-008
+- [ ] T050 [P] Write `tests/e2e/no-pressure.spec.ts` — walk every route and assert no rendered text contains a `%` character, no element is a progress or meter element, and no element renders a streak, badge, level or day-count. This is FR-005's UI half; T013 covers only the words. Covers FR-005
 
 ---
 

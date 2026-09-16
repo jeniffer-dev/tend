@@ -87,15 +87,24 @@ control is fine on the design width and too small on the narrow one.
 
 | Suite | Criteria |
 |---|---|
-| `tests/unit/copy.test.ts` | FR-025, FR-026, FR-027, SC-004, SC-005 — scans every export of `lib/copy.ts` for forbidden terms, emoji, exclamation marks |
+| `tests/unit/copy.test.ts` | FR-026, FR-027, SC-005 — scans every export of `lib/copy.ts` for forbidden terms, emoji, exclamation marks |
+| `tests/e2e/home-picker-session.spec.ts` | FR-013–FR-019, SC-001 — the three MVP screens, and two taps from Home to a session |
+| `tests/e2e/session-states.spec.ts` | FR-019, SC-007 — the three states differ only in the three permitted strings |
+| `tests/e2e/areas.spec.ts` | FR-010–FR-012, FR-033 — the list, the reorder, the removal confirmation, the creating defaults |
+| `tests/e2e/capture-inbox.spec.ts` | FR-020, FR-021 — one field, no chip preselected, three unsorted items |
+| `tests/e2e/week-review.spec.ts` | FR-022–FR-024 — section order, People's absence, no minutes on Week |
+| `tests/e2e/first-run.spec.ts` | FR-009, FR-032 — no suggested areas, and the route to a rootless Areas |
 | `tests/e2e/dimensions.spec.ts` | FR-007, FR-008, SC-002, SC-003 — touch targets, horizontal overflow, clipping, overlap |
 | `tests/e2e/navigation.spec.ts` | FR-001, FR-028–FR-033, SC-011 — walks `lib/routes.ts`, asserts no dead ends and the conditional back rule |
-| `tests/e2e/screens.spec.ts` | FR-009–FR-024 — each screen has its required elements and none of its forbidden ones |
-| `tests/e2e/session-states.spec.ts` | FR-019, SC-007 — the three states differ only in the three permitted strings |
 | `tests/e2e/minutes.spec.ts` | SC-006 — minutes appear on three screens and nowhere else |
+| `tests/e2e/motion.spec.ts` | Article V — only color transitions, and none at all under reduced motion |
+| `tests/e2e/persistence.spec.ts` | FR-003, SC-008 — a reload returns every screen to fixture state; no storage API is touched |
+| `tests/e2e/no-pressure.spec.ts` | FR-005 — no percentage, no progress element, no streak or badge on any route |
 
 Every acceptance criterion in `spec.md` is named by at least one test, per
-Article VII.
+Article VII — except SC-004 and SC-010, which are verified by review and by
+observation respectively. spec.md §"How SC-004 and SC-010 are verified"
+explains why a test for either would only appear to check it.
 
 ## What "done" looks like
 
