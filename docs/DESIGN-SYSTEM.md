@@ -1,7 +1,7 @@
 # Design System — the CURRENT look
 
-**Version:** 1.1.0
-**Amended:** 2026-09-09 — adopted for Tend
+**Version:** 1.2.0
+**Amended:** 2026-09-16 — the session clock role added (§3)
 **Status:** Active
 
 Extracted from the CURRENT codebase, not from memory: every value here was
@@ -162,6 +162,7 @@ Enable ligatures on `body`: `font-feature-settings: "rlig" 1, "calt" 1;`
 | Eyebrow | `text-xs uppercase tracking-widest text-muted-foreground/45` | see below |
 | Fine print | `text-xs text-muted-foreground/50` | |
 | Micro | `text-[11px]` / `text-[10px]` | metadata only |
+| Session clock | `text-[clamp(3.25rem,19.5vw,4.75rem)] font-medium tracking-[-0.03em] leading-none tabular-nums` | one per app; see below |
 
 `tracking-tight` on every heading. `tracking-widest` on every eyebrow.
 Nothing in between.
@@ -181,6 +182,31 @@ the content it introduces.
 
 Opacity is a real tier in this system. `text-muted-foreground` at `/45`,
 `/50`, `/55`, `/60` are distinct, intentional levels — not sloppiness.
+
+### The session clock is the one display size
+
+Added in 1.2.0. The scale above stops at `text-2xl` because it was
+extracted from an app whose largest type was a page title. Tend has one
+element that has to be legible at arm's length rather than at reading
+distance — the session clock — and nothing else in the product does.
+
+`4.75rem` is 76px, the size the approved design draws it at, and it is the
+maximum. The `clamp` exists for one reason: at 320px a six-character clock
+(`+17:04`) set at 76px is wider than the card it sits in, and clipping the
+clock is the one failure the session screen cannot survive. `19.5vw`
+reaches exactly 76px at the 390px design width, so the fluid middle term
+never applies above it; below 390px the clock shrinks rather than clips.
+
+`tabular-nums` is load-bearing, not decoration: without it the digits
+change width as the time changes and the clock jitters in place.
+
+**This is a display size, not a heading.** It takes `font-medium`, not
+`font-semibold`, and it carries no color of its own — Article V forbids
+the clock turning red or pulsing as time runs out, and the surest way to
+honour that is for the clock to have exactly one treatment in every state.
+
+Adding a second use of this row is a design system change, not a judgement
+call at the use site.
 
 ---
 
@@ -465,6 +491,7 @@ one copy goes stale, and the stale one gets built.
 
 | Decision | Where |
 |---|---|
+| Session clock, the one display size | §3 |
 | Base container 720px, single column | §4 |
 | No multi-column grids | §4 |
 | Designed at 390px first | §4 |
