@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design system v1.1.0 §8, verbatim. No value here was invented, and none
+   may be changed without amending docs/DESIGN-SYSTEM.md first
+   (Constitution Article IV).
+
+   There is no `.dark` block. Tend v1 is light-only by decision: the
+   `text-muted-foreground` opacity tiers (/45, /50, /55, /60) are
+   load-bearing hierarchy and do not survive inversion unexamined
+   (design system §9, Article IV). */
+
+@layer base {
+  :root {
+    --current-soft:     #ADEEE3;
+    --current-recovery: #86DEB7;
+    --current-primary:  #64B493;
+    --current-load:     #F5A65B;
+    --current-peak:     #FCD581;
+
+    --background: 60 18% 97%;
+    --foreground: 222 18% 16%;
+    --card: 40 25% 99%;
+    --card-foreground: 222 18% 16%;
+    --popover: 40 25% 99%;
+    --popover-foreground: 222 18% 16%;
+    --primary: 155 35% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 12% 93%;
+    --secondary-foreground: 222 15% 25%;
+    --muted: 40 10% 94%;
+    --muted-foreground: 220 8% 50%;
+    --accent: 40 12% 93%;
+    --accent-foreground: 222 18% 16%;
+    --destructive: 0 72% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 40 10% 90%;
+    --input: 40 10% 90%;
+    --ring: 155 35% 55%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Article V requires prefers-reduced-motion be honoured. The only motion in
+   Tend is `transition-colors`; under reduced motion there is none at all. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
