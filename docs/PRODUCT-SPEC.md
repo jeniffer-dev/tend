@@ -191,3 +191,16 @@ sigue el Artículo II de la constitución: *Tend*, *Session*, *Area*,
 - ~~¿Plataforma?~~ **Resuelto:** web móvil primero, 390px de base, Next.js.
 - ¿Persistencia: local (IndexedDB) o con backend? Fuera de alcance de la feature 001.
 - ¿Qué pasa con una sesión que se abandona sin cerrar (la app se cierra a mitad)? Se decide en la feature 003, junto con la persistencia que la haría detectable. Hasta entonces el enum no lleva `abandoned`.
+
+---
+
+## 8. Recordatorios (feature futura)
+
+No están en el alcance de la v1 y no tienen spec propia todavía. Esta sección existe para que las notas abiertas de la Ronda 2 de diseño no se pierdan hasta que esa feature se especifique.
+
+El handoff `docs/design/Tend.dc.html` trae ocho artboards de la Ronda 2 que pertenecen aquí: Reminder, Not now (primera y cuarta vez), Set a reminder, Review postponed (con y sin tareas pospuestas), Home postponed y Week postponed.
+
+### Notas abiertas
+
+- **La artboard `HOME · POSTPONED TASK` repite la nota de ausencia vieja de Home** — `People sits outside today. It stays on the week list until you put it here.` Ese string quedó superado en la feature 001 (aclaración Q3): mezclaba dos cosas distintas, no estar en Home hoy y estar en la lista semanal, y la segunda mitad contradecía la pantalla Week. La 001 lo reemplazó por `People keeps a rhythm of one session a week. It is not a daily area, so it does not wait for you here.` **La feature de recordatorios DEBE aplicar la misma decisión a esa artboard**, o el string descartado vuelve a entrar por la puerta de atrás.
+
