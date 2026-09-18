@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { AreaCard } from '@/features/home/area-card';
 import { ReviewEntry } from '@/features/home/review-entry';
 import { home as copy } from '@/lib/copy';
-import { areaById, homeCardsInSortOrder } from '@/lib/fixtures';
+import { areaById, homeCardsInDisplayOrder } from '@/lib/fixtures';
 
 /**
  * Home — what am I tending right now?
@@ -37,7 +37,7 @@ export default function HomePage() {
         {/* Single column, always. A second column is more content, not more
             breathing room (design system §4). */}
         <div className="grid grid-cols-1 gap-3">
-          {homeCardsInSortOrder.map((card) => {
+          {homeCardsInDisplayOrder.map((card) => {
             const area = areaById(card.areaId);
             if (!area) return null;
             return <AreaCard key={card.areaId} area={area} card={card} />;

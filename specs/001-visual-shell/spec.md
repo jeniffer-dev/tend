@@ -289,7 +289,10 @@ screen; it is testable entirely on its own.
   selected.
 - **FR-013**: **Home** MUST show the day's areas in the order set on the
   Areas screen and nothing else. The inbox, the week list and history are
-  reachable only through the bottom navigation.
+  reachable only through the bottom navigation. The order set on the Areas
+  screen governs *within* a treatment group; see **FR-013a**
+  (`contracts/screens.md` §`/`) for where an area already attended today
+  sits relative to the areas still to be tended.
 - **FR-014**: **Home** MUST render an area in one of three treatments: to be
   tended (solid Tend button), past its rhythm (outline Tend button plus the
   copy saying so), or already attended today (collapsed to one line, no

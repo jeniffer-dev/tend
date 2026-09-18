@@ -1,12 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 
 import { home, picker, session } from '../../lib/copy';
-import {
-  areas,
-  homeCardsInSortOrder,
-  sessionStates,
-  weekListTasksForArea,
-} from '../../lib/fixtures';
+import { sessionStates, weekListTasksForArea } from '../../lib/fixtures';
 
 /**
  * User Story 1 — the sit-down-and-tend loop, across its three screens.
@@ -15,8 +10,6 @@ import {
  * Every assertion runs twice, at 390px and at 320px, because the project
  * matrix in playwright.config.ts is what supplies the viewport.
  */
-
-const areaName = (id: string) => areas.find((a) => a.id === id)!.name;
 
 /**
  * Tend's own markup, scoped away from the Next.js dev overlay — which
@@ -33,11 +26,36 @@ async function screenText(page: Page) {
 test.describe('Home — what am I tending right now?', () => {
   test.beforeEach(async ({ page }) => await page.goto('/'));
 
+  /* The expected order is written out literally rather than read back from
+     lib/fixtures.ts. Deriving it from the same function the page uses would
+     compare the code against itself and pass no matter what that function
+     did. Morning pages before Health is fixture order; Home last is the
+     rule. */
+  const EXPECTED_ORDER = ['Morning pages', 'Health', 'Money', 'Home'];
+
   test('FR-013: shows the day areas in the order set on Areas', async ({ page }) => {
-    const names = homeCardsInSortOrder.map((c) => areaName(c.areaId));
     const rendered = await page.getByTestId('area-card').allInnerTexts();
-    expect(rendered.length).toBe(names.length);
-    names.forEach((name, i) => expect(rendered[i]).toContain(name));
+    expect(rendered.length).toBe(EXPECTED_ORDER.length);
+    EXPECTED_ORDER.forEach((name, i) => expect(rendered[i]).toContain(name));
+  });
+
+  test('FR-013a: what was attended today sinks below what is still open', async ({ page }) => {
+    const cards = page.getByTestId('area-card');
+
+    // The attended card is last on the screen.
+    await expect(cards.last()).toContainText('Attended today, 15 minutes');
+
+    // And no card carrying a Tend button sits below it. This is the
+    // assertion that matters: an attended row between two Tend buttons
+    // pushes live work below the fold.
+    const attendedY = (await cards.last().boundingBox())!.y;
+    const tendableYs = await Promise.all(
+      (await cards.filter({ has: page.getByRole('link', { name: home.tendAction }) }).all()).map(
+        async (card) => (await card.boundingBox())!.y
+      )
+    );
+    expect(tendableYs.length).toBe(3);
+    for (const y of tendableYs) expect(y).toBeLessThan(attendedY);
   });
 
   test('FR-014: renders all three treatments — solid, outline, and collapsed', async ({ page }) => {

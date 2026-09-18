@@ -67,6 +67,22 @@ the bottom navigation.
 **Must have when the week is ending**: the Review entry, at the top, above
 the areas, as a tappable line — not a badge, not a notification.
 
+**Order (FR-013a)**: the areas still to be tended come first — `to-tend`
+and `past-rhythm` together, in `sortOrder` — and every area already
+attended today sinks below them, also in `sortOrder` among themselves.
+
+This is what the HOME artboard draws, and the reason is the screen's one
+question. What has been attended today is no longer an answer to *what am
+I tending right now?*; it stays on the screen only so the day reads as
+complete, and it earns its place at the bottom rather than in the middle
+of what is still open. An attended area sitting between two Tend buttons
+pushes live work below the fold, which is the one thing Home cannot do
+(Article III: actionable in one tap from cold start).
+
+`sortOrder` still governs *within* each group, so the order a person set
+on the Areas screen is never rearranged — only the attended ones are
+moved as a block.
+
 **Must not have**: any inbox item, any week list, any history, any minute
 count other than the attended line's, any Areas entry in the bottom
 navigation (FR-029).

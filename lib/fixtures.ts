@@ -336,15 +336,36 @@ export const reviewRows: ReviewRow[] = [
   },
 ];
 
-/** Home renders its cards in the order set on the Areas screen (FR-013).
- *  The sort lives here rather than in the component: ordering by a stored
- *  field is not a calculation, but it is still a rule, and Article VI keeps
- *  rules out of components. It also makes FR-013 structural — Home cannot
- *  render in a different order than Areas without this file changing. */
-export const homeCardsInSortOrder: HomeCard[] = [...homeCards].sort(
-  (a, b) =>
-    (areas.find((x) => x.id === a.areaId)?.sortOrder ?? 0) -
-    (areas.find((x) => x.id === b.areaId)?.sortOrder ?? 0)
+/** What is still to be tended sorts above what was attended today.
+ *  `to-tend` and `past-rhythm` rank together: both are still open, and a
+ *  past-rhythm area is no less tendable than any other (Article I — a
+ *  budget warns, it never blocks). */
+const homeGroupRank = (card: HomeCard): number => (card.treatment === 'attended' ? 1 : 0);
+
+const sortOrderOf = (areaId: string): number =>
+  areas.find((area) => area.id === areaId)?.sortOrder ?? 0;
+
+/**
+ * Home's display order (FR-013, FR-013a — contracts/screens.md §`/`).
+ *
+ * Two keys: the attended areas sink below the ones still open, and
+ * `sortOrder` governs within each group. The order a person set on the
+ * Areas screen is therefore never rearranged — the attended cards move as
+ * a block and nothing else changes place.
+ *
+ * The rule lives here rather than in the component. Ordering by a stored
+ * field is not a calculation, but it is still a rule, and Article VI keeps
+ * rules out of components. It also makes the requirement structural: Home
+ * cannot drift out of this order without this file changing.
+ *
+ * Why attended sinks: what has been attended today is no longer an answer
+ * to *what am I tending right now?*. It stays on screen so the day reads as
+ * complete, but an attended row sitting between two Tend buttons pushes
+ * live work below the fold, and Home has to be actionable in one tap from
+ * cold start (Article III).
+ */
+export const homeCardsInDisplayOrder: HomeCard[] = [...homeCards].sort(
+  (a, b) => homeGroupRank(a) - homeGroupRank(b) || sortOrderOf(a.areaId) - sortOrderOf(b.areaId)
 );
 
 /* --------------------------------------------------------------- access */
