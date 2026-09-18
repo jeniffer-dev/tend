@@ -1,7 +1,7 @@
 # Design System — the CURRENT look
 
-**Version:** 1.3.0
-**Amended:** 2026-09-18 — selected task in the Picker (§6)
+**Version:** 1.4.0
+**Amended:** 2026-09-18 — Textarea's third admitted use (§5)
 **Status:** Active
 
 Extracted from the CURRENT codebase, not from memory: every value here was
@@ -293,8 +293,10 @@ control. Grows with `rows`, never with a drag handle: `resize-none`. For
 the muted inline variant, mirror the Input's:
 `border-transparent bg-muted px-2 text-xs`.
 
-Reach for it only where the content is genuinely prose the user will
-re-read later. A single line of text belongs in an Input.
+Admitted in exactly three places: task notes, progress notes, and
+Capture's field. The test is prose to re-read **or** a thought that needs
+room to land — see Constitution Article VI. A single line still belongs in
+an Input, and a fourth use is an amendment.
 
 **Tabs** — for switching views inside a page, never for primary nav.
 
@@ -528,6 +530,7 @@ one copy goes stale, and the stale one gets built.
 |---|---|
 | Session clock, the one display size | §3 |
 | Selected task in the Picker, in the area's color | §6 |
+| Textarea's three admitted uses | §5 |
 | Base container 720px, single column | §4 |
 | No multi-column grids | §4 |
 | Designed at 390px first | §4 |
