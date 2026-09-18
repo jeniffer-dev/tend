@@ -1,7 +1,7 @@
 # Design System — the CURRENT look
 
-**Version:** 1.2.0
-**Amended:** 2026-09-16 — the session clock role added (§3)
+**Version:** 1.3.0
+**Amended:** 2026-09-18 — selected task in the Picker (§6)
 **Status:** Active
 
 Extracted from the CURRENT codebase, not from memory: every value here was
@@ -324,6 +324,41 @@ number is the point.
 **Selected** → `border-foreground bg-foreground text-background` for a
 chip. High contrast, no color.
 
+**Selected task in the Picker** → a `2px` border in **the area's own
+color**. Added in 1.3.0.
+
+The chip rule above is deliberately colorless, and for a chip that is
+right: a filter chip belongs to no area, so it has no color to borrow. A
+task does. Every task in the Picker belongs to the one area being tended,
+so the color is not chosen to mean *selected* — it is the color that task
+already carries everywhere else in the product, turned up to mark which one
+the session is about to be.
+
+`border-foreground` was the first build and it was read on a phone as too
+hard for this product. Black is the loudest thing this palette has, and
+spending it on a selection inside a calm screen is spending it in the wrong
+place.
+
+**This is the one place a brand color marks a state, and it is bounded on
+purpose.** §2's rule stands — color encodes the area, never a status — and
+this does not breach it, because the hue carries no judgement: it is the
+same hue whether the task is going well or badly, early or late, and there
+is no palette in which it could become a warning. What it encodes is
+*which area you are in*, applied to the row the primary action will act on.
+
+Two constraints make that bound real, and both are load-bearing:
+
+- The border is the area's color and never a fixed color. A hardcoded green
+  here would be exactly the status encoding §2 forbids.
+- Unselected rows carry the same `2px` border at `--border`, not `1px`, so
+  selecting a task changes the color and nothing about the geometry. A
+  border that grows on selection makes text reflow, and a row that moves
+  when you touch it does not read as calm.
+
+Do not extend this to a second control without amending this section. The
+argument above is about task cards inside a single area's Picker, and it
+does not transfer to anything that spans areas.
+
 **Motion** → `transition-colors` only. No entrance animations, no spring,
 no parallax. Honour `prefers-reduced-motion`.
 
@@ -492,6 +527,7 @@ one copy goes stale, and the stale one gets built.
 | Decision | Where |
 |---|---|
 | Session clock, the one display size | §3 |
+| Selected task in the Picker, in the area's color | §6 |
 | Base container 720px, single column | §4 |
 | No multi-column grids | §4 |
 | Designed at 390px first | §4 |
