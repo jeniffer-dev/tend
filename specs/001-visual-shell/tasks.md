@@ -84,12 +84,12 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 
 **Independent test**: Open `/areas` directly at 390px, reorder, open an area, change every control, and trigger the removal confirmation.
 
-- [ ] T024 [P] [US2] Create `features/areas/area-row.tsx` — color dot, name, and the rhythm line (`Three sessions a week · in Home daily`) as a literal fixture string (FR-010)
-- [ ] T025 [P] [US2] Create `features/areas/remove-confirmation.tsx` — states what happens to the area's tasks **and** to its past sessions before offering `Remove the area`, alongside `Keep it` (FR-011)
-- [ ] T026 [US2] Create `app/areas/page.tsx` — five areas in `sortOrder`, drag to reorder (visual only, not persisted), `New area`, the footer note, and the conditional back control from `components/back-link.tsx` (FR-010, FR-030, FR-031). No Tend button on this screen
-- [ ] T027 [P] [US2] Create `features/areas/area-form.tsx` — name field, five color swatches, rhythm 1–5, the On Home two-way choice, and the three section notes (FR-012). Every control shows which option is selected; each rhythm control is at least 44x44px and all five fit one row at 320px
-- [ ] T028 [US2] Create `app/areas/[areaId]/page.tsx` and `app/areas/new/page.tsx` — the same screen. Editing prefills the name with the area's value; creating leaves it empty showing the placeholder, with defaults rhythm `3`, On Home `Every day`, fifth palette color (spec.md §3 "Editing vs. creating"). Top action is `Back to areas`, never `Done` (FR-012, FR-025, clarification Q1). No delete action here
-- [ ] T029 [US2] Write `tests/e2e/areas.spec.ts` — the list, the reorder, the removal confirmation's two statements, the creating-state defaults, and the absence of a `Done` label
+- [X] T024 [P] [US2] Create `features/areas/area-row.tsx` — color dot, name, and the rhythm line (`Three sessions a week · in Home daily`) as a literal fixture string (FR-010)
+- [X] T025 [P] [US2] Create `features/areas/remove-confirmation.tsx` — states what happens to the area's tasks **and** to its past sessions before offering `Remove the area`, alongside `Keep it` (FR-011)
+- [X] T026 [US2] Create `app/areas/page.tsx` — five areas in `sortOrder`, drag to reorder (visual only, not persisted), `New area`, the footer note, and the conditional back control from `components/back-link.tsx` (FR-010, FR-030, FR-031). No Tend button on this screen
+- [X] T027 [P] [US2] Create `features/areas/area-form.tsx` — name field, five color swatches, rhythm 1–5, the On Home two-way choice, and the three section notes (FR-012). Every control shows which option is selected; each rhythm control is at least 44x44px and all five fit one row at 320px
+- [X] T028 [US2] Create `app/areas/[areaId]/page.tsx` and `app/areas/new/page.tsx` — the same screen. Editing prefills the name with the area's value; creating leaves it empty showing the placeholder, with defaults rhythm `3`, On Home `Every day`, fifth palette color (spec.md §3 "Editing vs. creating"). Top action is `Back to areas`, never `Done` (FR-012, FR-025, clarification Q1). No delete action here
+- [X] T029 [US2] Write `tests/e2e/areas.spec.ts` — the list, the reorder, the removal confirmation's two statements, the creating-state defaults, and the absence of a `Done` label
 
 ---
 

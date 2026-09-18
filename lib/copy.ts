@@ -36,13 +36,27 @@ export const firstRun = {
 export const areas = {
   eyebrow: 'Your areas',
   heading: 'Five, in your order',
-  removalExplanation:
-    'Removing Money keeps its five tasks. They move to the inbox carrying the name, and its eleven past sessions stay in Review.',
+  /* The removal explanation is NOT here. It differs per area — it names
+     that area's task and session counts — so it lives on the area in
+     lib/fixtures.ts, one home rather than two. Money's is the approved
+     string verbatim. */
   removalAction: 'Remove the area',
   keepAction: 'Keep it',
   footerNote:
     'Drag to reorder. Home shows them in this order. Tap an area to change its name, color or rhythm.',
   secondaryAction: 'New area',
+
+  /* FLAGGED — accessible names taken from the artboard's own aria-labels,
+     not from spec.md §"Screen copy", which lists no accessible names. They
+     are user-facing: a screen reader says them aloud. */
+  reorderLabel: (areaName: string) => `Reorder ${areaName}`,
+
+  /* FLAGGED — invented. The artboard draws the removal confirmation but
+     draws nothing that opens it, and Area edit must not carry a delete
+     action (contracts/screens.md). FR-011 needs a trigger, so this is one.
+     It reuses the vocabulary of the approved `Remove the area`. */
+  removeTrigger: 'Remove',
+  removeTriggerLabel: (areaName: string) => `Remove ${areaName}`,
 } as const;
 
 /** 3. Area edit — What is this area, and how often?
@@ -54,6 +68,15 @@ export const areaEdit = {
   nameLabel: 'Name',
   namePlaceholder: 'Morning pages',
   colorLabel: 'Color',
+  /* FLAGGED — the artboard's own aria-labels for the five swatches. They
+     match the design system §2 token descriptions, in palette order. */
+  colorOptionLabels: {
+    soft: 'Pale aqua',
+    recovery: 'Mint',
+    primary: 'Green',
+    load: 'Warm orange',
+    peak: 'Soft gold',
+  },
   colorNote:
     'The color marks the area wherever it appears. It carries no meaning of its own.',
   rhythmLabel: 'Sessions a week',

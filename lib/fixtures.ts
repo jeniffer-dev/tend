@@ -53,6 +53,16 @@ export type Area = {
   /** For the Area edit control's selected state only. */
   isDaily: boolean;
   sortOrder: number;
+  /** What the removal confirmation says about this area, whole. It names
+   *  what happens to the tasks *and* to the past sessions, which is what
+   *  FR-011 requires before anything destructive is offered.
+   *
+   *  Money's is the approved string, verbatim. The other four are fixture
+   *  data written on its construction, the same class of thing as the
+   *  fixture task titles: the design draws this state only for Money, and
+   *  giving the fixture the sentence was preferred to giving the component
+   *  two counts to assemble one from. */
+  removalExplanation: string;
 };
 
 /** FR-014's three treatments, one-to-one. */
@@ -130,6 +140,8 @@ export const areas: Area[] = [
     rhythm: 3,
     isDaily: true,
     sortOrder: 1,
+    removalExplanation:
+      'Removing Morning pages keeps its four tasks. They move to the inbox carrying the name, and its nine past sessions stay in Review.',
   },
   {
     id: 'health',
@@ -139,6 +151,8 @@ export const areas: Area[] = [
     rhythm: 3,
     isDaily: true,
     sortOrder: 2,
+    removalExplanation:
+      'Removing Health keeps its six tasks. They move to the inbox carrying the name, and its fourteen past sessions stay in Review.',
   },
   {
     id: 'home',
@@ -148,6 +162,8 @@ export const areas: Area[] = [
     rhythm: 2,
     isDaily: true,
     sortOrder: 3,
+    removalExplanation:
+      'Removing Home keeps its three tasks. They move to the inbox carrying the name, and its seven past sessions stay in Review.',
   },
   {
     id: 'people',
@@ -157,6 +173,8 @@ export const areas: Area[] = [
     rhythm: 1,
     isDaily: false,
     sortOrder: 4,
+    removalExplanation:
+      'Removing People keeps its two tasks. They move to the inbox carrying the name, and its four past sessions stay in Review.',
   },
   {
     id: 'money',
@@ -166,6 +184,8 @@ export const areas: Area[] = [
     rhythm: 2,
     isDaily: true,
     sortOrder: 5,
+    removalExplanation:
+      'Removing Money keeps its five tasks. They move to the inbox carrying the name, and its eleven past sessions stay in Review.',
   },
 ];
 
@@ -367,6 +387,18 @@ const sortOrderOf = (areaId: string): number =>
 export const homeCardsInDisplayOrder: HomeCard[] = [...homeCards].sort(
   (a, b) => homeGroupRank(a) - homeGroupRank(b) || sortOrderOf(a.areaId) - sortOrderOf(b.areaId)
 );
+
+/** What Area edit starts from when creating rather than editing.
+ *
+ *  Taken from the prototype script embedded in the approved design file —
+ *  the designer's own values — rather than invented: rhythm 3, On Home
+ *  `Every day`, and the fifth palette colour (spec.md §"Editing vs.
+ *  creating"). */
+export const CREATING_DEFAULTS = {
+  color: 'peak' as AreaColor,
+  rhythm: 3 as Rhythm,
+  isDaily: true,
+} as const;
 
 /* --------------------------------------------------------------- access */
 /* Plain lookups over arrays. Not a query layer, and nothing here derives a

@@ -77,6 +77,7 @@ const fixtureStrings: Array<[string, string]> = [
   ...fixtures.areas.flatMap((a) => [
     [`area(${a.id}).name`, a.name] as [string, string],
     [`area(${a.id}).rhythmLabel`, a.rhythmLabel] as [string, string],
+    [`area(${a.id}).removalExplanation`, a.removalExplanation] as [string, string],
   ]),
   ...fixtures.homeCards.map((c) => [`homeCard(${c.areaId}).line`, c.line] as [string, string]),
   ...fixtures.tasks.flatMap((t) => [
