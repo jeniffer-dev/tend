@@ -14,7 +14,7 @@ export default defineConfig({
   retries: 0,
   reporter: 'list',
   use: {
-    baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'http://127.0.0.1:3001',
     trace: 'on-first-retry',
   },
   projects: [
@@ -27,10 +27,19 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], viewport: { width: 320, height: 568 } },
     },
   ],
+  /* A production build, on its own port, in its own dist directory.
+     `next dev` compiles a route the first time it is requested, and a suite
+     that navigates the same dozen routes over and over ends up measuring
+     the compiler rather than the app: the same specs that pass in under a
+     minute against a built server took 16 minutes parallel and 29 minutes
+     serial against `next dev`, failing a different handful of navigations
+     each run. Port 3001 and NEXT_DIST_DIR keep this off whatever is serving
+     the phone on 3000. */
   webServer: {
-    command: 'npm run dev -- --port 3000',
-    url: 'http://127.0.0.1:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    command:
+      'NEXT_DIST_DIR=.next-test npm run build && NEXT_DIST_DIR=.next-test npx next start --port 3001',
+    url: 'http://127.0.0.1:3001',
+    reuseExistingServer: false,
+    timeout: 240_000,
   },
 });
