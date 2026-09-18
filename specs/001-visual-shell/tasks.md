@@ -99,11 +99,11 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 
 **Independent test**: Open `/capture` at 390px, type, toggle an area chip on and off, then open `/inbox` and see three unsorted items.
 
-- [ ] T030 [P] [US3] Create `features/capture/capture-form.tsx` — exactly one text field, four optional area chips with none preselected and each toggleable off, the note about where an item with no area goes (FR-020). No date field, no priority control
-- [ ] T031 [US3] Create `app/capture/page.tsx` — the form plus the primary action `Capture`
-- [ ] T032 [P] [US3] Create `features/inbox/inbox-row.tsx` — title, the captured label as a literal string, and `Give it an area`. No date framed as due or late
-- [ ] T033 [US3] Create `app/inbox/page.tsx` — three unsorted items and the footer note that nothing expires (FR-021)
-- [ ] T034 [US3] Write `tests/e2e/capture-inbox.spec.ts` — one field only, no chip preselected, chips toggle off, three inbox items, no due-date framing
+- [X] T030 [P] [US3] Create `features/capture/capture-form.tsx` — exactly one text field, four optional area chips with none preselected and each toggleable off, the note about where an item with no area goes (FR-020). No date field, no priority control
+- [X] T031 [US3] Create `app/capture/page.tsx` — the form plus the primary action `Capture`
+- [X] T032 [P] [US3] Create `features/inbox/inbox-row.tsx` — title, the captured label as a literal string, and `Give it an area`. No date framed as due or late
+- [X] T033 [US3] Create `app/inbox/page.tsx` — three unsorted items and the footer note that nothing expires (FR-021)
+- [X] T034 [US3] Write `tests/e2e/capture-inbox.spec.ts` — one field only, no chip preselected, chips toggle off, three inbox items, no due-date framing
 
 ---
 

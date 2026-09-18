@@ -400,6 +400,11 @@ export const CREATING_DEFAULTS = {
   isDaily: true,
 } as const;
 
+/** The areas Capture offers as chips, in the order the artboard draws them
+ *  — which is not `sortOrder`. Held as ids so no component has to turn a
+ *  chip's label back into an area to find its colour. */
+export const captureChipAreaIds = ['health', 'morning-pages', 'money', 'home'] as const;
+
 /* --------------------------------------------------------------- access */
 /* Plain lookups over arrays. Not a query layer, and nothing here derives a
    displayed value — each returns fixture rows as they are stored. */
