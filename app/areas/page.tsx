@@ -15,6 +15,11 @@ import { backForAreas } from '@/lib/routes';
  * No Tend button: this is where you decide what exists, not where you act on
  * it (contracts/screens.md).
  *
+ * `?confirm=<areaId>` opens that row in the removal confirmation. Area edit
+ * sends the person here to decide: it may start a removal and may never
+ * execute one, because the screen that explains the consequences is the
+ * screen that decides (FR-011, contracts/screens.md).
+ *
  * Areas is the one screen whose back control is conditional. It returns to
  * whichever screen opened it — Week or Review — and renders no control at
  * all when First run opened it, because First run describes a state that no
@@ -24,9 +29,9 @@ import { backForAreas } from '@/lib/routes';
 export default async function AreasPage({
   searchParams,
 }: {
-  searchParams: Promise<{ from?: string }>;
+  searchParams: Promise<{ from?: string; confirm?: string }>;
 }) {
-  const { from } = await searchParams;
+  const { from, confirm } = await searchParams;
 
   return (
     <>
@@ -40,7 +45,10 @@ export default async function AreasPage({
           <h1 className="text-2xl font-semibold tracking-tight">{copy.heading}</h1>
         </div>
 
-        <AreaList areas={[...fixtureAreas].sort((a, b) => a.sortOrder - b.sortOrder)} />
+        <AreaList
+          areas={[...fixtureAreas].sort((a, b) => a.sortOrder - b.sortOrder)}
+          confirmingAreaId={confirm}
+        />
 
         <p className="text-xs text-muted-foreground/50 text-pretty">{copy.footerNote}</p>
       </div>

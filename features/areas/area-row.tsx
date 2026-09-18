@@ -17,6 +17,10 @@ import type { Area } from '@/lib/fixtures';
  *
  * No Tend button. Areas is where you decide what exists, not where you act
  * on it (contracts/screens.md).
+ *
+ * No remove control either. Removal is started from Area edit — the screen
+ * that is already about this one area — and decided here, in the
+ * confirmation that replaces the row.
  */
 export function AreaRow({
   area,
@@ -25,7 +29,6 @@ export function AreaRow({
   onReorderPointerMove,
   onReorderPointerUp,
   onReorderKeyDown,
-  onRemove,
 }: {
   area: Area;
   isDragging: boolean;
@@ -33,7 +36,6 @@ export function AreaRow({
   onReorderPointerMove: (event: React.PointerEvent<HTMLButtonElement>) => void;
   onReorderPointerUp: (event: React.PointerEvent<HTMLButtonElement>) => void;
   onReorderKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
-  onRemove: () => void;
 }) {
   return (
     <div
@@ -54,18 +56,6 @@ export function AreaRow({
         </span>
         <span className="text-sm text-muted-foreground text-pretty">{area.rhythmLabel}</span>
       </Link>
-
-      {/* FLAGGED: the artboard draws no control that opens the removal
-          confirmation, and Area edit must not carry a delete action. FR-011
-          needs a trigger, so this is one. */}
-      <button
-        type="button"
-        aria-label={copy.removeTriggerLabel(area.name)}
-        onClick={onRemove}
-        className="h-11 shrink-0 rounded-md px-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-      >
-        {copy.removeTrigger}
-      </button>
 
       {/* Three plain rules, as drawn — not an icon. Keyboard reorder is
           wired to the same control so the list is operable without a

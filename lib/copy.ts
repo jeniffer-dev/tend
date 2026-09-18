@@ -50,13 +50,6 @@ export const areas = {
      not from spec.md §"Screen copy", which lists no accessible names. They
      are user-facing: a screen reader says them aloud. */
   reorderLabel: (areaName: string) => `Reorder ${areaName}`,
-
-  /* FLAGGED — invented. The artboard draws the removal confirmation but
-     draws nothing that opens it, and Area edit must not carry a delete
-     action (contracts/screens.md). FR-011 needs a trigger, so this is one.
-     It reuses the vocabulary of the approved `Remove the area`. */
-  removeTrigger: 'Remove',
-  removeTriggerLabel: (areaName: string) => `Remove ${areaName}`,
 } as const;
 
 /** 3. Area edit — What is this area, and how often?

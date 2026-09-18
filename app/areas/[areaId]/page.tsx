@@ -12,6 +12,7 @@ export default async function AreaEditPage({ params }: { params: Promise<{ areaI
 
   return (
     <AreaEditScreen
+      areaId={area.id}
       name={area.name}
       color={area.color}
       rhythm={area.rhythm}

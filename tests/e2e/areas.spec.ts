@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
-import { areaEdit, areas as copy } from '../../lib/copy';
+import { areaEdit, areas, areas as copy } from '../../lib/copy';
 import { areas as fixtureAreas, CREATING_DEFAULTS } from '../../lib/fixtures';
 
 /**
@@ -49,6 +49,34 @@ test.describe('Areas — what am I paying attention to?', () => {
     expect(await rowNames(page)).toEqual(['Health', 'Home', 'Morning pages', 'People', 'Money']);
   });
 
+  test('the row lands where it is released, not past it', async ({ page }) => {
+    const rows = await page.getByTestId('area-row').all();
+    const first = (await rows[0].boundingBox())!;
+    const second = (await rows[1].boundingBox())!;
+    const handle = page.getByRole('button', { name: copy.reorderLabel('Morning pages') });
+    const box = (await handle.boundingBox())!;
+
+    // Travel exactly one row down and release there. An earlier build
+    // reordered live *and* translated by the full travel, so the row ran
+    // away at twice the speed of the pointer and overshot.
+    const step = second.y - first.y;
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    for (let i = 1; i <= 4; i++) {
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2 + (step * i) / 4);
+    }
+    await page.mouse.up();
+
+    expect(await rowNames(page)).toEqual(['Health', 'Morning pages', 'Home', 'People', 'Money']);
+  });
+
+  test('the drag handle takes touch-action none so the page cannot scroll under it', async ({ page }) => {
+    const touchAction = await page
+      .getByRole('button', { name: copy.reorderLabel('Morning pages') })
+      .evaluate((el) => getComputedStyle(el).touchAction);
+    expect(touchAction).toBe('none');
+  });
+
   test('the reorder handle is operable without a pointer', async ({ page }) => {
     await page.getByRole('button', { name: copy.reorderLabel('Morning pages') }).focus();
     await page.keyboard.press('ArrowDown');
@@ -65,7 +93,7 @@ test.describe('Areas — what am I paying attention to?', () => {
   });
 
   test('FR-011: removal states what happens to the tasks AND to the sessions', async ({ page }) => {
-    await page.getByRole('button', { name: copy.removeTriggerLabel('Money') }).click();
+    await page.goto('/areas?confirm=money');
 
     const confirmation = page.getByTestId('remove-confirmation');
     await expect(confirmation).toBeVisible();
@@ -80,13 +108,38 @@ test.describe('Areas — what am I paying attention to?', () => {
   });
 
   test('FR-011: the confirmation names the area own counts, not Money always', async ({ page }) => {
-    await page.getByRole('button', { name: copy.removeTriggerLabel('Health') }).click();
+    await page.goto('/areas?confirm=health');
     await expect(page.getByTestId('remove-confirmation')).toContainText('Removing Health');
     await expect(page.getByTestId('remove-confirmation')).not.toContainText('Removing Money');
   });
 
+  test('FR-011: Area edit starts the removal and Areas decides it', async ({ page }) => {
+    await page.goto('/areas/money');
+
+    // The trigger is a tertiary link, at the weight of the session's
+    // `Mark it done` — not a button competing with the form.
+    const link = page.getByRole('link', { name: copy.removalAction });
+    await expect(link).toBeVisible();
+    await link.click();
+
+    await expect(page).toHaveURL(/\/areas\?confirm=money$/);
+    await expect(page.getByTestId('remove-confirmation')).toContainText('Removing Money');
+  });
+
+  test('the row carries no remove control of its own', async ({ page }) => {
+    await expect(page.getByTestId('area-row').first()).not.toContainText('Remove');
+  });
+
+  test('Keep it closes the confirmation and the row returns', async ({ page }) => {
+    await page.goto('/areas?confirm=money');
+    await page.getByRole('button', { name: copy.keepAction }).click();
+
+    await expect(page.getByTestId('remove-confirmation')).toHaveCount(0);
+    await expect(page.locator('[data-area="money"]')).toBeVisible();
+  });
+
   test('Article IV: the destructive action carries no red', async ({ page }) => {
-    await page.getByRole('button', { name: copy.removeTriggerLabel('Money') }).click();
+    await page.goto('/areas?confirm=money');
     const button = page.getByRole('button', { name: copy.removalAction });
 
     const style = await button.evaluate((el) => {
@@ -174,12 +227,20 @@ test.describe('Area edit — what is this area, and how often?', () => {
     }
   });
 
-  test('carries no delete action — removal lives on Areas', async ({ page }) => {
+  test('removal can be started here but never executed here', async ({ page }) => {
     await page.goto('/areas/health');
-    const text = await page.getByTestId('screen').innerText();
-    for (const forbidden of ['Remove', 'Delete']) {
-      expect(text, `Area edit offers "${forbidden}"`).not.toContain(forbidden);
-    }
+
+    // `Keep it` is the other half of the decision, and it belongs to the
+    // confirmation on Areas. Its absence is what proves this screen only
+    // starts the removal.
+    await expect(page.getByText(areas.keepAction)).toHaveCount(0);
+    await expect(page.getByTestId('remove-confirmation')).toHaveCount(0);
+    await expect(page.getByTestId('screen')).not.toContainText('Delete');
+  });
+
+  test('creating offers no removal — there is nothing yet to remove', async ({ page }) => {
+    await page.goto('/areas/new');
+    await expect(page.getByRole('link', { name: areas.removalAction })).toHaveCount(0);
   });
 
   test('FR-030: Area edit always returns to Areas', async ({ page }) => {

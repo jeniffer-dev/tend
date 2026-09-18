@@ -102,6 +102,10 @@ before offering the destructive action.
 **Must not have**: a Tend button. Areas is where you decide what exists,
 not where you act on it.
 
+**Opened at `?confirm=<areaId>`**: that row renders the removal
+confirmation rather than the row. This is where Area edit's removal link
+arrives, and where the decision is actually made.
+
 **Goes to**: `/areas/[areaId]` on tapping an area; `/areas/new` from
 `New area`; back to its opener, or nowhere if opened from First run.
 
@@ -117,11 +121,19 @@ note. Each control shows its selected option.
 empty and shows its placeholder. Defaults are rhythm 3, On Home
 `Every day`, fifth palette color — from the design's own prototype.
 
-**Must not have**: a Done button (clarification Q1), a delete action
-(removal lives on Areas, where the consequences are explained), a
-sessions-per-day or minutes control.
+**May start a removal, and may never execute one**: a tertiary
+`Remove the area` text link at the end of the screen, at the same weight as
+the session's `Mark it done`. It navigates to `/areas?confirm=<areaId>` and
+does nothing else. The screen that states the consequences is the screen
+that decides, so both real choices — `Remove the area` and `Keep it` — live
+only in the confirmation on Areas.
 
-**Goes to**: `/areas`.
+Absent when creating: there is nothing yet to remove.
+
+**Must not have**: a Done button (clarification Q1), a control that removes
+the area from this screen, a sessions-per-day or minutes control.
+
+**Goes to**: `/areas`, and `/areas?confirm=<areaId>` from the removal link.
 
 ---
 
