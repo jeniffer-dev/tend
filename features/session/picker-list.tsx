@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { picker as copy } from '@/lib/copy';
 import { sessionHref } from '@/lib/routes';
 import { cn } from '@/lib/utils';
-import type { Task } from '@/lib/fixtures';
+import { areaColorHex, type AreaColor, type Task } from '@/lib/fixtures';
 
 /**
  * The Picker's task list, with the first task already selected on arrival
@@ -23,11 +23,27 @@ import type { Task } from '@/lib/fixtures';
  * Selection highlighting is the only client state in this feature, and it
  * does not survive a reload — nothing here is stored (FR-003).
  *
- * The selected treatment is `border-foreground`, as the design draws it: a
- * darker border, not a colour. Colour marks the area and never a state
- * (Article IV).
+ * The selected task carries a 2px border in the area's own colour (design
+ * system §6, added in 1.3.0). The colour is not chosen to mean *selected* —
+ * it is the colour the task already carries everywhere else, turned up to
+ * mark which one the session is about to be. It is read from the area
+ * rather than hardcoded, because a fixed colour here would be the status
+ * encoding §2 forbids.
+ *
+ * Unselected rows carry the same 2px border at `--border`. Selecting
+ * changes the colour and nothing about the geometry: a border that grew on
+ * selection would reflow the text, and a row that moves when you touch it
+ * does not read as calm.
  */
-export function PickerList({ tasks, scopeNote }: { tasks: Task[]; scopeNote: string }) {
+export function PickerList({
+  tasks,
+  scopeNote,
+  color,
+}: {
+  tasks: Task[];
+  scopeNote: string;
+  color: AreaColor;
+}) {
   const [selectedId, setSelectedId] = useState(tasks[0]?.id ?? null);
 
   return (
@@ -41,9 +57,10 @@ export function PickerList({ tasks, scopeNote }: { tasks: Task[]; scopeNote: str
               type="button"
               aria-pressed={isSelected}
               onClick={() => setSelectedId(task.id)}
+              style={isSelected ? { borderColor: areaColorHex[color] } : undefined}
               className={cn(
-                'flex w-full flex-col gap-2 rounded-xl border bg-card p-5 text-left shadow-sm transition-colors',
-                isSelected ? 'border-foreground' : 'border-border hover:border-muted-foreground/40'
+                'flex w-full flex-col gap-2 rounded-xl border-2 bg-card p-5 text-left shadow-sm transition-colors',
+                isSelected ? 'border-transparent' : 'border-border hover:border-muted-foreground/40'
               )}
             >
               <span className="text-base font-semibold tracking-tight">{task.title}</span>

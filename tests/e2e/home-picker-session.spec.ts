@@ -164,6 +164,48 @@ test.describe('Picker — what do I focus on for fifteen minutes?', () => {
     await expect(page.getByText('Not attended yet.')).toBeVisible();
   });
 
+  test('the selected task is bordered in the area own colour, 2px', async ({ page }) => {
+    // Both areas are checked on purpose. One would pass against a hardcoded
+    // colour; two prove the border is read from the area (design system §6).
+    for (const [areaId, expected] of [
+      ['health', 'rgb(100, 180, 147)'], // --current-primary  #64B493
+      ['money', 'rgb(245, 166, 91)'], //  --current-load     #F5A65B
+    ]) {
+      await page.goto(`/tend/${areaId}`);
+      const selected = page.locator('[aria-pressed="true"]');
+      await expect(selected).toHaveCount(1);
+
+      const border = await selected.evaluate((el) => {
+        const s = getComputedStyle(el);
+        return { color: s.borderTopColor, width: s.borderTopWidth };
+      });
+      expect(border.color).toBe(expected);
+      expect(border.width).toBe('2px');
+    }
+  });
+
+  test('selecting a task changes the colour and moves nothing', async ({ page }) => {
+    const options = page.locator('[aria-pressed]');
+    const geometryOf = () =>
+      options.evaluateAll((els) =>
+        els.map((el) => {
+          const r = el.getBoundingClientRect();
+          return [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)];
+        })
+      );
+
+    const before = await geometryOf();
+    await options.nth(1).click();
+    await expect(options.nth(1)).toHaveAttribute('aria-pressed', 'true');
+    expect(await geometryOf(), 'selecting a task reflowed the list').toEqual(before);
+
+    // Unselected rows keep the same 2px border, at the neutral token.
+    const unselected = await options
+      .first()
+      .evaluate((el) => getComputedStyle(el).borderTopWidth);
+    expect(unselected).toBe('2px');
+  });
+
   test('carries no inbox item and no way to add a task', async ({ page }) => {
     const text = await screenText(page);
     expect(text).not.toContain('Ask the dentist about the night guard');

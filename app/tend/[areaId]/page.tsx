@@ -33,7 +33,7 @@ export default async function PickerPage({ params }: { params: Promise<{ areaId:
         <h1 className="text-2xl font-semibold tracking-tight">{copy.heading}</h1>
       </div>
 
-      <PickerList tasks={tasks} scopeNote={copy.scopeNote(area.name)} />
+      <PickerList tasks={tasks} scopeNote={copy.scopeNote(area.name)} color={area.color} />
     </div>
   );
 }

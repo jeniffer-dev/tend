@@ -132,6 +132,11 @@ each with a last-session note, the first task selected on arrival, the
 scope note, the primary action, the footer note about switching inside the
 session.
 
+**The selected task is visible as such**: a 2px border in the area's own
+color (design system §6). The treatment is named here because "selected on
+arrival" is only checkable if selection can be seen. The color is the
+area's and never a fixed one.
+
 **Must not have**: tasks from another area, inbox items, a way to add a
 task. Capture is elsewhere.
 
