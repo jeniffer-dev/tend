@@ -113,11 +113,11 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 
 **Independent test**: Open `/week` and `/review` at 390px and read both.
 
-- [ ] T035 [P] [US4] Create `features/week/week-row.tsx` — area name, sessions committed, and the line about tasks and sessions attended, all as literal fixture strings. No minutes, no percentage, no bar framed as a target (FR-022)
-- [ ] T036 [US4] Create `app/week/page.tsx` — four areas totalling ten sessions with People absent (clarification Q3), and `Change the rhythm` linking to `/areas` (FR-029)
-- [ ] T037 [P] [US4] Create `features/review/review-section.tsx` — `Attended` and `Unattended` as two labelled sections, Attended first, with minutes appearing inside the row strings (FR-023)
-- [ ] T038 [US4] Create `app/review/page.tsx` — the two sections, the closing note that unattended is a fact about the week and not about the person (FR-024), and `Set this week's rhythm` linking to `/areas`. No chart, no trend, no comparison with last week
-- [ ] T039 [US4] Write `tests/e2e/week-review.spec.ts` — section order, People's absence from Week, no minutes on Week, and both links reaching `/areas`
+- [X] T035 [P] [US4] Create `features/week/week-row.tsx` — area name, sessions committed, and the line about tasks and sessions attended, all as literal fixture strings. No minutes, no percentage, no bar framed as a target (FR-022)
+- [X] T036 [US4] Create `app/week/page.tsx` — four areas totalling ten sessions with People absent (clarification Q3), and `Change the rhythm` linking to `/areas` (FR-029)
+- [X] T037 [P] [US4] Create `features/review/review-section.tsx` — `Attended` and `Unattended` as two labelled sections, Attended first, with minutes appearing inside the row strings (FR-023)
+- [X] T038 [US4] Create `app/review/page.tsx` — the two sections, the closing note that unattended is a fact about the week and not about the person (FR-024), and `Set this week's rhythm` linking to `/areas`. No chart, no trend, no comparison with last week
+- [X] T039 [US4] Write `tests/e2e/week-review.spec.ts` — section order, People's absence from Week, no minutes on Week, and both links reaching `/areas`
 
 ---
 
