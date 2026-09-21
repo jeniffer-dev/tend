@@ -133,6 +133,18 @@ export function pickerHref(areaId: string): string {
   return `/tend/${areaId}`;
 }
 
+/**
+ * The empty Area edit. Both First run's `Name your first area` (FR-032) and
+ * Areas' `New area` (FR-033) open it — the same screen, by requirement.
+ *
+ * It carries no `?from=`, so leaving it lands on an Areas with no opener,
+ * which renders as a root with no back control. That is exactly what FR-031
+ * asks for when First run opened it: First run describes a state that no
+ * longer exists once an area has been named, so there is nowhere behind
+ * Areas to go.
+ */
+export const newAreaHref = '/areas/new';
+
 /** Where a Picker's primary action goes. */
 export function sessionHref(taskId: string): string {
   return `/session/${taskId}`;

@@ -127,9 +127,9 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 
 **Independent test**: Open `/first-run` at 390px, read it, and follow `Name your first area` through to Areas.
 
-- [ ] T040 [US5] Create `app/first-run/page.tsx` — the invitation, the four color dots with their caption, `Name your first area`, and the closing line about nothing being set up in advance. No area listed, none suggested, no navigation to Home (FR-009)
-- [ ] T041 [US5] Wire `Name your first area` to `/areas/new` in `lib/routes.ts` and confirm leaving that screen lands on `/areas` with no back control rendered (FR-031, FR-032)
-- [ ] T042 [US5] Write `tests/e2e/first-run.spec.ts` — no suggested areas, no apology or exclamation mark, and the route through `/areas/new` to a rootless `/areas`
+- [X] T040 [US5] Create `app/first-run/page.tsx` — the invitation, the four color dots with their caption, `Name your first area`, and the closing line about nothing being set up in advance. No area listed, none suggested, no navigation to Home (FR-009)
+- [X] T041 [US5] Wire `Name your first area` to `/areas/new` in `lib/routes.ts` and confirm leaving that screen lands on `/areas` with no back control rendered (FR-031, FR-032)
+- [X] T042 [US5] Write `tests/e2e/first-run.spec.ts` — no suggested areas, no apology or exclamation mark, and the route through `/areas/new` to a rootless `/areas`
 
 ---
 

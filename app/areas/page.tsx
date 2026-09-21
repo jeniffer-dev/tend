@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { AreaList } from '@/features/areas/area-list';
 import { areas as copy } from '@/lib/copy';
 import { areas as fixtureAreas } from '@/lib/fixtures';
-import { backForAreas } from '@/lib/routes';
+import { backForAreas, newAreaHref } from '@/lib/routes';
 
 /**
  * Areas — what am I paying attention to?
@@ -55,7 +55,7 @@ export default async function AreasPage({
 
       <StickyFooter>
         <Button asChild variant="outline" className="w-full">
-          <Link href="/areas/new">{copy.secondaryAction}</Link>
+          <Link href={newAreaHref}>{copy.secondaryAction}</Link>
         </Button>
       </StickyFooter>
     </div>
