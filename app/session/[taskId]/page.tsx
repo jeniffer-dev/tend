@@ -50,8 +50,8 @@ export default async function SessionPage({
   const fixture = sessionStates[isSessionState(state) ? state : 'running'];
 
   return (
-    <>
-      <div className="flex flex-col gap-7">
+    <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col gap-7">
         <div className="flex flex-col gap-1.5">
           <p className="text-xs uppercase tracking-widest text-muted-foreground/45">
             {copy.eyebrow(area.name)}
@@ -78,6 +78,6 @@ export default async function SessionPage({
           <Link href={pickerHref(area.id)}>{copy.markItDone}</Link>
         </Button>
       </StickyFooter>
-    </>
+    </div>
   );
 }

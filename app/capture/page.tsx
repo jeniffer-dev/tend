@@ -15,8 +15,8 @@ import { backForScreen } from '@/lib/routes';
  */
 export default function CapturePage() {
   return (
-    <>
-      <div className="flex flex-col gap-6">
+    <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col gap-6">
         <BackLink target={backForScreen('/capture')} />
 
         <p className="text-xs uppercase tracking-widest text-muted-foreground/45">{copy.eyebrow}</p>
@@ -27,6 +27,6 @@ export default function CapturePage() {
       <StickyFooter>
         <Button className="w-full">{copy.primaryAction}</Button>
       </StickyFooter>
-    </>
+    </div>
   );
 }

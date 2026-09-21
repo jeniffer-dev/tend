@@ -34,8 +34,8 @@ export default async function AreasPage({
   const { from, confirm } = await searchParams;
 
   return (
-    <>
-      <div className="flex flex-col gap-5">
+    <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col gap-5">
         <BackLink target={backForAreas(from)} />
 
         <div className="flex flex-col gap-1.5">
@@ -58,6 +58,6 @@ export default async function AreasPage({
           <Link href="/areas/new">{copy.secondaryAction}</Link>
         </Button>
       </StickyFooter>
-    </>
+    </div>
   );
 }

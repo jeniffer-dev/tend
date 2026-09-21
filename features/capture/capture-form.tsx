@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { AreaDot } from '@/components/area-dot';
-import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { capture as copy } from '@/lib/copy';
 import { areaById, captureChipAreaIds } from '@/lib/fixtures';
 import { cn } from '@/lib/utils';
@@ -17,14 +17,12 @@ import { cn } from '@/lib/utils';
  * added here is one more decision between remembering a thing and being rid
  * of it.
  *
- * FLAGGED — the artboard draws this field as a four-row `<textarea>`; it is
- * an `Input` here. Constitution Article VI admits Textarea for prose the
- * user will re-read "and for nothing else", naming `Task.notes` and
- * `Session.progress_note`, and says plainly that a single line of text still
- * belongs in an Input. `One thing` is a single line. The constitution
- * outranks the design file, so this is the departure it requires — but it is
- * a visible one, and it is the kind of call worth overruling if the intent
- * was a roomy box to think in.
+ * The field is a four-row Textarea, as the artboard draws it. Constitution
+ * Article VI admits it here as its third case (amended 1.2.0): something
+ * the person has just remembered and needs room to put down, even though
+ * they will not re-read it. The size of a field is not only about how the
+ * text is read later — it is about what it invites while it is written, and
+ * a one-line box makes a person edit the thought down before it is out.
  *
  * A chip toggles off as readily as on. Nothing is stored (FR-003).
  */
@@ -33,10 +31,11 @@ export function CaptureForm() {
 
   return (
     <div className="flex flex-col gap-6">
-      <Input
+      <Textarea
         aria-label={copy.eyebrow}
+        rows={4}
         placeholder={copy.fieldPlaceholder}
-        className="h-14 rounded-xl bg-card px-4 text-lg tracking-[-0.01em] shadow-sm"
+        className="min-h-[104px] rounded-xl bg-card p-4 text-lg leading-snug tracking-[-0.01em] shadow-sm"
       />
 
       <div className="flex flex-col gap-2.5">

@@ -24,8 +24,8 @@ import { areaById, homeCardsInDisplayOrder } from '@/lib/fixtures';
  */
 export default function HomePage() {
   return (
-    <>
-      <div className="flex flex-col gap-5">
+    <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col gap-5">
         <div className="flex flex-col gap-1.5">
           <p className="text-xs uppercase tracking-widest text-muted-foreground/45">
             {copy.eyebrow}
@@ -58,6 +58,6 @@ export default function HomePage() {
           <Link href="/week">{copy.nav.week}</Link>
         </Button>
       </StickyFooter>
-    </>
+    </div>
   );
 }
