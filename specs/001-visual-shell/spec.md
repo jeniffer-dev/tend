@@ -564,8 +564,18 @@ relationships enforced, no rules applied.
   §"How FR-002, SC-004 and SC-010 are verified".
 - **SC-005**: No screen contains a word from the forbidden lexicon, an
   emoji, an exclamation mark, or an apology.
-- **SC-006**: Minutes appear only on Review, on the session clock, and on
-  Home's collapsed "Attended today" line — nowhere else.
+- **SC-006**: Minutes are **reported** only on Review, on the session clock,
+  and on Home's collapsed "Attended today" line — nowhere else. What this
+  protects is minutes as a figure about what happened, which is what would
+  undermine a rhythm counted in sessions.
+
+  **One approved string names a duration outside those three**, and it is an
+  exception rather than a breach: the Picker's primary action reads `Tend
+  for fifteen minutes`. That is the length of the session in the label of
+  the button that starts it, not a record of anything. It is listed here so
+  the spec and `tests/e2e/minutes.spec.ts` say the same thing; the test
+  carries the same single entry and asserts it is the only mention on that
+  screen. A second entry on that list means this criterion was wrong.
 - **SC-007**: The three session states are visually identical in layout and
   treatment, differing only in the clock string, the clock note and the note
   content.
