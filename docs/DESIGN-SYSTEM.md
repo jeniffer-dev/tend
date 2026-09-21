@@ -1,7 +1,7 @@
 # Design System — the CURRENT look
 
-**Version:** 1.6.0
-**Amended:** 2026-09-21 — selected controls in Area edit (§6)
+**Version:** 1.7.0
+**Amended:** 2026-09-21 — §6 restated as one selection rule
 **Status:** Active
 
 Extracted from the CURRENT codebase, not from memory: every value here was
@@ -323,56 +323,17 @@ Fading is the entire treatment. No strikethrough, no grey palette swap.
 filled with `var(--current-primary)`. No percentage label unless the
 number is the point.
 
-**Selected** → `border-foreground bg-foreground text-background` for a
-chip. High contrast, no color.
+**Selected** → inside an area, the control you are acting on takes that
+area's color; a control that belongs to no area stays colorless
+(`border-foreground bg-foreground text-background`). Examples: the selected
+task in the Picker, the row being dragged in Areas, the selected controls in
+Area edit — and Capture's area chips, which span areas and so take none.
 
-**Selected task in the Picker** → a `2px` border in **the area's own
-color**. Added in 1.3.0.
-
-The chip rule above is deliberately colorless, and for a chip that is
-right: a filter chip belongs to no area, so it has no color to borrow. A
-task does. Every task in the Picker belongs to the one area being tended,
-so the color is not chosen to mean *selected* — it is the color that task
-already carries everywhere else in the product, turned up to mark which one
-the session is about to be.
-
-`border-foreground` was the first build and it was read on a phone as too
-hard for this product. Black is the loudest thing this palette has, and
-spending it on a selection inside a calm screen is spending it in the wrong
-place.
-
-**This is the one place a brand color marks a state, and it is bounded on
-purpose.** §2's rule stands — color encodes the area, never a status — and
-this does not breach it, because the hue carries no judgement: it is the
-same hue whether the task is going well or badly, early or late, and there
-is no palette in which it could become a warning. What it encodes is
-*which area you are in*, applied to the row the primary action will act on.
-
-Two constraints make that bound real, and both are load-bearing:
-
-- The border is the area's color and never a fixed color. A hardcoded green
-  here would be exactly the status encoding §2 forbids.
-- Unselected rows carry the same `2px` border at `--border`, not `1px`, so
-  selecting a task changes the color and nothing about the geometry. A
-  border that grows on selection makes text reflow, and a row that moves
-  when you touch it does not read as calm.
-
-**Row being dragged in Areas** → the same `2px` border in the area's own
-color, and the same `2px` at `--border` at rest. Added in 1.5.0. The row
-under your hand takes its area's color, and a drag is the plainest case of
-acting on a row — `border-foreground` read as too hard here for exactly the
-reason it did in the Picker.
-
-**Selected control in Area edit** → the area's color as the fill, on the
-swatch, the rhythm and the On Home choice alike. Added in 1.6.0. The whole
-screen is one area, so its selected controls take that area's color — the
-one the swatch is set to at that moment, which changes as it is chosen.
-
-Three places, then: the selected task in the Picker, the row being dragged
-in Areas, and the selected controls in Area edit. What they share is a
-control belonging to exactly one area and marked as the one being acted on.
-A control standing for several areas at once has no one color to take. A
-fourth place is an amendment.
+Two constraints, both load-bearing. The color is read from the area and
+never hardcoded — a fixed green would be the status encoding §2 forbids.
+And selection changes color and fill, never geometry: borders keep their
+width in both states, because a row that moves when you touch it does not
+read as calm.
 
 **Motion** → `transition-colors` only. No entrance animations, no spring,
 no parallax. Honour `prefers-reduced-motion`.
