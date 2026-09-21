@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { AreaDot } from '@/components/area-dot';
 import { areas as copy } from '@/lib/copy';
 import { cn } from '@/lib/utils';
-import type { Area } from '@/lib/fixtures';
+import { areaColorHex, type Area } from '@/lib/fixtures';
 
 /**
  * One area on the Areas screen: its colour, its name, and the line stating
@@ -21,6 +21,13 @@ import type { Area } from '@/lib/fixtures';
  * No remove control either. Removal is started from Area edit — the screen
  * that is already about this one area — and decided here, in the
  * confirmation that replaces the row.
+ *
+ * A row being dragged takes a 2px border in its own area's colour (design
+ * system §6, added in 1.5.0) — the same rule as the selected task in the
+ * Picker: the row under your hand takes its area's colour. It is read from
+ * the area and never hardcoded, and rows carry the same 2px at `--border`
+ * at rest, so picking a row up changes the colour and nothing about the
+ * geometry.
  */
 export function AreaRow({
   area,
@@ -41,9 +48,10 @@ export function AreaRow({
     <div
       data-testid="area-row"
       data-area={area.id}
+      style={isDragging ? { borderColor: areaColorHex[area.color] } : undefined}
       className={cn(
-        'flex items-center gap-2.5 rounded-xl border border-border bg-card py-3.5 pl-4 pr-2 shadow-sm transition-colors',
-        isDragging && 'border-foreground'
+        'flex items-center gap-2.5 rounded-xl border-2 bg-card py-3.5 pl-4 pr-2 shadow-sm transition-colors',
+        isDragging ? 'border-transparent' : 'border-border'
       )}
     >
       <Link

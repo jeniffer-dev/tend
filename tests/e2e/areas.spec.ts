@@ -70,6 +70,71 @@ test.describe('Areas — what am I paying attention to?', () => {
     expect(await rowNames(page)).toEqual(['Health', 'Morning pages', 'Home', 'People', 'Money']);
   });
 
+  test('a row being dragged is bordered in its own area colour, 2px', async ({ page }) => {
+    // Two areas on purpose. One would pass against a hardcoded colour; two
+    // prove the border is read from the row's own area (design system §6).
+    // Selected by id, never by text: `hasText: 'Home'` also matches every
+    // row whose rhythm line reads "in Home daily".
+    for (const [id, area, expected] of [
+      ['morning-pages', 'Morning pages', 'rgb(252, 213, 129)'], // peak #FCD581
+      ['home', 'Home', 'rgb(173, 238, 227)'], //                  soft #ADEEE3
+    ]) {
+      await page.goto('/areas');
+      const handle = page.getByRole('button', { name: copy.reorderLabel(area) });
+      const box = (await handle.boundingBox())!;
+
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2 + 12);
+
+      // toHaveCSS polls, which matters here: the row carries
+      // `transition-colors`, so reading the computed style once catches the
+      // border mid-interpolation and returns a colour that is neither the
+      // resting one nor the area's. Polling also proves the transition
+      // settles on the right value rather than merely heading towards it.
+      const row = page.locator(`[data-area="${id}"]`);
+      await expect(row, `${area} did not take its own colour`).toHaveCSS(
+        'border-top-color',
+        expected
+      );
+      await expect(row).toHaveCSS('border-top-width', '2px');
+      await page.mouse.up();
+    }
+  });
+
+  test('picking a row up changes the colour and moves nothing', async ({ page }) => {
+    const rows = page.locator('[data-area]');
+    const geometryOf = () =>
+      rows.evaluateAll((els) =>
+        els.map((el) => {
+          const r = el.getBoundingClientRect();
+          return [Math.round(r.width), Math.round(r.height)];
+        })
+      );
+
+    const before = await geometryOf();
+    const handle = page.getByRole('button', { name: copy.reorderLabel('Health') });
+    const box = (await handle.boundingBox())!;
+
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2 + 6);
+    const during = await geometryOf();
+    await page.mouse.up();
+
+    expect(during, 'picking a row up reflowed the list').toEqual(before);
+  });
+
+  test('no row is bordered in the foreground colour at rest', async ({ page }) => {
+    const borders = await page
+      .locator('[data-area]')
+      .evaluateAll((els) => els.map((el) => getComputedStyle(el).borderTopColor));
+    for (const border of borders) {
+      // #212630, the ink. Too hard for a calm screen (design system §6).
+      expect(border).not.toBe('rgb(33, 38, 48)');
+    }
+  });
+
   test('the drag handle takes touch-action none so the page cannot scroll under it', async ({ page }) => {
     const touchAction = await page
       .getByRole('button', { name: copy.reorderLabel('Morning pages') })
