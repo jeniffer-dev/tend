@@ -1,7 +1,7 @@
 # Design System — the CURRENT look
 
-**Version:** 1.4.0
-**Amended:** 2026-09-18 — Textarea's third admitted use (§5)
+**Version:** 1.5.0
+**Amended:** 2026-09-21 — the dragged row in Areas (§6)
 **Status:** Active
 
 Extracted from the CURRENT codebase, not from memory: every value here was
@@ -357,9 +357,16 @@ Two constraints make that bound real, and both are load-bearing:
   border that grows on selection makes text reflow, and a row that moves
   when you touch it does not read as calm.
 
-Do not extend this to a second control without amending this section. The
-argument above is about task cards inside a single area's Picker, and it
-does not transfer to anything that spans areas.
+**Row being dragged in Areas** → the same `2px` border in the area's own
+color, and the same `2px` at `--border` at rest. Added in 1.5.0. The row
+under your hand takes its area's color, and a drag is the plainest case of
+acting on a row — `border-foreground` read as too hard here for exactly the
+reason it did in the Picker.
+
+Do not extend this to a third place without amending this section. What
+these two share is a single row that belongs to exactly one area and is
+briefly under the user's hand. A control standing for several areas at once
+has no one color to take.
 
 **Motion** → `transition-colors` only. No entrance animations, no spring,
 no parallax. Honour `prefers-reduced-motion`.
@@ -529,7 +536,7 @@ one copy goes stale, and the stale one gets built.
 | Decision | Where |
 |---|---|
 | Session clock, the one display size | §3 |
-| Selected task in the Picker, in the area's color | §6 |
+| The row under your hand takes its area's color | §6 |
 | Textarea's three admitted uses | §5 |
 | Base container 720px, single column | §4 |
 | No multi-column grids | §4 |
