@@ -1,7 +1,7 @@
 # Design System — the CURRENT look
 
-**Version:** 1.5.0
-**Amended:** 2026-09-21 — the dragged row in Areas (§6)
+**Version:** 1.6.0
+**Amended:** 2026-09-21 — selected controls in Area edit (§6)
 **Status:** Active
 
 Extracted from the CURRENT codebase, not from memory: every value here was
@@ -363,10 +363,16 @@ under your hand takes its area's color, and a drag is the plainest case of
 acting on a row — `border-foreground` read as too hard here for exactly the
 reason it did in the Picker.
 
-Do not extend this to a third place without amending this section. What
-these two share is a single row that belongs to exactly one area and is
-briefly under the user's hand. A control standing for several areas at once
-has no one color to take.
+**Selected control in Area edit** → the area's color as the fill, on the
+swatch, the rhythm and the On Home choice alike. Added in 1.6.0. The whole
+screen is one area, so its selected controls take that area's color — the
+one the swatch is set to at that moment, which changes as it is chosen.
+
+Three places, then: the selected task in the Picker, the row being dragged
+in Areas, and the selected controls in Area edit. What they share is a
+control belonging to exactly one area and marked as the one being acted on.
+A control standing for several areas at once has no one color to take. A
+fourth place is an amendment.
 
 **Motion** → `transition-colors` only. No entrance animations, no spring,
 no parallax. Honour `prefers-reduced-motion`.
@@ -536,7 +542,7 @@ one copy goes stale, and the stale one gets built.
 | Decision | Where |
 |---|---|
 | Session clock, the one display size | §3 |
-| The row under your hand takes its area's color | §6 |
+| What is selected or dragged takes its area's color | §6 |
 | Textarea's three admitted uses | §5 |
 | Base container 720px, single column | §4 |
 | No multi-column grids | §4 |
