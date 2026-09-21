@@ -27,7 +27,7 @@ export default function ReviewPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col gap-6">
+      <div className="flex flex-1 flex-col gap-6 pb-[var(--footer-h,9rem)]">
         <BackLink target={backForScreen('/review')} />
 
         <div className="flex flex-col gap-1.5">

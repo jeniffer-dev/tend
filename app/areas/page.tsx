@@ -35,7 +35,7 @@ export default async function AreasPage({
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col gap-5">
+      <div className="flex flex-1 flex-col gap-5 pb-[var(--footer-h,9rem)]">
         <BackLink target={backForAreas(from)} />
 
         <div className="flex flex-col gap-1.5">

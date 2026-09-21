@@ -21,7 +21,7 @@ import { areasHref, backForScreen } from '@/lib/routes';
 export default function WeekPage() {
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col gap-5">
+      <div className="flex flex-1 flex-col gap-5 pb-[var(--footer-h,9rem)]">
         <BackLink target={backForScreen('/week')} />
 
         <div className="flex flex-col gap-1.5">

@@ -23,17 +23,17 @@ export default async function PickerPage({ params }: { params: Promise<{ areaId:
   const tasks = weekListTasksForArea(area.id);
 
   return (
-    <div className="flex flex-1 flex-col gap-5">
-      <BackLink target={backForScreen('/tend/[areaId]')} />
+    <div className="flex flex-1 flex-col">
+      <PickerList tasks={tasks} scopeNote={copy.scopeNote(area.name)} color={area.color}>
+        <BackLink target={backForScreen('/tend/[areaId]')} />
 
-      <div className="flex flex-col gap-1.5">
-        <p className="text-xs uppercase tracking-widest text-muted-foreground/45">
-          {copy.eyebrow(area.name)}
-        </p>
-        <h1 className="text-2xl font-semibold tracking-tight">{copy.heading}</h1>
-      </div>
-
-      <PickerList tasks={tasks} scopeNote={copy.scopeNote(area.name)} color={area.color} />
+        <div className="flex flex-col gap-1.5">
+          <p className="text-xs uppercase tracking-widest text-muted-foreground/45">
+            {copy.eyebrow(area.name)}
+          </p>
+          <h1 className="text-2xl font-semibold tracking-tight">{copy.heading}</h1>
+        </div>
+      </PickerList>
     </div>
   );
 }

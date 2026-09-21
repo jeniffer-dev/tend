@@ -36,7 +36,7 @@ export default function FirstRunPage() {
     <div className="flex flex-1 flex-col">
       {/* Centred, as drawn: the screen has little on it and the invitation
           sits in the middle rather than pinned under the status bar. */}
-      <div className="flex flex-1 flex-col justify-center gap-6">
+      <div className="flex flex-1 flex-col justify-center gap-6 pb-[var(--footer-h,9rem)]">
         <div className="flex flex-col gap-2.5">
           <p className="text-xs uppercase tracking-widest text-muted-foreground/45">
             {copy.eyebrow}

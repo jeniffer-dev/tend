@@ -256,6 +256,52 @@ test.describe('Area edit — what is this area, and how often?', () => {
     await expect(page.getByRole('button', { name: areaEdit.onHomeOptions[1] })).toHaveAttribute('aria-pressed', 'false');
   });
 
+  test('what is selected takes the area colour, and follows the swatch', async ({ page }) => {
+    await page.goto('/areas/health');
+
+    const GREEN = 'rgb(100, 180, 147)'; // --current-primary #64B493
+    const ORANGE = 'rgb(245, 166, 91)'; // --current-load    #F5A65B
+
+    // Health's stored colour fills the rhythm and the On Home choice.
+    const rhythm = page.getByRole('button', { name: '3', exact: true });
+    const everyDay = page.getByRole('button', { name: areaEdit.onHomeOptions[0] });
+    await expect(rhythm).toHaveCSS('background-color', GREEN);
+    await expect(everyDay).toHaveCSS('background-color', GREEN);
+
+    // And the ink on it is the foreground, never white: these five are pale
+    // by design and white on them is unreadable.
+    await expect(rhythm).toHaveCSS('color', 'rgb(33, 38, 48)');
+
+    // Choosing a new swatch recolours the other controls with it — the
+    // colour is the chosen one, not the area's stored one.
+    await page.getByRole('button', { name: areaEdit.colorOptionLabels.load }).click();
+    await expect(rhythm).toHaveCSS('background-color', ORANGE);
+    await expect(everyDay).toHaveCSS('background-color', ORANGE);
+
+    // Nothing selected is black any more.
+    for (const control of [rhythm, everyDay]) {
+      await expect(control).not.toHaveCSS('background-color', 'rgb(33, 38, 48)');
+    }
+  });
+
+  test('selecting changes the colour and never the geometry', async ({ page }) => {
+    await page.goto('/areas/health');
+    const controls = page.locator('[aria-pressed]');
+
+    const geometryOf = () =>
+      controls.evaluateAll((els) =>
+        els.map((el) => {
+          const r = el.getBoundingClientRect();
+          return [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)];
+        })
+      );
+
+    const before = await geometryOf();
+    await page.getByRole('button', { name: '5', exact: true }).click();
+    await page.getByRole('button', { name: areaEdit.colorOptionLabels.soft }).click();
+    expect(await geometryOf(), 'a selection reflowed the form').toEqual(before);
+  });
+
   test('FR-012: tapping a control selects it and deselects the others', async ({ page }) => {
     await page.goto('/areas/health');
 

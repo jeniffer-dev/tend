@@ -39,45 +39,54 @@ export function PickerList({
   tasks,
   scopeNote,
   color,
+  children,
 }: {
   tasks: Task[];
   scopeNote: string;
   color: AreaColor;
+  /** The screen's back control and heading. They live inside the content
+   *  wrapper so the footer stays a sibling of it, which is what lets the
+   *  wrapper reserve the footer's height beneath itself. */
+  children?: React.ReactNode;
 }) {
   const [selectedId, setSelectedId] = useState(tasks[0]?.id ?? null);
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-3">
-        {tasks.map((task) => {
-          const isSelected = task.id === selectedId;
-          return (
-            <button
-              key={task.id}
-              type="button"
-              aria-pressed={isSelected}
-              onClick={() => setSelectedId(task.id)}
-              style={isSelected ? { borderColor: areaColorHex[color] } : undefined}
-              className={cn(
-                'flex w-full flex-col gap-2 rounded-xl border-2 bg-card p-5 text-left shadow-sm transition-colors',
-                isSelected ? 'border-transparent' : 'border-border hover:border-muted-foreground/40'
-              )}
-            >
-              <span className="text-base font-semibold tracking-tight">{task.title}</span>
-              <span className="flex flex-col gap-1">
-                <span className="text-xs uppercase tracking-widest text-muted-foreground/45">
-                  {copy.lastSessionLabel}
-                </span>
-                <span className="text-sm text-muted-foreground text-pretty">
-                  {task.lastSessionNote}
-                </span>
-              </span>
-            </button>
-          );
-        })}
-      </div>
+      <div className="flex flex-1 flex-col gap-5 pb-[var(--footer-h,9rem)]">
+        {children}
 
-      <p className="text-xs text-muted-foreground/50 text-pretty">{scopeNote}</p>
+        <div className="grid grid-cols-1 gap-3">
+          {tasks.map((task) => {
+            const isSelected = task.id === selectedId;
+            return (
+              <button
+                key={task.id}
+                type="button"
+                aria-pressed={isSelected}
+                onClick={() => setSelectedId(task.id)}
+                style={isSelected ? { borderColor: areaColorHex[color] } : undefined}
+                className={cn(
+                  'flex w-full flex-col gap-2 rounded-xl border-2 bg-card p-5 text-left shadow-sm transition-colors',
+                  isSelected ? 'border-transparent' : 'border-border hover:border-muted-foreground/40'
+                )}
+              >
+                <span className="text-base font-semibold tracking-tight">{task.title}</span>
+                <span className="flex flex-col gap-1">
+                  <span className="text-xs uppercase tracking-widest text-muted-foreground/45">
+                    {copy.lastSessionLabel}
+                  </span>
+                  <span className="text-sm text-muted-foreground text-pretty">
+                    {task.lastSessionNote}
+                  </span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <p className="text-xs text-muted-foreground/50 text-pretty">{scopeNote}</p>
+      </div>
 
       <StickyFooter className="flex flex-col gap-2">
         <Button asChild className="w-full">
