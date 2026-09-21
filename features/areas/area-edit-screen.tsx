@@ -63,7 +63,11 @@ export function AreaEditScreen({
       {areaId && (
         <Link
           href={`/areas?confirm=${areaId}`}
-          className="mb-5 inline-flex h-11 items-center justify-center self-start rounded-md px-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          /* -ml-2.5 cancels the px-2.5, so the text lines up with the rest
+             of the content while the tap target keeps its 44px — the same
+             pattern as BackLink and Home's review entry. Without it the
+             label sat 10px right of everything above it. */
+          className="-ml-2.5 mb-5 inline-flex h-11 items-center justify-center self-start rounded-md px-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
           {areasCopy.removalAction}
         </Link>

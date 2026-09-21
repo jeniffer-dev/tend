@@ -349,6 +349,35 @@ test.describe('Area edit — what is this area, and how often?', () => {
     await expect(page.getByTestId('screen')).not.toContainText('Delete');
   });
 
+  test('the removal link lines up with the rest of the content', async ({ page }) => {
+    await page.goto('/areas/health');
+
+    // Where the *text* starts, not where the box starts: a ghost control
+    // carries horizontal padding for its tap target, and without a matching
+    // negative margin its label sits indented from everything above it.
+    const textLeft = (starts: string) =>
+      page.evaluate((prefix) => {
+        for (const el of document.querySelectorAll('[data-testid="screen"] *')) {
+          if (el.children.length === 0 && el.textContent?.trim().startsWith(prefix)) {
+            const range = document.createRange();
+            range.selectNodeContents(el);
+            return Math.round(range.getBoundingClientRect().left);
+          }
+        }
+        return null;
+      }, starts);
+
+    const [eyebrow, note, remove] = await Promise.all([
+      textLeft('Area'),
+      textLeft(areaEdit.footerNote),
+      textLeft(areas.removalAction),
+    ]);
+
+    expect(eyebrow).not.toBeNull();
+    expect(remove, 'the removal link is indented from the content').toBe(eyebrow);
+    expect(note, 'the footer note is indented from the content').toBe(eyebrow);
+  });
+
   test('creating offers no removal — there is nothing yet to remove', async ({ page }) => {
     await page.goto('/areas/new');
     await expect(page.getByRole('link', { name: areas.removalAction })).toHaveCount(0);
