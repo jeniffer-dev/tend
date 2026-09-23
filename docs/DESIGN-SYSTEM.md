@@ -1,7 +1,7 @@
 # Design System — the CURRENT look
 
-**Version:** 1.7.0
-**Amended:** 2026-09-21 — §6 restated as one selection rule
+**Version:** 1.8.0
+**Amended:** 2026-09-23 — the empty-screen title role (§3)
 **Status:** Active
 
 Extracted from the CURRENT codebase, not from memory: every value here was
@@ -163,6 +163,7 @@ Enable ligatures on `body`: `font-feature-settings: "rlig" 1, "calt" 1;`
 | Fine print | `text-xs text-muted-foreground/50` | |
 | Micro | `text-[11px]` / `text-[10px]` | metadata only |
 | Session clock | `text-[clamp(3.25rem,19.5vw,4.75rem)] font-medium tracking-[-0.03em] leading-none tabular-nums` | one per app; see below |
+| Empty-screen title | `text-[30px] font-semibold tracking-[-0.025em] leading-[1.15]` | First run only; see below |
 
 `tracking-tight` on every heading. `tracking-widest` on every eyebrow.
 Nothing in between.
@@ -182,6 +183,15 @@ the content it introduces.
 
 Opacity is a real tier in this system. `text-muted-foreground` at `/45`,
 `/50`, `/55`, `/60` are distinct, intentional levels — not sloppiness.
+
+### The empty-screen title
+
+Added in 1.8.0, and used on First run alone. A screen with nothing on it
+but an invitation carries its heading larger than a page title, because
+`text-2xl` set against that much space reads as small rather than as calm.
+
+A second use is an amendment. What earns this size is a screen with no
+content to compete with — not importance, and not length.
 
 ### The session clock is the one display size
 
@@ -505,6 +515,7 @@ one copy goes stale, and the stale one gets built.
 | Session clock, the one display size | §3 |
 | What is selected or dragged takes its area's color | §6 |
 | Textarea's three admitted uses | §5 |
+| Empty-screen title, First run only | §3 |
 | Base container 720px, single column | §4 |
 | No multi-column grids | §4 |
 | Designed at 390px first | §4 |
