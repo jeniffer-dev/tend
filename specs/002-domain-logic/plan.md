@@ -175,8 +175,13 @@ read the clock?" a matter of memory rather than location.
 
 `features/` keeps its shape. The components 001 built take the same props
 they always did — a line, a treatment, a label — and those props now arrive
-derived instead of literal. That the components do not change is the
-clearest evidence 001's fixture rule did its job.
+derived instead of literal. That almost every component is rewired rather
+than rewritten is the clearest evidence 001's fixture rule did its job.
+
+Three change, and each for a reason the spec argues on the page rather than
+here: the Home card gains a fourth treatment, the Picker gains the
+consequence line, and the sticky footer's pre-hydration reservation is
+recalculated for the footer shape that line creates.
 
 ## Complexity Tracking
 

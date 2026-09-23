@@ -12,16 +12,23 @@ transition settled
 
 ## What this feature is
 
-The same ten screens, the same words, and nothing new on any of them. What
-changes is underneath: **every value a screen shows is derived from state,
-where feature 001 stored the finished sentence.**
+The same ten screens, answering the same ten questions. What changes is
+underneath: **every value a screen shows is derived from state, where
+feature 001 stored the finished sentence.**
 
 Feature 001 built `lib/fixtures.ts` so that `Week` could read
 `Three tasks on the list. Two sessions attended.` as a literal string. That
 was deliberate — it made "no business logic in components" impossible to
 fail by accident, and it left this feature's job visible. This feature
-replaces those literals with functions in `lib/`, and the components do not
-change.
+replaces those literals with functions in `lib/`, and the components mostly
+take the props they always took.
+
+**Two things are genuinely new, and both are argued rather than assumed.**
+Twenty-six strings for states 001 never reached — empty lists, a week with
+nothing in it, a session still running — and two elements that passed
+Article III's addition test in writing: Week's route to last week, and the
+Picker's line naming what starting here closes. No sentence 001 approved is
+reworded, and no screen changes the question it answers.
 
 State lives for as long as the browser session. Nothing is written to disk;
 persistence is feature 003.
