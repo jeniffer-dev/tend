@@ -166,6 +166,17 @@ in the way the session implies.
 5. **Given** a session started before midnight on Sunday, **When** it is
    closed after midnight on Monday, **Then** it counts toward the week that
    contained its start.
+6. **Given** a session running on one area, **When** the person opens
+   another area's Picker, **Then** the screen states which task is still
+   running and that starting here closes it, before the action and without
+   blocking it (FR-015c).
+7. **Given** that same state, **When** the person starts the session
+   anyway, **Then** the first session is recorded as progressed with the
+   minutes it ran and an empty note, the new one is running, and exactly
+   one session is open (FR-015c, FR-015d).
+8. **Given** a session running on an area, **When** the person opens that
+   same area's Picker and picks another task, **Then** no consequence line
+   is shown, the session stays open and only its task changes (FR-015).
 
 ---
 
@@ -533,7 +544,19 @@ renders it.
 - Subtasks, recurring tasks, tags, filters, notifications, statistics,
   charts, multi-user, sharing, sync, calendar integration — Constitution
   Article III's v1 exclusions.
-- Any new screen, and any new element on an existing screen.
+- Any new screen.
+- Any element that has not passed Article III's addition test **in
+  writing**. Two have, and each is argued in its own section rather than
+  exempted: Week's `Look back on last week`, and the Picker's line naming
+  what starting here closes. An element arrives by being argued, not by
+  being useful, and "it might help" remains a rejection.
+
+  This bullet used to read "and any new element on an existing screen",
+  which the feature contradicted twice while claiming to be bound by it. A
+  rule the work does not follow is worse than no rule: it teaches the reader
+  that the list is decoration. The bar has not moved — it is the addition
+  test, which is what Article III actually requires — and it is now stated
+  as the bar the feature is really held to.
 
 ## Screen copy — the strings 002 adds
 
@@ -619,6 +642,20 @@ lines rather than becoming `Look up the bike shop…`. Shortening it to fit
 would name the task badly at exactly the moment naming it is the point.
 The area the session runs in is not named — what is about to close is a
 session on a task, and the task is what identifies it.
+
+**The line sits inside the sticky bar, directly above the action.** It is
+the consequence of that button and it belongs beside it, in the pattern the
+design system already has for a message inside the sticky bar (Article IV).
+Putting it in the page flow would leave it above the fold while the button
+sits at the thumb, which is the one arrangement that lets someone act
+without reading it.
+
+That makes a **fourth footer shape** — a line, the action, the existing note
+— and it is the tallest of the four. `components/sticky-footer.tsx`
+publishes its measured height and the nine screens reserve it, but the
+pre-hydration fallback is a constant documented as "the tallest footer",
+and it would now be short. It is recalculated in T025b, at 320px, where the
+line wraps to three lines.
 
 **The line does not appear when the session is running in this same area.**
 Picking another task there switches the task inside the open session and

@@ -149,6 +149,16 @@ color (design system §6). The treatment is named here because "selected on
 arrival" is only checkable if selection can be seen. The color is the
 area's and never a fixed one.
 
+> **Extended by feature 002 (2026-09-23).** The Picker gains one element:
+> a line inside the sticky bar, directly above the action, naming the task
+> whose session is still running and stating that starting here closes it.
+> It appears only when that session is on a task in **another** area; in
+> this area, picking another task switches it inside the open session and
+> the footer note already says so. It states a consequence and gates
+> nothing — the action keeps its words and its place. Argued through
+> Article III's addition test in 002 spec.md §"Why the Picker states what
+> starting here closes", not exempted from it.
+
 **Must not have**: tasks from another area, inbox items, a way to add a
 task. Capture is elsewhere.
 

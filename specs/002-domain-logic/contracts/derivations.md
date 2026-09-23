@@ -99,7 +99,11 @@ this same area produces nothing: picking another task there switches the
 task inside the open session (FR-015), and the 001 footer note already says
 so.
 
-It sits above the primary action and gates nothing. The action keeps its
+It sits **inside the sticky bar, directly above the action** — the
+consequence beside the button it belongs to, in the design system's pattern
+for a message inside the bar. This is the footer's fourth and tallest shape,
+which is why the pre-hydration reservation is recalculated (T025b). It gates
+nothing. The action keeps its
 approved words, both ways forward stay available, and no confirmation step
 is added (FR-012, FR-015c). The Picker is handed the finished sentence or
 `null`, never the running session to phrase itself from.
@@ -189,7 +193,9 @@ no figure at all — a zero would be a number where there is no measurement.
 3. Every user-facing string comes from `lib/copy.ts`. Derivations choose
    between templates and fill them; they never concatenate prose.
 4. 001's `contracts/screens.md` holds unchanged — same screens, same routes,
-   same back rule, same ordering, and no new element except Week's
-   `Look back on last week`.
+   same back rule, same ordering. Two elements are added, each argued
+   through Article III's addition test in spec.md rather than exempted from
+   it: Week's `Look back on last week`, and the Picker's line naming what
+   starting here closes. Both are recorded as additions in 001's contract.
 5. Given `?seed=001`, every screen renders 001's approved copy character for
    character (SC-001).
