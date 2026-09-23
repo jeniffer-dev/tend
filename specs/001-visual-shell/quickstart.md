@@ -13,10 +13,13 @@ has no back end and makes no network call after the fonts load.
 
 ```bash
 npm install
-npm run dev -- --host
+npm run dev
 ```
 
-`--host` prints a LAN address. Open that on a phone. Per Article VII the
+`next dev` binds `0.0.0.0` already and prints a Network address beside the
+Local one. Open that on a phone. (There is no `--host` flag; the option is
+`-H, --hostname`, and it is not needed because the default is what you
+want.) Per Article VII the
 criteria are verified "on a real device or device emulator", and the README
 is right that the real device is more honest — text rendering, tap target
 comfort and thumb reach do not survive the DevTools emulator faithfully.
@@ -59,11 +62,17 @@ clock string of a different length pushing something.
 Particularly `?state=past`. The clock reads `+17:04` and the treatment is
 identical to running. Article V and FR-006.
 
-### Minutes appear in exactly three places
+### Minutes are reported in exactly three places
 
 `/review`, the session clock, and Home's `Attended today, 15 minutes`.
 Anywhere else is a defect against SC-006 — most likely on `/week`, which is
 the screen most tempted by them.
+
+**One approved string names a duration outside those three** and is not a
+defect: the Picker's `Tend for fifteen minutes`. It is the length of the
+session in the label of the button that starts it, not a figure about what
+happened. spec.md §SC-006 records the exception, and
+`tests/e2e/minutes.spec.ts` carries the same single entry.
 
 ### Every screen answers its one question with nothing else on it
 
@@ -96,7 +105,7 @@ control is fine on the design width and too small on the narrow one.
 | `tests/e2e/first-run.spec.ts` | FR-009, FR-032 — no suggested areas, and the route to a rootless Areas |
 | `tests/e2e/dimensions.spec.ts` | FR-007, FR-008, SC-002, SC-003 — touch targets, horizontal overflow, clipping, overlap |
 | `tests/e2e/navigation.spec.ts` | FR-001, FR-028–FR-033, SC-011 — walks `lib/routes.ts`, asserts no dead ends and the conditional back rule |
-| `tests/e2e/minutes.spec.ts` | SC-006 — minutes appear on three screens and nowhere else |
+| `tests/e2e/minutes.spec.ts` | SC-006 — minutes are reported on three screens and nowhere else, with the Picker's duration named as the one exception |
 | `tests/e2e/motion.spec.ts` | Article V — only color transitions, and none at all under reduced motion |
 | `tests/e2e/persistence.spec.ts` | FR-003, SC-008 — a reload returns every screen to fixture state; no storage API is touched |
 | `tests/e2e/no-pressure.spec.ts` | FR-005 — no percentage, no progress element, no streak or badge on any route |

@@ -180,8 +180,10 @@ the reflection ritual with no other screen involved.
 3. **Given** the Review screen, **When** the person reads it, **Then**
    Attended and Unattended appear as two labelled sections, Attended first.
 4. **Given** the Review screen, **When** the person reads an attended area,
-   **Then** minutes appear there as a plain figure, and this is the only
-   screen other than the session clock where minutes appear.
+   **Then** minutes appear there as a plain figure. Review, the session
+   clock and Home's collapsed attended line are the only places minutes are
+   reported; see SC-006, which also records the one approved duration named
+   outside them.
 5. **Given** the Review screen, **When** the person reads the unattended
    area, **Then** it is described as unattended and no word from the
    forbidden lexicon (overdue, missed, failed, behind) appears anywhere.
