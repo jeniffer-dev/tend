@@ -1,8 +1,8 @@
 # Tend — Constitution
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 **Ratified:** 2026-09-07
-**Last amended:** 2026-09-09
+**Last amended:** 2026-09-18
 **Status:** Active
 
 These are the immutable principles that govern how specifications become
@@ -188,9 +188,26 @@ scrolls its own content horizontally hides exactly that. Hand-rolling is
 worse than adopting the shadcn/ui primitive: a bare `<textarea>` inherits
 none of the `--input` border, `--ring` focus treatment or `text-sm` body
 size, so every use site would re-declare them and drift. Its styling
-mirrors the Input's by construction (design system §5). It is admitted for
-prose the user will re-read, and for nothing else; a single line of text
-still belongs in an Input.
+mirrors the Input's by construction (design system §5).
+
+**Where Textarea is admitted (amended 1.2.0).** Three cases, and no others:
+
+1. `Task.notes` — prose the user will re-read.
+2. `Session.progress_note` — prose the user will re-read.
+3. **Capture's field** — something the user has just remembered and needs
+   room to put down, even though they will not re-read it.
+
+The third case was added after the first build of Capture used an `Input`
+on the strength of the old wording. That wording asked the wrong question.
+The size of a field is not only about how the text is read later; it is
+also about what it invites while it is being written. Capture exists to get
+a thing out of someone's head, and a one-line box makes them edit it down
+before it is even out. The approved design draws four rows, and it draws
+them for this reason.
+
+A single line of text still belongs in an Input. What admits a Textarea is
+prose to re-read **or** a thought that needs room to land — not length
+alone, and not decoration. A fourth case is an amendment.
 
 ---
 

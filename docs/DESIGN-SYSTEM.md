@@ -1,7 +1,7 @@
 # Design System — the CURRENT look
 
-**Version:** 1.1.0
-**Amended:** 2026-09-09 — adopted for Tend
+**Version:** 1.8.0
+**Amended:** 2026-09-23 — the empty-screen title role (§3)
 **Status:** Active
 
 Extracted from the CURRENT codebase, not from memory: every value here was
@@ -162,6 +162,8 @@ Enable ligatures on `body`: `font-feature-settings: "rlig" 1, "calt" 1;`
 | Eyebrow | `text-xs uppercase tracking-widest text-muted-foreground/45` | see below |
 | Fine print | `text-xs text-muted-foreground/50` | |
 | Micro | `text-[11px]` / `text-[10px]` | metadata only |
+| Session clock | `text-[clamp(3.25rem,19.5vw,4.75rem)] font-medium tracking-[-0.03em] leading-none tabular-nums` | one per app; see below |
+| Empty-screen title | `text-[30px] font-semibold tracking-[-0.025em] leading-[1.15]` | First run only; see below |
 
 `tracking-tight` on every heading. `tracking-widest` on every eyebrow.
 Nothing in between.
@@ -181,6 +183,40 @@ the content it introduces.
 
 Opacity is a real tier in this system. `text-muted-foreground` at `/45`,
 `/50`, `/55`, `/60` are distinct, intentional levels — not sloppiness.
+
+### The empty-screen title
+
+Added in 1.8.0, and used on First run alone. A screen with nothing on it
+but an invitation carries its heading larger than a page title, because
+`text-2xl` set against that much space reads as small rather than as calm.
+
+A second use is an amendment. What earns this size is a screen with no
+content to compete with — not importance, and not length.
+
+### The session clock is the one display size
+
+Added in 1.2.0. The scale above stops at `text-2xl` because it was
+extracted from an app whose largest type was a page title. Tend has one
+element that has to be legible at arm's length rather than at reading
+distance — the session clock — and nothing else in the product does.
+
+`4.75rem` is 76px, the size the approved design draws it at, and it is the
+maximum. The `clamp` exists for one reason: at 320px a six-character clock
+(`+17:04`) set at 76px is wider than the card it sits in, and clipping the
+clock is the one failure the session screen cannot survive. `19.5vw`
+reaches exactly 76px at the 390px design width, so the fluid middle term
+never applies above it; below 390px the clock shrinks rather than clips.
+
+`tabular-nums` is load-bearing, not decoration: without it the digits
+change width as the time changes and the clock jitters in place.
+
+**This is a display size, not a heading.** It takes `font-medium`, not
+`font-semibold`, and it carries no color of its own — Article V forbids
+the clock turning red or pulsing as time runs out, and the surest way to
+honour that is for the clock to have exactly one treatment in every state.
+
+Adding a second use of this row is a design system change, not a judgement
+call at the use site.
 
 ---
 
@@ -267,8 +303,10 @@ control. Grows with `rows`, never with a drag handle: `resize-none`. For
 the muted inline variant, mirror the Input's:
 `border-transparent bg-muted px-2 text-xs`.
 
-Reach for it only where the content is genuinely prose the user will
-re-read later. A single line of text belongs in an Input.
+Admitted in exactly three places: task notes, progress notes, and
+Capture's field. The test is prose to re-read **or** a thought that needs
+room to land — see Constitution Article VI. A single line still belongs in
+an Input, and a fourth use is an amendment.
 
 **Tabs** — for switching views inside a page, never for primary nav.
 
@@ -295,8 +333,17 @@ Fading is the entire treatment. No strikethrough, no grey palette swap.
 filled with `var(--current-primary)`. No percentage label unless the
 number is the point.
 
-**Selected** → `border-foreground bg-foreground text-background` for a
-chip. High contrast, no color.
+**Selected** → inside an area, the control you are acting on takes that
+area's color; a control that belongs to no area stays colorless
+(`border-foreground bg-foreground text-background`). Examples: the selected
+task in the Picker, the row being dragged in Areas, the selected controls in
+Area edit — and Capture's area chips, which span areas and so take none.
+
+Two constraints, both load-bearing. The color is read from the area and
+never hardcoded — a fixed green would be the status encoding §2 forbids.
+And selection changes color and fill, never geometry: borders keep their
+width in both states, because a row that moves when you touch it does not
+read as calm.
 
 **Motion** → `transition-colors` only. No entrance animations, no spring,
 no parallax. Honour `prefers-reduced-motion`.
@@ -465,6 +512,10 @@ one copy goes stale, and the stale one gets built.
 
 | Decision | Where |
 |---|---|
+| Session clock, the one display size | §3 |
+| What is selected or dragged takes its area's color | §6 |
+| Textarea's three admitted uses | §5 |
+| Empty-screen title, First run only | §3 |
 | Base container 720px, single column | §4 |
 | No multi-column grids | §4 |
 | Designed at 390px first | §4 |

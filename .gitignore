@@ -8,3 +8,9 @@ dist/
 *.log
 .vercel
 .claude/settings.local.json
+next-env.d.ts
+playwright-report/
+test-results/
+.playwright/
+*.tsbuildinfo
+.next-test/

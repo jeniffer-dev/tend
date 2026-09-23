@@ -49,6 +49,14 @@ line on Home.
 This is a change from `docs/PRODUCT-SPEC.md`, which types the budget as
 `weekly_budget_minutes`. See Assumptions.
 
+## Clarifications
+
+### Session 2026-09-09
+
+- Q: When someone is on a screen that is not Home, how do they get back — and how do they reach Areas in the first place? → A: Areas is reached through the two rhythm links already drawn (`Change the rhythm` on Week, `Set this week's rhythm` on Review). Home's bottom navigation stays as approved. Every non-Home screen returns to the screen that opened it; Home is the root and has no back control.
+- Q: Is Areas reachable from First run, when Week and Review have nothing to show? → A: No — the edge was missing. Resolved: First run's `Name your first area` opens Area edit with an empty name, and leaving it lands on Areas. Areas reached this way is a root and shows no back control, because First run is a state that no longer exists once an area is named.
+- Q: What does Area edit look like when creating an area rather than editing one? → A: The design draws only the editing state. The empty state reuses the same screen with the name field empty, and takes the defaults the design's own prototype carries: rhythm 3, On Home `Every day`, and the fifth palette color preselected.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Sit down and tend something (Priority: P1)
@@ -172,8 +180,10 @@ the reflection ritual with no other screen involved.
 3. **Given** the Review screen, **When** the person reads it, **Then**
    Attended and Unattended appear as two labelled sections, Attended first.
 4. **Given** the Review screen, **When** the person reads an attended area,
-   **Then** minutes appear there as a plain figure, and this is the only
-   screen other than the session clock where minutes appear.
+   **Then** minutes appear there as a plain figure. Review, the session
+   clock and Home's collapsed attended line are the only places minutes are
+   reported; see SC-006, which also records the one approved duration named
+   outside them.
 5. **Given** the Review screen, **When** the person reads the unattended
    area, **Then** it is described as unattended and no word from the
    forbidden lexicon (overdue, missed, failed, behind) appears anywhere.
@@ -200,6 +210,11 @@ screen; it is testable entirely on its own.
    exclamation mark and no emoji.
 2. **Given** the First run screen, **When** the person looks for suggested
    or sample areas, **Then** none are offered, and the screen says so.
+3. **Given** the First run screen, **When** the person taps `Name your first
+   area`, **Then** Area edit opens with an empty name field, rhythm 3 and
+   On Home set to `Every day`.
+4. **Given** Area edit was opened from First run, **When** the person leaves
+   it, **Then** they land on Areas, and Areas shows no back control.
 
 ---
 
@@ -226,6 +241,13 @@ screen; it is testable entirely on its own.
   ellipsis, and the row grows to fit.
 - **A reload mid-flow.** Everything returns to the fixture state. This is
   expected and is not an error; no screen claims anything was saved.
+- **The very first area.** From First run there is no Week and no Review to
+  pass through, so `Name your first area` opens the empty Area edit
+  directly and lands on Areas afterwards. Areas shows no back control in
+  this case — there is nowhere behind it to go.
+- **Areas opened from two different places.** Reached from Week or Review it
+  returns there; reached from First run it is a root. The screen is the
+  same either way; only the back control differs.
 
 ## Requirements *(mandatory)*
 
@@ -237,7 +259,8 @@ screen; it is testable entirely on its own.
   another screen by tapping, with no dead ends.
 - **FR-002**: The system MUST derive every displayed value from a hardcoded
   fixture. No screen may compute a duration, a total, a percentage or a
-  remaining count at render time.
+  remaining count at render time. **Verified by code review, not by test** —
+  see §"How FR-002, FR-025, SC-004, SC-009 and SC-010 are verified".
 - **FR-003**: The system MUST NOT persist anything. A reload returns every
   screen to its fixture state.
 - **FR-004**: The session clock MUST be a static display of the fixture's
@@ -268,7 +291,10 @@ screen; it is testable entirely on its own.
   selected.
 - **FR-013**: **Home** MUST show the day's areas in the order set on the
   Areas screen and nothing else. The inbox, the week list and history are
-  reachable only through the bottom navigation.
+  reachable only through the bottom navigation. The order set on the Areas
+  screen governs *within* a treatment group; see **FR-013a**
+  (`contracts/screens.md` §`/`) for where an area already attended today
+  sits relative to the areas still to be tended.
 - **FR-014**: **Home** MUST render an area in one of three treatments: to be
   tended (solid Tend button), past its rhythm (outline Tend button plus the
   copy saying so), or already attended today (collapsed to one line, no
@@ -300,11 +326,29 @@ screen; it is testable entirely on its own.
 - **FR-024**: **Review** MUST describe an unattended area as a fact about
   the week and not about the person.
 
+#### Navigation
+
+- **FR-028**: Every screen other than Home MUST return to the screen that
+  opened it. Home is the root and MUST NOT show a back control.
+- **FR-029**: Areas MUST be reachable from Week's `Change the rhythm` and
+  from Review's `Set this week's rhythm`. Home's bottom navigation MUST
+  remain `Capture · Inbox · Week` and MUST NOT gain an Areas entry.
+- **FR-030**: Area edit MUST return to Areas. Areas MUST return to whichever
+  screen opened it — Week, Review, or First run.
+- **FR-031**: When Areas was reached from First run, it MUST show no back
+  control and MUST behave as a root, because First run describes a state
+  that no longer exists once an area has been named.
+- **FR-032**: First run's `Name your first area` MUST open Area edit with an
+  empty name field. Leaving that screen MUST land on Areas.
+- **FR-033**: Areas' `New area` MUST open the same empty Area edit as
+  FR-032.
+
 #### Copy
 
 - **FR-025**: Every user-facing string MUST match the approved copy in
   §"Screen copy" below, character for character. Copy is a requirement of
-  this feature, not an implementation choice.
+  this feature, not an implementation choice. **Verified by the parser diff
+  against §"Screen copy", not by test** — see §"How FR-002, FR-025, SC-004, SC-009 and SC-010 are verified".
 - **FR-026**: No screen may use a word from the forbidden lexicon
   (Constitution Article II): start task, timer, pomodoro, category, bucket,
   project, overdue, missed, failed, behind, streak.
@@ -314,6 +358,16 @@ screen; it is testable entirely on its own.
 ### Screen copy *(verbatim — transcribed from `docs/design/Tend.dc.html`)*
 
 Strings are reproduced exactly, including em dashes (—) and middots (·).
+
+**The handoff contains more than this feature builds.** As of the Round 2
+update (2026-09-16) `docs/design/Tend.dc.html` holds eighteen screens. The
+twelve that matter here are First run, Areas, Area edit, Home, Picker,
+Session in its three states, Capture, Inbox, Week and Review. The other
+eight — Reminder, Not now (first and fourth time), Set a reminder, Review
+postponed (with and without postponed tasks), Home postponed and Week
+postponed — belong to a future reminders feature and are **out of scope**.
+Do not build them, and do not take copy from them. Their open notes live in
+`docs/PRODUCT-SPEC.md` §8.
 
 #### 1. First run
 
@@ -351,6 +405,7 @@ Strings are reproduced exactly, including em dashes (—) and middots (·).
 | Eyebrow | `Area` |
 | Top action | `Back to areas` |
 | Field label | `Name` |
+| Field value (editing an area) | `Morning pages` |
 | Field placeholder | `Morning pages` |
 | Section label | `Color` |
 | Section note | `The color marks the area wherever it appears. It carries no meaning of its own.` |
@@ -362,14 +417,27 @@ Strings are reproduced exactly, including em dashes (—) and middots (·).
 | Section note | `Either way it stays on the week list. This only decides whether it waits for you on Home.` |
 | Footer note | `Changes apply as you make them.` |
 
+**Editing vs. creating.** The design draws only the editing state: the name
+field carries the value `Morning pages`, not just the placeholder. The
+creating state is the same screen with the name field empty and the
+placeholder showing. Its defaults are taken from the design's own
+prototype rather than invented: rhythm **3**, On Home **`Every day`**, and
+the fifth palette color preselected. All other copy is identical.
+
 #### 4. Home
+
+Two strings were cut by Article III's addition test (T048, 2026-09-21):
+Health's `Two sessions this week.` here, and the Picker's `Last session`
+row label below. Both survived removal — the screen still answered its one
+question without them — so both came out. Counting sessions is Week's work;
+on Home it read as a scoreboard.
 
 | Role | String |
 |---|---|
 | Eyebrow | `Tending today` |
 | Heading | `Sunday` |
 | Review entry | `The week closes tonight. Look back on it.` |
-| Area — to tend | `Health` / `Two sessions this week. Last attended Monday.` / action `Tend` |
+| Area — to tend | `Health` / `Last attended Monday.` / action `Tend` |
 | Area — to tend | `Morning pages` / `Last attended Thursday.` / action `Tend` |
 | Area — past rhythm | `Money` / `Past the two sessions you set for this week. Tend it anyway if it is what you want.` / action `Tend` (outline) |
 | Area — attended | `Home` / `Attended today, 15 minutes` (no action) |
@@ -382,9 +450,9 @@ Strings are reproduced exactly, including em dashes (—) and middots (·).
 |---|---|
 | Eyebrow | `Health · this week` |
 | Heading | `Pick one thing` |
-| Task 1 | `Book the blood test` / `Last session` / `Found the lab. Need the referral number from the clinic.` |
-| Task 2 | `Refill the prescription` / `Last session` / `Not attended yet.` |
-| Task 3 | `Walk three mornings` / `Last session` / `Two mornings so far. Thursday is open.` |
+| Task 1 | `Book the blood test` / `Found the lab. Need the referral number from the clinic.` |
+| Task 2 | `Refill the prescription` / `Not attended yet.` |
+| Task 3 | `Walk three mornings` / `Two mornings so far. Thursday is open.` |
 | Scope note | `Only what you put on the week list for Health shows here. Anything captured since sits in the inbox.` |
 | Primary action | `Tend for fifteen minutes` |
 | Footer note | `You can switch to another task inside the session.` |
@@ -501,11 +569,22 @@ relationships enforced, no rules applied.
 - **SC-003**: Every tappable control measures at least 44x44px at both
   widths.
 - **SC-004**: Every user-facing string on every screen matches the approved
-  copy character for character.
+  copy character for character. **Verified by review, not by test** — see
+  §"How FR-002, FR-025, SC-004, SC-009 and SC-010 are verified".
 - **SC-005**: No screen contains a word from the forbidden lexicon, an
   emoji, an exclamation mark, or an apology.
-- **SC-006**: Minutes appear only on Review, on the session clock, and on
-  Home's collapsed "Attended today" line — nowhere else.
+- **SC-006**: Minutes are **reported** only on Review, on the session clock,
+  and on Home's collapsed "Attended today" line — nowhere else. What this
+  protects is minutes as a figure about what happened, which is what would
+  undermine a rhythm counted in sessions.
+
+  **One approved string names a duration outside those three**, and it is an
+  exception rather than a breach: the Picker's primary action reads `Tend
+  for fifteen minutes`. That is the length of the session in the label of
+  the button that starts it, not a record of anything. It is listed here so
+  the spec and `tests/e2e/minutes.spec.ts` say the same thing; the test
+  carries the same single entry and asserts it is the only mention on that
+  screen. A second entry on that list means this criterion was wrong.
 - **SC-007**: The three session states are visually identical in layout and
   treatment, differing only in the clock string, the clock note and the note
   content.
@@ -513,9 +592,84 @@ relationships enforced, no rules applied.
   screen claims that anything was saved.
 - **SC-009**: Each of the ten screens answers its stated question with
   nothing else on it — verified by removing any element and confirming the
-  question would no longer be answered.
+  question would no longer be answered. **Verified by T048's addition test,
+  not by test code** — see §"How FR-002, FR-025, SC-004, SC-009 and SC-010 are verified".
 - **SC-010**: A person shown Home on a phone, without instruction, taps an
-  area's Tend button as their first action.
+  area's Tend button as their first action. **Verified by observation, not
+  by test** — see §"How FR-002, FR-025, SC-004, SC-009 and SC-010 are verified".
+- **SC-011**: Every screen can be left without using the browser's back
+  button, and every screen is reachable from First run or from Home in at
+  most three taps.
+
+## How FR-002, FR-025, SC-004, SC-009 and SC-010 are verified
+
+Article VII requires every acceptance criterion to have at least one test
+naming it. Five items here cannot be satisfied that way, and saying so is
+better than writing a test that only appears to check them.
+
+Each is verified by something, and that evidence is named below. An item
+that reaches this list without evidence is an item nobody checked.
+
+**FR-002 — nothing is computed at render time.** This is a property of how
+the code is written, not of what it renders, so no assertion against a
+running page can establish it. It is enforced by construction: `lib/fixtures.ts`
+stores the displayed string rather than the inputs a component would reduce
+(data-model.md §"The rule that governs every shape below"), so there is
+nothing in a fixture for a component to compute *from*. **FR-002 is verified
+by code review** against that rule. `tests/e2e/no-pressure.spec.ts` catches
+the most likely symptom — a percentage reaching the screen — but the
+requirement itself is upheld by the fixture shape.
+
+**SC-004 — copy matches character for character.** `lib/copy.ts` *is* the
+transcription of the approved copy, so a test comparing the two compares a
+file against itself and proves nothing. Extracting the strings from
+`docs/design/Tend.dc.html` at test time was considered and rejected: the
+design file carries three strings this spec has deliberately overruled
+(clarifications Q1, Q2, Q3), so the test would need a documented exception
+list, and an exception list is where such a test rots.
+
+The transcription was made with a parser rather than by eye, and diffed
+against the Round 2 handoff on 2026-09-16 with zero differences across all
+twelve artboards. **SC-004 is verified by that review.** What a test *can*
+check, and does, is that the strings obey the rules: `tests/unit/copy.test.ts`
+covers the lexicon, emoji and punctuation constraints (FR-026, FR-027,
+SC-005).
+
+If this recurs in feature 002, the better answer is to generate `lib/copy.ts`
+from the spec's copy tables so the spec becomes the machine-readable source.
+
+**FR-025 — every user-facing string matches the approved copy.** This is
+SC-004's requirement stated as an obligation on the build rather than as an
+outcome, so it is unverifiable by test for exactly the same reason and is
+listed here beside it.
+
+**FR-025 is verified by the parser diff**, run against §"Screen copy" rather
+than by eye: the section's table cells are extracted and each string is
+searched for in `lib/copy.ts` and `lib/fixtures.ts`, with the area-name
+templates resolved before comparison. It reported **106 of 106 strings
+present** on its last run, after T048 removed `Last session` and the
+Picker's count dropped the total from 107. A string deleted from the spec
+and left in the code, or the reverse, fails it.
+
+**SC-009 — each screen answers its question with nothing else on it.** The
+check is to remove an element and ask whether the screen's question still
+has an answer; anything that survives removal comes out. No assertion can
+make that judgement, because "does this element serve the question" is the
+judgement itself.
+
+**SC-009 is verified by T048**, run over all ten screens on 2026-09-21. It
+took two elements off: Home's `Two sessions this week.` and the Picker's
+`Last session` row label. Both removals are recorded in §"Screen copy" and
+each is held in place by a test named for T048, so the screens cannot drift
+back. A run of T048 that removes nothing is a result, not a formality — but
+a feature that never runs it has not met SC-009.
+
+**SC-010 — an unprompted person taps Tend first.** This is a usability
+observation about a real person, not an assertion about the build. It is
+recorded because it is the truest statement of whether Home works, and it is
+verified by watching someone open the app. SC-001 (two taps to a session)
+and SC-009 (each screen answers its question with nothing else) carry the
+buildable half of the same intent and both have tests.
 
 ## Assumptions
 
@@ -539,10 +693,13 @@ relationships enforced, no rules applied.
 - **Review's week is "Week of 7 September"**, matching the fixture. Since
   the week starts Monday (product spec §4.4, as amended 2026-09-09) and
   7 September 2026 is a Monday, the fixture is consistent with that rule.
-- **Navigation between screens is not specified in the design.** The bottom
-  navigation (Capture, Inbox, Week) is drawn on Home only. This feature
-  assumes it appears on Home and that the other screens return to where
-  they were opened from.
+- **Navigation is not drawn in the design and was decided in clarification.**
+  The design file contains no links between screens at all. The topology is
+  now specified in FR-028 through FR-033 rather than assumed.
+- **The empty Area edit state is not drawn.** The design's only Area edit is
+  prefilled with `Morning pages` as a value. Its creating-state defaults
+  come from the prototype script embedded in the same design file — the
+  designer's own values — not from a fresh judgement call.
 - **Testing at 320px is additive.** The constitution requires 390px
   verification; 320px was requested for this feature and is treated as a
   second required width, not a replacement.
