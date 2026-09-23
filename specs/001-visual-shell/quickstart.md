@@ -111,9 +111,11 @@ control is fine on the design width and too small on the narrow one.
 | `tests/e2e/no-pressure.spec.ts` | FR-005 — no percentage, no progress element, no streak or badge on any route |
 
 Every acceptance criterion in `spec.md` is named by at least one test, per
-Article VII — except FR-002, SC-004 and SC-010, which are verified by code
-review, by review and by observation respectively. spec.md §"How FR-002,
-SC-004 and SC-010 are verified" explains why a test for any of the three
+Article VII — except five, each verified by something else and named with
+its evidence: FR-002 by code review, FR-025 by the parser diff against
+§"Screen copy", SC-004 by that same review, SC-009 by T048's addition test,
+and SC-010 by watching someone open the app. spec.md §"How FR-002, FR-025,
+SC-004, SC-009 and SC-010 are verified" explains why a test for any of them
 would only appear to check it.
 
 ## What "done" looks like

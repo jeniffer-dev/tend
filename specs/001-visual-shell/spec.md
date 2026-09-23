@@ -260,7 +260,7 @@ screen; it is testable entirely on its own.
 - **FR-002**: The system MUST derive every displayed value from a hardcoded
   fixture. No screen may compute a duration, a total, a percentage or a
   remaining count at render time. **Verified by code review, not by test** —
-  see §"How FR-002, SC-004 and SC-010 are verified".
+  see §"How FR-002, FR-025, SC-004, SC-009 and SC-010 are verified".
 - **FR-003**: The system MUST NOT persist anything. A reload returns every
   screen to its fixture state.
 - **FR-004**: The session clock MUST be a static display of the fixture's
@@ -347,7 +347,8 @@ screen; it is testable entirely on its own.
 
 - **FR-025**: Every user-facing string MUST match the approved copy in
   §"Screen copy" below, character for character. Copy is a requirement of
-  this feature, not an implementation choice.
+  this feature, not an implementation choice. **Verified by the parser diff
+  against §"Screen copy", not by test** — see §"How FR-002, FR-025, SC-004, SC-009 and SC-010 are verified".
 - **FR-026**: No screen may use a word from the forbidden lexicon
   (Constitution Article II): start task, timer, pomodoro, category, bucket,
   project, overdue, missed, failed, behind, streak.
@@ -569,7 +570,7 @@ relationships enforced, no rules applied.
   widths.
 - **SC-004**: Every user-facing string on every screen matches the approved
   copy character for character. **Verified by review, not by test** — see
-  §"How FR-002, SC-004 and SC-010 are verified".
+  §"How FR-002, FR-025, SC-004, SC-009 and SC-010 are verified".
 - **SC-005**: No screen contains a word from the forbidden lexicon, an
   emoji, an exclamation mark, or an apology.
 - **SC-006**: Minutes are **reported** only on Review, on the session clock,
@@ -591,19 +592,23 @@ relationships enforced, no rules applied.
   screen claims that anything was saved.
 - **SC-009**: Each of the ten screens answers its stated question with
   nothing else on it — verified by removing any element and confirming the
-  question would no longer be answered.
+  question would no longer be answered. **Verified by T048's addition test,
+  not by test code** — see §"How FR-002, FR-025, SC-004, SC-009 and SC-010 are verified".
 - **SC-010**: A person shown Home on a phone, without instruction, taps an
   area's Tend button as their first action. **Verified by observation, not
-  by test** — see §"How FR-002, SC-004 and SC-010 are verified".
+  by test** — see §"How FR-002, FR-025, SC-004, SC-009 and SC-010 are verified".
 - **SC-011**: Every screen can be left without using the browser's back
   button, and every screen is reachable from First run or from Home in at
   most three taps.
 
-## How FR-002, SC-004 and SC-010 are verified
+## How FR-002, FR-025, SC-004, SC-009 and SC-010 are verified
 
 Article VII requires every acceptance criterion to have at least one test
-naming it. Three items here cannot be satisfied that way, and saying so is
+naming it. Five items here cannot be satisfied that way, and saying so is
 better than writing a test that only appears to check them.
+
+Each is verified by something, and that evidence is named below. An item
+that reaches this list without evidence is an item nobody checked.
 
 **FR-002 — nothing is computed at render time.** This is a property of how
 the code is written, not of what it renders, so no assertion against a
@@ -632,6 +637,32 @@ SC-005).
 
 If this recurs in feature 002, the better answer is to generate `lib/copy.ts`
 from the spec's copy tables so the spec becomes the machine-readable source.
+
+**FR-025 — every user-facing string matches the approved copy.** This is
+SC-004's requirement stated as an obligation on the build rather than as an
+outcome, so it is unverifiable by test for exactly the same reason and is
+listed here beside it.
+
+**FR-025 is verified by the parser diff**, run against §"Screen copy" rather
+than by eye: the section's table cells are extracted and each string is
+searched for in `lib/copy.ts` and `lib/fixtures.ts`, with the area-name
+templates resolved before comparison. It reported **106 of 106 strings
+present** on its last run, after T048 removed `Last session` and the
+Picker's count dropped the total from 107. A string deleted from the spec
+and left in the code, or the reverse, fails it.
+
+**SC-009 — each screen answers its question with nothing else on it.** The
+check is to remove an element and ask whether the screen's question still
+has an answer; anything that survives removal comes out. No assertion can
+make that judgement, because "does this element serve the question" is the
+judgement itself.
+
+**SC-009 is verified by T048**, run over all ten screens on 2026-09-21. It
+took two elements off: Home's `Two sessions this week.` and the Picker's
+`Last session` row label. Both removals are recorded in §"Screen copy" and
+each is held in place by a test named for T048, so the screens cannot drift
+back. A run of T048 that removes nothing is a result, not a formality — but
+a feature that never runs it has not met SC-009.
 
 **SC-010 — an unprompted person taps Tend first.** This is a usability
 observation about a real person, not an assertion about the build. It is
