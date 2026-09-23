@@ -13,7 +13,7 @@
 
 ## Requirement Completeness
 
-- [ ] No [NEEDS CLARIFICATION] markers remain
+- [x] No [NEEDS CLARIFICATION] markers remain
 - [x] Requirements are testable and unambiguous
 - [x] Success criteria are measurable
 - [x] Success criteria are technology-agnostic (no implementation details)
@@ -31,21 +31,20 @@
 
 ## Notes
 
-Three [NEEDS CLARIFICATION] markers remain, deliberately. The feature
-description asked for open items to go to `/speckit-clarify` rather than be
-assumed, and all three would change what gets built:
+All 16 items pass. Six clarifications were settled on 2026-09-23 and are
+recorded in the spec's §Clarifications: an empty start with a separate
+development mode, in-memory state only, empty-state copy written by the
+product owner, numbers as words to twelve and figures from thirteen, day
+names to seven days back, and an area counting as attended from the moment
+a session starts.
 
-- **Q1** — empty start or seeded start (scope)
-- **Q2** — what "browser session" means at a reload, and whether 001's
-  "no storage API is touched" assertion carries forward (scope, and it
-  contradicts an existing passing test either way)
-- **Q3** — empty-state copy, which does not exist and which Article II makes
-  a requirement rather than an implementation choice (scope)
+**Two things still gate implementation**, neither of which is a spec-quality
+defect:
 
-Four smaller items are listed in the spec under §"Smaller items" — number
-words, relative days, when the week is closing, and what makes an area
-attended today. None changes the feature's shape, but each affects whether
-SC-001 can pass, and SC-001 is the criterion this feature is judged by.
-
-**Status**: blocked on `/speckit-clarify` for the three questions above.
-Everything else passes.
+1. **One decision is open** — when the week counts as closing. It also
+   decides how often Review is reachable, since Home's entry is its only
+   inbound edge.
+2. **Eighteen empty states need copy**, listed in the spec's §Open with
+   their screens and the conditions that produce them. FR-027 forbids
+   inventing provisional wording, so those strings block the build rather
+   than the plan.

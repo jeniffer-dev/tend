@@ -4,7 +4,8 @@
 
 **Created**: 2026-09-23
 
-**Status**: Draft — three open questions, see §"Questions for /speckit-clarify"
+**Status**: Draft — one open question (when the week closes) and the
+empty-state copy pending
 
 **Input**: User description: "Feature 002: la lógica real detrás de las diez pantallas. Las mismas pantallas, los mismos textos, pero los valores se calculan en vez de estar escritos en el fixture, y el estado vive durante la sesión del navegador (sin persistencia todavía; eso es la 003)."
 
@@ -32,6 +33,17 @@ become this feature's regression anchor: if the derivation is right, the
 sentences come back identical. If a single word differs, either the
 derivation is wrong or a rule was never written down.
 
+## Clarifications
+
+### Session 2026-09-23
+
+- Q: Does the app start empty or seeded with 001's example data? → A: Genuinely empty. First run is the first thing anyone sees; nothing is seeded and nothing is suggested (Article I). A separate development mode loads state equivalent to 001's, and is never the default.
+- Q: What does "lives for the browser session" mean at a reload? → A: In memory only. A reload restarts. 002 writes to no storage API, so 001's `persistence.spec.ts` carries forward unchanged. Persistence is 003, done once and properly.
+- Q: Who writes the copy the empty states need? → A: The product owner. This feature lists every state that needs a string and waits for the wording; no provisional copy is invented.
+- Q: How are numbers written? → A: Words up to twelve, figures from thirteen. That is what lets `Three sessions` and `52 minutes` coexist.
+- Q: How are past days named? → A: The day's name up to seven days back; beyond that, the date.
+- Q: When does an area count as attended today? → A: As soon as a session starts, not when it closes. Leaving mid-session must not erase the day.
+
 ## Decisions already taken
 
 These are settled and this specification is bound by them. They are not
@@ -48,6 +60,11 @@ open for reinterpretation during planning.
   zero changes nothing but the number and the line beneath it.
 - **Passing the rhythm is extra; falling short is a fact about the week.**
   No percentages, no streaks, no scoreboards (Constitution Article I).
+- **Numbers are words up to twelve and figures from thirteen.** This is
+  what lets `Three sessions` and `52 minutes` both be correct.
+- **A past day is named up to seven days back, and dated beyond that.**
+- **An area counts as attended today as soon as a session starts**, not when
+  it closes. Leaving mid-session must not erase the day.
 - **The rhythm is `sessions_per_week`, an integer from 1 to 5.**
   `weekly_budget_minutes` is gone from the model (`PRODUCT-SPEC.md` §3.1,
   amended 0.4). Minutes are recorded per session and shown in exactly three
@@ -297,6 +314,9 @@ renders it.
   none.
 - **FR-015**: The person MUST be able to switch to another task in the same
   area without ending the session.
+- **FR-015a**: An area MUST count as attended today from the moment a
+  session on it starts, not from when it closes. Leaving a session without
+  closing it MUST NOT remove the area's attended state for that day.
 
 #### Areas, tasks and capture
 
@@ -316,18 +336,31 @@ renders it.
 
 #### State
 
-- **FR-023**: State MUST live for the browser session and MUST NOT be
-  written to durable storage. Persistence is feature 003.
+- **FR-023**: State MUST live in memory for the browser session only. The
+  system MUST NOT write to `localStorage`, `sessionStorage`, IndexedDB or
+  cookies. A reload returns to the starting state, so 001's
+  `tests/e2e/persistence.spec.ts` carries forward unchanged. Persistence is
+  feature 003.
 - **FR-024**: The system MUST NOT lose a running session while the person
   moves between screens.
+- **FR-025**: The app MUST start empty. With no areas, First run is what a
+  person sees, and nothing is seeded or suggested (Article I).
+- **FR-026**: A development mode MUST be able to load state equivalent to
+  001's fixtures, and MUST NOT be what the app does by default. It is what
+  makes SC-001 runnable.
 
 #### Copy
 
-- **FR-025**: All copy MUST remain as approved in 001 §"Screen copy". Any
+- **FR-027**: All copy MUST remain as approved in 001 §"Screen copy". Any
   string this feature needs that 001 does not have is new approved copy and
-  MUST be written down before it is built.
-- **FR-026**: No screen may use a word from the forbidden lexicon
+  MUST be written down before it is built. No provisional wording may be
+  invented to unblock work.
+- **FR-028**: No screen may use a word from the forbidden lexicon
   (Constitution Article II), an emoji, an exclamation mark or an apology.
+- **FR-029**: Quantities MUST be written as words up to twelve and as
+  figures from thirteen.
+- **FR-030**: A past day MUST be named by its day name up to seven days
+  back, and by its date beyond that.
 
 ### Key Entities
 
@@ -393,44 +426,48 @@ renders it.
   Article III's v1 exclusions.
 - Any new screen, and any new element on an existing screen.
 
-## Questions for /speckit-clarify
+## Open
 
-Three items are genuinely open, and each would change what gets built. They
-are recorded here rather than assumed, and `/speckit-clarify` should settle
-them before planning.
+### One question remains
 
-- **Q1 — Where does the app start?** [NEEDS CLARIFICATION: does feature 002
-  begin from genuinely empty state, so the first thing anyone sees is First
-  run, or does it begin seeded with 001's example areas and tasks so the
-  computed screens have something to compute from?]
+**When does the week count as closing?** Home carries the Review entry only
+when the week is ending, and Review's only inbound edge is that entry — so
+the answer decides how often Review is reachable at all. Options and their
+consequences were put to the product owner on 2026-09-23; the decision is
+pending and `/speckit-plan` should not start without it.
 
-- **Q2 — What does "lives for the browser session" mean at a reload?**
-  [NEEDS CLARIFICATION: is state held in memory only, so a reload returns to
-  the starting state as it did in 001, or does it survive a reload within
-  the same tab? 001 asserts that no storage API is touched at all, and that
-  assertion either carries into 002 or is replaced.]
+### The copy the empty states need
 
-- **Q3 — Who writes the copy the empty states need?** [NEEDS CLARIFICATION:
-  computed screens reach states 001's fixtures never produced — an area with
-  no week-list tasks, a week with no sessions, an empty Inbox, a single area
-  where the copy says five. None of these has approved copy. Is writing
-  those strings in scope for 002, and does the existing design need extending
-  before they can be built?]
+The product owner writes these; no provisional wording is invented (FR-027).
+Each entry is a state a computed screen can reach, the condition that
+produces it, and what has no string today.
 
-### Smaller items, also for /speckit-clarify
+| # | Screen | Condition | What has no copy |
+|---|---|---|---|
+| 1 | Areas | The last area is removed | The heading, which derives from a count that is now zero |
+| 2 | Areas | One area exists | `Five, in your order` — "in your order" means nothing for one |
+| 3 | Areas | An area with no tasks is removed | The confirmation states what happens to tasks; there are none |
+| 4 | Areas | An area with no past sessions is removed | The confirmation states what happens to sessions; there are none |
+| 5 | Home | Areas exist but none is daily | The screen has no cards at all |
+| 6 | Home | Every daily area is attended today | Nothing is left to tend; every card is collapsed |
+| 7 | Home | No area is non-daily | The absence note has nothing to account for |
+| 8 | Home | Two or more areas are non-daily | The approved note is singular by construction, and 001 §"The one string that is not transcribed" says it is rewritten rather than generalised when a second appears. A second has appeared |
+| 9 | Home | A session is running right now | The attended line reports elapsed minutes for a session that has not ended (FR-015a) |
+| 10 | Picker | The area has no tasks on the week list | The list is empty, and 001 avoided this by giving every area a task |
+| 11 | Picker | Every task on the list is done | Same empty list, reached a different way |
+| 12 | Inbox | Nothing is unsorted | `Three unsorted` derives from a count that is now zero |
+| 13 | Week | No area has a rhythm or a task this week | `Four areas, ten sessions` with nothing behind it |
+| 14 | Week | An area has a rhythm but no tasks on the list | The row line names tasks on the list; there are none |
+| 15 | Review | The week has no sessions at all | The Attended section is empty and the heading counts zero |
+| 16 | Review | Every area was attended | The Unattended section is empty |
+| 17 | Review | An area was attended but its sessions carry no note | The row reads `52 minutes. Last note: …` and there is no note |
+| 18 | Task | A session closed with an empty progress note | The last-session note, which is neither a note nor `Not attended yet.` |
 
-Not blocking the shape of the feature, but each affects whether SC-001 can
-pass:
+**Two of these are rules rather than copy**, and are called out so they are
+not answered with a sentence:
 
-- **Number words.** The copy spells counts as words (`Three sessions`,
-  `Six sessions`, `eleven past sessions`) and minutes as figures
-  (`52 minutes`). The rule and its ceiling are not written down anywhere.
-- **Relative days.** `Last attended Monday.` and `Captured last Thursday.`
-  use different forms. When a day becomes `last X`, and what today and
-  yesterday read as, is not specified.
-- **When the week is closing.** Home shows the Review entry with
-  `The week closes tonight.` 001 fixed it to Sunday. Whether it appears all
-  of Sunday, from a time on Sunday, or across a wider window is not stated.
-- **What makes an area attended today.** Whether a session must be closed to
-  count, or merely started, is not stated — it matters for an area tended
-  right now.
+- **#8** was pre-decided in 001 and is now due. It may need a plural form, a
+  per-area line, or a different construction entirely.
+- **Which areas become Capture's chips** is unspecified. 001 hardcoded four
+  ids that happened to be the daily ones. Whether the chips are all areas,
+  the daily ones, or a capped list needs a rule before it needs copy.
