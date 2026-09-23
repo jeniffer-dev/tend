@@ -645,10 +645,17 @@ session on a task, and the task is what identifies it.
 
 **The line sits inside the sticky bar, directly above the action.** It is
 the consequence of that button and it belongs beside it, in the pattern the
-design system already has for a message inside the sticky bar (Article IV).
+design system already has for a message inside the sticky bar (§4).
 Putting it in the page flow would leave it above the fold while the button
 sits at the thumb, which is the one arrangement that lets someone act
-without reading it.
+without reading it — which is the design system's own stated reason for the
+pattern.
+
+**No design system amendment is required.** §4 names error messages, but it
+states a rule about position rather than about severity, and the bar already
+carries non-error prose: the Picker's own
+`You can switch to another task inside the session.` has been inside it
+since 001. No token, no spacing value and no type value is new here.
 
 That makes a **fourth footer shape** — a line, the action, the existing note
 — and it is the tallest of the four. `components/sticky-footer.tsx`
