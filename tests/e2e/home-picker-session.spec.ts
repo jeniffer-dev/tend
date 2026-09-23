@@ -58,6 +58,15 @@ test.describe('Home — what am I tending right now?', () => {
     for (const y of tendableYs) expect(y).toBeLessThan(attendedY);
   });
 
+  test('T048: Home counts no sessions — that is Week work', async ({ page }) => {
+    // `Two sessions this week.` was cut from Health's card: on Home it read
+    // as a scoreboard, and the screen answers its question without it.
+    await expect(page.getByTestId('screen')).not.toContainText('sessions this week');
+    await expect(page.locator('[data-testid="area-card"]').filter({ hasText: 'Health' })).toContainText(
+      'Last attended Monday.'
+    );
+  });
+
   test('FR-014: renders all three treatments — solid, outline, and collapsed', async ({ page }) => {
     // To tend: a solid Tend button.
     const solid = page.getByTestId('area-card').filter({ hasText: 'Health' }).getByRole('link', { name: home.tendAction });
@@ -159,9 +168,18 @@ test.describe('Picker — what do I focus on for fifteen minutes?', () => {
     await expect(options.nth(1)).toHaveAttribute('aria-pressed', 'false');
   });
 
-  test('FR-017: every task carries a last-session row, including one never attended', async ({ page }) => {
-    await expect(page.getByText(picker.lastSessionLabel)).toHaveCount(weekListTasksForArea('health').length);
+  test('FR-017: every task carries a last-session note, including one never attended', async ({ page }) => {
+    for (const task of weekListTasksForArea('health')) {
+      await expect(
+        page.getByRole('button', { name: new RegExp(task.title) })
+      ).toContainText(task.lastSessionNote);
+    }
+    // The one never attended says so rather than showing a gap.
     await expect(page.getByText('Not attended yet.')).toBeVisible();
+  });
+
+  test('T048: the task rows carry no `Last session` label', async ({ page }) => {
+    await expect(page.getByTestId('screen')).not.toContainText('Last session');
   });
 
   test('the selected task is bordered in the area own colour, 2px', async ({ page }) => {

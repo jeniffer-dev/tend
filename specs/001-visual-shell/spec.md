@@ -423,12 +423,18 @@ the fifth palette color preselected. All other copy is identical.
 
 #### 4. Home
 
+Two strings were cut by Article III's addition test (T048, 2026-09-21):
+Health's `Two sessions this week.` here, and the Picker's `Last session`
+row label below. Both survived removal — the screen still answered its one
+question without them — so both came out. Counting sessions is Week's work;
+on Home it read as a scoreboard.
+
 | Role | String |
 |---|---|
 | Eyebrow | `Tending today` |
 | Heading | `Sunday` |
 | Review entry | `The week closes tonight. Look back on it.` |
-| Area — to tend | `Health` / `Two sessions this week. Last attended Monday.` / action `Tend` |
+| Area — to tend | `Health` / `Last attended Monday.` / action `Tend` |
 | Area — to tend | `Morning pages` / `Last attended Thursday.` / action `Tend` |
 | Area — past rhythm | `Money` / `Past the two sessions you set for this week. Tend it anyway if it is what you want.` / action `Tend` (outline) |
 | Area — attended | `Home` / `Attended today, 15 minutes` (no action) |
@@ -441,9 +447,9 @@ the fifth palette color preselected. All other copy is identical.
 |---|---|
 | Eyebrow | `Health · this week` |
 | Heading | `Pick one thing` |
-| Task 1 | `Book the blood test` / `Last session` / `Found the lab. Need the referral number from the clinic.` |
-| Task 2 | `Refill the prescription` / `Last session` / `Not attended yet.` |
-| Task 3 | `Walk three mornings` / `Last session` / `Two mornings so far. Thursday is open.` |
+| Task 1 | `Book the blood test` / `Found the lab. Need the referral number from the clinic.` |
+| Task 2 | `Refill the prescription` / `Not attended yet.` |
+| Task 3 | `Walk three mornings` / `Two mornings so far. Thursday is open.` |
 | Scope note | `Only what you put on the week list for Health shows here. Anything captured since sits in the inbox.` |
 | Primary action | `Tend for fifteen minutes` |
 | Footer note | `You can switch to another task inside the session.` |

@@ -15,7 +15,7 @@ import { areaColorHex, type AreaColor, type Task } from '@/lib/fixtures';
  * (FR-017). Every task shows its last-session note — and `Not attended
  * yet.` when there is none, never an empty space, because a gap where a
  * note should be reads as something missing rather than as something not
- * yet done.
+ * yet done. The note carries no label: it reads as what it is.
  *
  * This owns the primary action as well as the list, because the action
  * depends on which task is selected and lifting that selection into the
@@ -72,13 +72,11 @@ export function PickerList({
                 )}
               >
                 <span className="text-base font-semibold tracking-tight">{task.title}</span>
-                <span className="flex flex-col gap-1">
-                  <span className="text-xs uppercase tracking-widest text-muted-foreground/45">
-                    {copy.lastSessionLabel}
-                  </span>
-                  <span className="text-sm text-muted-foreground text-pretty">
-                    {task.lastSessionNote}
-                  </span>
+                {/* No `Last session` label. It was cut by Article III's
+                    addition test: the note reads as what it is without one,
+                    and the Picker still answered its question without it. */}
+                <span className="text-sm text-muted-foreground text-pretty">
+                  {task.lastSessionNote}
                 </span>
               </button>
             );

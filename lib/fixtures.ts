@@ -200,7 +200,7 @@ export const homeCards: HomeCard[] = [
   {
     areaId: 'health',
     treatment: 'to-tend',
-    line: 'Two sessions this week. Last attended Monday.',
+    line: 'Last attended Monday.',
   },
   {
     areaId: 'home',

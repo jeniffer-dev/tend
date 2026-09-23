@@ -57,7 +57,7 @@ type HomeTreatment = 'to-tend' | 'past-rhythm' | 'attended'
 type HomeCard = {
   areaId: string
   treatment: HomeTreatment
-  line: string          // 'Two sessions this week. Last attended Monday.'
+  line: string          // 'Last attended Monday.'
                         // or 'Attended today, 15 minutes'
 }
 ```

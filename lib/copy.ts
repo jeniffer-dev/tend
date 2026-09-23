@@ -106,7 +106,6 @@ export const home = {
 export const picker = {
   eyebrow: (areaName: string) => `${areaName} · this week`,
   heading: 'Pick one thing',
-  lastSessionLabel: 'Last session',
   scopeNote: (areaName: string) =>
     `Only what you put on the week list for ${areaName} shows here. Anything captured since sits in the inbox.`,
   primaryAction: 'Tend for fifteen minutes',
