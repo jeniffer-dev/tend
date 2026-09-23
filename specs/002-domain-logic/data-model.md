@@ -88,15 +88,38 @@ type Session = {
   startedAt: Date
   endedAt: Date | null      // null while running
   plannedMinutes: number    // 15
+  actualMinutes: number | null   // written once at close; null while running
   outcome: 'completed' | 'progressed' | null   // null while running
   progressNote: string      // '' is meaningful: attended, no note left
 }
 ```
 
-`actualMinutes` is **not stored**. It is `endedAt − startedAt`, and storing
-it as well would let the two disagree. PRODUCT-SPEC §3.3 types it as a
-field; it is derived here because nothing else in this model is redundant
-and a redundant field is a defect waiting for a rounding difference.
+**`actualMinutes` is stored, written once at close, and never recomputed.**
+PRODUCT-SPEC §3.3 types it as a field and calls the difference between
+planned and actual "el dato central del sistema", and the product spec
+stands.
+
+The reason it is a field rather than a derivation is the orphaned session.
+Closing the tab or running out of battery is ordinary, not exceptional, and
+a session with no `endedAt` has nothing for a derived figure to be computed
+from. A recorded minute count survives what the timestamps do not.
+
+**The live clock is still derived** from `startedAt` and `now`, and that
+does not change (research.md §4). The two coexist because they answer
+different questions: the clock is how long this session has been going, and
+`actualMinutes` is how long it went. One is a view, the other a record.
+
+The rule that keeps the redundancy from becoming a contradiction:
+**`actualMinutes` is written exactly once, at close, and is never
+recalculated afterwards.** Nothing reads the timestamps to correct it and
+nothing recomputes it on load. If it ever disagrees with
+`endedAt − startedAt`, the record is right and the arithmetic is stale.
+
+**A session with no `endedAt` is feature 003's problem.** It cannot arise
+while state lives only in memory — losing the tab loses the session with it
+— and 003 is where persistence makes it both possible and detectable.
+PRODUCT-SPEC §7 already parks the same question, and this is the same
+question wearing a different hat.
 
 `progressNote: ''` is a real state, not a missing value. A session closed
 without a note produces `Attended. No note left.`, which is a different fact

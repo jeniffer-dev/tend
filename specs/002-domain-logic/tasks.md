@@ -32,8 +32,8 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 **Purpose**: The copy this feature adds, and the directories the new rules live in.
 
 - [ ] T001 Create `lib/state/`, `lib/derive/` and `lib/seed/`. The split is load-bearing: `state/` is the only part that mutates, `derive/` is pure and takes `now`, and `seed/` never ships as a default path (plan.md §"Structure Decision")
-- [ ] T002 Extend `lib/copy.ts` with the twenty-one new strings from spec.md §"Screen copy", character-exact. Several are templates — `{area}`, `{n}`, `{names}`, `{sessions}` — and the interpolation points are named there. No user-facing string may be written inline in a component or assembled from fragments in a derivation
-- [ ] T003 Extend `tests/unit/copy.test.ts` to lint the new strings for Article II's forbidden lexicon, emoji, exclamation marks and apologies, calling every template with a sample so its output is linted too
+- [ ] T002 Extend `lib/copy.ts` with the twenty-one new strings from spec.md §"Screen copy", character-exact. Several are templates — `{area}`, `{n}`, `{names}`, `{sessions}` — and the interpolation points are named there. No user-facing string may be written inline in a component or assembled from fragments in a derivation. Covers FR-027
+- [ ] T003 Extend `tests/unit/copy.test.ts` to lint the new strings for Article II's forbidden lexicon, emoji, exclamation marks and apologies, calling every template with a sample so its output is linted too. Covers FR-028
 
 ---
 
@@ -46,11 +46,11 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 ### State
 
 - [ ] T004 Define state types in `lib/state/types.ts` per data-model.md — `Area` (with `sessionsPerWeek: 1|2|3|4|5`, `isDaily`, `sortOrder`, `archivedAt: Date | null`), `Task` (with `areaId: string | null` where null means the inbox, `onWeekList`, `capturedAt: Date`, `doneAt: Date | null`), `Session` (with `startedAt`, `endedAt: Date | null`, `plannedMinutes`, `outcome: 'completed' | 'progressed' | null`, `progressNote: string` where `''` means attended without a note), and `State`. **No field may hold a user-facing sentence** — if you can read one in the state, the state is wrong
-- [ ] T005 Implement the reducer in `lib/state/store.ts` with the ten transitions in data-model.md §"State transitions". `actualMinutes` is NOT stored: it is `endedAt − startedAt`, and storing it too would let the two disagree
+- [ ] T005 Implement the reducer in `lib/state/store.ts` with the ten transitions in data-model.md §"State transitions". `actualMinutes` is **written once, at close, and never recalculated** (FR-010a) — a session orphaned by a closed tab has no `endedAt` for a derived figure to come from, which is why PRODUCT-SPEC §3.3 makes it a field
 - [ ] T006 Implement area removal in `lib/state/store.ts` as **archiving**, not deletion — `archivedAt: now`, tasks get `areaId: null` keeping their titles, sessions untouched (FR-018). PRODUCT-SPEC RF-04 says *archivar*, and it is what lets the confirmation's promise about Review be true
 - [ ] T007 Create `lib/state/provider.tsx` — a client provider mounted in `app/layout.tsx`, holding state in memory and publishing `now`. It writes to no storage API (FR-023). Being above the router is what lets a running session survive navigation (FR-024)
 - [ ] T008 Implement the clock tick in `lib/state/provider.tsx` — one second, running only while a session is active, updating `now` and nothing else. The tick must not re-render screens that do not read it (plan.md §"Performance Goals")
-- [ ] T009 [P] Write `tests/unit/store.test.ts` — every transition, including that closing as done sets `doneAt` and takes the task off the week list, closing as progressed does neither, switching task mid-session leaves `startedAt` alone, and archiving an area leaves its sessions intact
+- [ ] T009 [P] Write `tests/unit/store.test.ts` — every transition, including that closing as done sets `doneAt` and takes the task off the week list, closing as progressed does neither, switching task mid-session leaves `startedAt` alone, archiving an area leaves its sessions intact, and `actualMinutes` is written at close and unchanged by any later action (FR-010a)
 
 ### Derivations
 
@@ -58,7 +58,7 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 - [ ] T011 [P] Write `tests/unit/week.test.ts` — Monday 00:00 and Sunday 23:59:59.999 boundaries, a session starting Sunday 23:58 and ending Monday 00:20 belonging to the closing week, and a week spanning a daylight-saving changeover still starting at local midnight. Covers FR-005, FR-006, SC-002
 - [ ] T012 [P] Implement `lib/derive/counting.ts` — `sessionsInWeek`, `minutesInWeek`, `isPastRhythm`, `attendedToday`, `lastAttended`. **No function here returns a ratio.** `isPastRhythm` returns a boolean; dividing sessions by rhythm is one line away at every call site and is the shape Article I forbids (plan.md §"The second gate")
 - [ ] T013 [P] Write `tests/unit/counting.test.ts` — counts at, below and above the rhythm; `attendedToday` true for a session that has started and not closed (FR-015a); `lastAttended` across a week boundary
-- [ ] T014 [P] Implement `lib/derive/format.ts` — `numberWord` (words to twelve, figures from thirteen, FR-029), `dayName` (day name to seven days back, date beyond, FR-030), `joinNames` (`A and B`, `A, B and C`, FR-022b), `clockString` derived from `startedAt` and `now` rather than counted down
+- [ ] T014 [P] Implement `lib/derive/format.ts` — `numberWord` (words to twelve, figures from thirteen, FR-029), `dayName` (day name to seven days back, date beyond, FR-030), `joinNames` (`A and B`, `A, B and C`, FR-022b), `clockString` derived from `startedAt` and `now` rather than counted down. Covers FR-003 through its terms
 - [ ] T015 [P] Write `tests/unit/format.test.ts` — the twelve/thirteen boundary in both directions, day names at exactly seven and eight days back, joining at one, two and three names, and `clockString` before zero, at zero and past it. Covers FR-011, FR-029, FR-030, FR-022b
 - [ ] T016 Implement `lib/derive/screens.ts` — one function per screen region per contracts/derivations.md, each taking `(state, now)` and returning finished strings. Derivations **choose between templates in `lib/copy.ts` and fill them**; they never concatenate prose
 - [ ] T017 [P] Write `tests/unit/screens.test.ts` — each region's output for the ordinary case and for every empty case in spec.md §"Screen copy"
@@ -84,7 +84,7 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 - [ ] T023 [US1] Rewire `app/tend/[areaId]/page.tsx` and `features/session/picker-list.tsx` — the area's week-list tasks that are not done, each with its last-session note in one of its three forms (FR-014)
 - [ ] T024 [US1] Rewire `app/session/[taskId]/page.tsx` and `features/session/session-clock.tsx` to the live clock, and **remove `?state=`** — it was an inspection affordance for three static fixtures and there is now one real clock
 - [ ] T025 [US1] Implement starting a session from the Picker's primary action, and switching task mid-session without ending it (FR-015). Switching changes `taskId` and leaves `startedAt` alone: it is one session
-- [ ] T026 [US1] Implement both closing actions in `app/session/[taskId]/page.tsx` — done and progressed, each recording `endedAt`, outcome and note (FR-010, FR-013)
+- [ ] T026 [US1] Implement both closing actions in `app/session/[taskId]/page.tsx` — done and progressed, each recording `endedAt`, `actualMinutes`, outcome and note (FR-010, FR-010a, FR-013). The live clock stays derived; the record is written once and never recomputed
 - [ ] T027 [US1] Write `tests/e2e/session-loop.spec.ts` — start a session, close it, and assert Home, the Picker and Week all changed. Covers US1's acceptance scenarios and SC-004
 - [ ] T028 [US1] **Rewrite** `tests/e2e/session-states.spec.ts` for a real clock. The test is remade, not deleted: what it protected is still a requirement. Assert the three moments of a session — before zero, at zero, and well past it — are identical in layout, colour and controls, differing only in the clock string and the line beneath it. It moves `now` instead of using `?state=`, which is exactly what having `now` as an argument makes possible. Covers **FR-011** and **SC-003** (001's SC-007 carried forward; renumbered because SC-007 here is the dimensional criterion)
 - [ ] T029 [P] [US1] Write `tests/e2e/session-continuity.spec.ts` — a running session survives navigating to Home and back, the clock has advanced, and Home showed `Tending now` while away. Covers FR-024, FR-015a
@@ -159,7 +159,7 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 
 ## Phase 8: Polish & Cross-Cutting Concerns
 
-- [ ] T058 Write `tests/e2e/seed-001-parity.spec.ts` — with `?seed=001`, every screen renders 001's approved copy character for character. **This is the criterion the feature is judged by** (SC-001), and it is the reason the seed pins the clock
+- [ ] T058 Write `tests/e2e/seed-001-parity.spec.ts` — with `?seed=001`, every screen renders 001's approved copy character for character. **This is the criterion the feature is judged by** (FR-002, SC-001), and it is the reason the seed pins the clock
 - [ ] T059 Confirm 001's thirteen e2e specs still pass unchanged, especially `tests/e2e/persistence.spec.ts` — nothing may be written to `localStorage`, `sessionStorage`, IndexedDB or cookies (FR-023)
 - [ ] T060 [P] Update `tests/e2e/minutes.spec.ts` for derived values — minutes reported on Review, the session clock and Home's attended line, with the Picker's `Tend for fifteen minutes` still the one approved duration outside them (SC-006)
 - [ ] T061 [P] Update `tests/e2e/no-pressure.spec.ts` — no percentage, no progress element, no streak or badge, and nothing sized to a fraction of its parent. This matters more here than in 001: `sessionsInWeek` and `sessionsPerWeek` now both exist, and dividing them is one line away (FR-004, SC-005, plan.md §"The second gate")

@@ -290,8 +290,10 @@ renders it.
   Article VI).
 - **FR-002**: Given state equivalent to 001's fixtures, every screen MUST
   render copy character-identical to what 001 rendered.
-- **FR-003**: The system MUST spell quantities as the approved copy spells
-  them, and MUST state minutes as figures where the approved copy does.
+- **FR-003**: Quantities and dates MUST be written the way the approved copy
+  writes them. The two rules that say how are **FR-029** (words to twelve,
+  figures from thirteen) and **FR-030** (day names to seven days back, dates
+  beyond); this requirement is the obligation, and those are its terms.
 - **FR-004**: The system MUST NOT show a percentage, a streak, a badge, a
   level, a scoreboard or any completion proportion, on any screen or as the
   size of any element.
@@ -313,6 +315,11 @@ renders it.
 
 - **FR-010**: A session MUST record when it started, when it ended, the
   minutes actually elapsed, its outcome and its progress note.
+- **FR-010a**: The recorded minutes MUST be written exactly once, when the
+  session is closed, and MUST NOT be recalculated afterwards. The live clock
+  remains derived from the start time and the current moment; the record and
+  the view answer different questions and MUST NOT be conflated. A session
+  with no end time is out of scope here and is decided in feature 003.
 - **FR-011**: The clock MUST count down from fifteen minutes, reach 0:00 and
   continue counting upward, with no maximum and no interruption.
 - **FR-012**: The system MUST NOT block, pause, warn, or prompt during a

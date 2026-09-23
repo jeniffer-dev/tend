@@ -166,6 +166,15 @@ actions.
 Identical layout and treatment in all three; only the clock string, the
 clock note and the note content differ (FR-019).
 
+> **Retired by feature 002 (2026-09-23).** `?state=` was an inspection
+> affordance for three static fixtures, and 002 has one real clock. The
+> requirement it served did not retire with it: the three moments of a
+> session must still be identical in layout, colour and controls, and 002
+> verifies that by moving `now` instead (002 spec.md SC-003, which is this
+> feature's SC-007 carried forward).
+
+
+
 **Must not have**: a visible state switcher, a pause or stop control, a
 progress ring, red at any point, any pulsing, any countdown framing.
 
