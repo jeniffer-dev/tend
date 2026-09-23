@@ -410,8 +410,15 @@ renders it.
   render copy identical to 001's, character for character.
 - **SC-002**: A session started at 23:58 on Sunday and closed at 00:20 on
   Monday is counted in the closing week, on both Week and Review.
-- **SC-003**: A session's clock reaches 0:00 and continues upward, and
-  nothing on the screen changes but the number and its line.
+- **SC-003**: The three moments of a session — before zero, at zero, and
+  well past it — are identical in layout, colour and controls, differing
+  only in the clock string and the line beneath it. The clock reaches 0:00
+  and continues upward, and nothing else on the screen changes.
+
+  This is 001's SC-007 carried forward. It is numbered SC-003 here because
+  SC-007 in this feature is the dimensional criterion. 001 verified it by
+  rendering three fixtures through `?state=`; this feature has one real
+  clock, so it is verified by moving `now` instead.
 - **SC-004**: Closing a session changes Home, the Picker, Week and Review in
   one step, with no screen left stale.
 - **SC-005**: No screen renders a percentage, a progress element, a streak, a
