@@ -76,7 +76,7 @@ derivations, 11 state transitions.
 | I — What Tend is | No streak, badge, level or pressure framing. Passing the rhythm is extra; falling short is a fact about the week. | PASS (FR-004, FR-009) | PASS — the derivation returns `is past rhythm`, never a proportion |
 | II — Lexicon | No forbidden term. All 26 new strings reviewed. | PASS | PASS — the copy lint extends to the new strings, and the one still unapproved is held out of `copy.ts` until it is (FR-027) |
 | III — Minimalism | No new screen. Two new elements: Week's link, and the Picker's consequence line. | PASS | PASS — each is argued on its merits in spec.md and neither is exempted. The Picker's line states a consequence and gates nothing |
-| IV — Visual system | No new visual value. Nothing in the design system changes. | PASS | PASS — 002 adds no component and no token |
+| IV — Visual system | No new visual value. Nothing in the design system changes. | PASS | PASS — 002 adds no component and no token. The Picker's line makes a fourth footer shape, and the sticky footer's pre-hydration reservation is recalculated for it (T025b); that constant is a layout guard, not a design system value, and §4's sticky-bar rule already covers a message that qualifies the action |
 | V — Motion | `transition-colors` only. The clock's tick changes a number, never a style. | PASS | PASS — one treatment in every clock state, as 001 established |
 | VI — Architecture | No business logic in components; domain rules pure, synchronous, unit-tested, isolated from React and persistence. | PASS — this feature is where that article finally has something to govern | PASS — see the gate below |
 | VII — Process | Reviewed spec and plan on disk; `/speckit-analyze` before `/speckit-implement`; criteria observable at 390px. | PASS — spec `d715b3a`, clarified `97f3795`/`50e2290`/`5ceee20` | PASS |
@@ -159,7 +159,7 @@ lib/
 └── routes.ts            # unchanged, plus Week's route to last week
 
 app/                     # pages become client components; layout stays server
-components/              # unchanged
+components/              # one change: sticky-footer.tsx's reservation
 features/                # unchanged in shape; inputs become derived values
 
 tests/

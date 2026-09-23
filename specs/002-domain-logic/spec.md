@@ -519,10 +519,14 @@ renders it.
 
 ## Assumptions
 
-- **The screens and their copy do not change.** 001's `contracts/screens.md`
-  remains the UI contract, including **001's FR-013a** ordering rule — what
-  is still to be tended sorts above what was attended today — and the
-  addition-test removals from 001's T048. Requirement ids are per feature:
+- **001's approved copy is not rewritten, and its screens keep their
+  shape.** Every sentence 001 approved says the same words here; what this
+  feature adds, it adds — twenty-six new strings for states 001 never
+  reached, and two elements that passed the addition test in writing.
+  Nothing approved is reworded and no screen changes the question it
+  answers. 001's `contracts/screens.md` remains the UI contract, including
+  **001's FR-013a** ordering rule — what is still to be tended sorts above
+  what was attended today — and the addition-test removals from 001's T048. Requirement ids are per feature:
   `FR-013a` belongs to 001's numbering and this feature's own `FR-013` is
   about closing a session as done. Where a task cites an inherited rule it
   names the feature it comes from.
