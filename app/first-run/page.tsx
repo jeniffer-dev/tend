@@ -20,11 +20,11 @@ import { newAreaHref } from '@/lib/routes';
  * There is no navigation to Home either: a person with no areas has no Home
  * to see. It is a root and shows no back control (FR-028).
  *
- * FLAGGED — the artboard sets the heading at 30px with `-0.025em` tracking.
- * The design system's scale stops at `text-2xl` (24px) for a page title and
- * has nothing at 30px, and Article IV forbids inventing a value. It is
- * built at `text-2xl`; making it larger means amending the design system
- * first, which is a decision rather than an implementation detail.
+ * The heading uses the empty-screen title role (design system §3, added in
+ * 1.8.0) — 30px, as the artboard draws it. This screen is the only place
+ * that role is admitted: it carries nothing but an invitation, so there is
+ * no content for the heading to compete with, and a page title set against
+ * that much space reads as small rather than as calm.
  *
  * The dots are palette samples, not areas — there are no areas yet. Four of
  * the five, as drawn, and the contract asks for four.
@@ -41,7 +41,7 @@ export default function FirstRunPage() {
           <p className="text-xs uppercase tracking-widest text-muted-foreground/45">
             {copy.eyebrow}
           </p>
-          <h1 className="text-2xl font-semibold leading-tight tracking-tight text-pretty">
+          <h1 className="text-[30px] font-semibold leading-[1.15] tracking-[-0.025em] text-pretty">
             {copy.heading}
           </h1>
         </div>

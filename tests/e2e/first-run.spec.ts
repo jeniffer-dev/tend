@@ -40,6 +40,14 @@ test.describe('First run — where do I start?', () => {
     await expect(page.getByTestId('screen').locator('a[href="/"]')).toHaveCount(0);
   });
 
+  test('the heading uses the empty-screen title role', async ({ page }) => {
+    // Design system §3, admitted for this screen alone. Asserted because
+    // it is the one place in the product allowed above a page title.
+    const heading = page.getByRole('heading', { name: firstRun.heading });
+    await expect(heading).toHaveCSS('font-size', '30px');
+    await expect(heading).toHaveCSS('letter-spacing', '-0.75px');
+  });
+
   test('FR-028: it is a root and shows no back control', async ({ page }) => {
     await expect(page.getByTestId('back-link')).toHaveCount(0);
   });
