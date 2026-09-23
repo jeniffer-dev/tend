@@ -115,17 +115,21 @@ recalculated afterwards.** Nothing reads the timestamps to correct it and
 nothing recomputes it on load. If it ever disagrees with
 `endedAt − startedAt`, the record is right and the arithmetic is stale.
 
-**A session with no `endedAt` is mostly feature 003's problem.** Losing
-the tab loses the session with it, so the durable orphan — the one that
-outlives the browser — arrives with persistence, and PRODUCT-SPEC §7
-already parks it.
+**A session with no `endedAt` is feature 003's problem.** Losing the tab
+loses the session with it, so the durable orphan — the one that outlives the
+browser — arrives with persistence, and PRODUCT-SPEC §7 already parks it.
 
-One case arrives earlier. `activeSessionId` holds a single session, so
-starting a second while the first still runs leaves the first with no
-`endedAt` and no `actualMinutes`, inside one tab and inside this feature.
-Review's copy says `One still open.` in the singular, which is true only if
-one is the maximum. The transition that resolves it is recorded as open in
-spec.md §"Open" and must be settled before T005.
+One case looked like it arrived earlier and does not. `activeSessionId`
+holds a single session, and starting a second while the first runs would
+have left the first with no `endedAt` and no `actualMinutes`, inside one tab
+and inside this feature. **Starting a session closes the running one**
+(FR-015c), so the slot is emptied by the same transition that fills it, and
+the only session without an `endedAt` at any moment is the one that is
+running.
+
+That is what makes `One still open.` true in the singular (FR-015d). The
+singular is not a guess about how people behave; it is a property the
+reducer holds.
 
 `progressNote: ''` is a real state, not a missing value. A session closed
 without a note produces `Attended. No note left.`, which is a different fact
@@ -134,11 +138,20 @@ from `Not attended yet.` and now has its own string.
 ### The clock
 
 ```ts
-type Clock = { origin: Date | null; now: Date }
+type Clock = {
+  origin: Date | null  // the seeded moment; null in the ordinary app
+  now: Date            // ticks each second; the session clock alone reads it
+  today: Date          // changes only when the local date changes
+}
 ```
 
-`now` is published by the provider and passed into every derivation. It
-advances once a second while a session runs.
+Both `now` and `today` are the same argument to the same pure functions —
+each is passed as `now`, and no derivation can tell which it was given. The
+two exist because a day name, a week boundary, a captured label and a rhythm
+comparison cannot change more than once a day, and subscribing every screen
+to a one-second tick to ask them is the performance constraint spent on
+nothing. `now` advances once a second while a session runs; `today` changes
+at local midnight.
 
 **Under `?seed=001` the clock starts at Sunday 13 September 2026, 13:00
 local, and advances from there.** `origin` holds that moment and `now`
@@ -231,7 +244,7 @@ and no document defines is how a reducer grows a case nobody reviewed.
 | Capture with no area | New `Task`, `areaId: null`, `capturedAt: now` — it is in the inbox |
 | Capture with an area | New `Task` with that `areaId`, not in the inbox |
 | Give an inbox item an area | `areaId` set; it leaves the inbox |
-| Start a session | New `Session` with `startedAt: now`, `endedAt: null`; `activeSessionId` set. The area is attended today from this moment (FR-015a) |
+| Start a session | **If a session is running on a task in another area, it closes first** as `progressed` with an empty note and its `actualMinutes` written (FR-015c). Then a new `Session` with `startedAt: now`, `endedAt: null`, and `activeSessionId` set. The area is attended today from this moment (FR-015a) |
 | Switch task mid-session | The running session's `taskId` changes; `startedAt` does not. It is one session |
 | Close as done | `endedAt: now`, `outcome: 'completed'`, note saved; the task's `doneAt` is set and it leaves the week list |
 | Close as progressed | `endedAt: now`, `outcome: 'progressed'`, note saved; the task stays on the week list |

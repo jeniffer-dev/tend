@@ -43,10 +43,13 @@ appears Sunday and Monday with Week carrying a permanent route into the
 previous week's Review, Capture's chips are every area in the Areas order,
 and Home's absence note is one sentence naming the absent areas.
 
-All twenty-one new strings were approved on 2026-09-23 and are recorded in
-the spec's §"Screen copy". The list closed at twenty-one rather than twenty
-because removing an area with neither tasks nor past sessions is its own
-case, which the pending list had missed.
+Twenty-five of the twenty-six new strings are approved and recorded in the
+spec's §"Screen copy". The list closed at twenty-one before
+`/speckit-analyze`, because removing an area with neither tasks nor past
+sessions is its own case, which the pending list had missed. Five were added
+after that pass and approved on 2026-09-23: Home's tending clause, Review's
+three open-session forms, and the Picker's consequence line — the last of
+which is the one still awaiting approval.
 
 Two items that were more than wording are both settled. Home's absence note
 becomes one sentence naming the areas, with a joining rule now in FR-022b.
@@ -54,4 +57,8 @@ And Week's `Look back on last week` passes Article III's addition test on
 its merits — setting this week's rhythm without seeing the last one is
 deciding blind — so it is recorded as passing rather than as an exception.
 
-**Nothing gates planning or implementation.**
+One item gates part of implementation and is recorded in the spec's
+§"Open": the Picker's consequence line,
+`A session on {task} is still running. Starting here closes it.`, is
+written down with its rules and is not yet approved. FR-027 holds T002a and
+T025a until it is. **Nothing else gates planning or implementation.**

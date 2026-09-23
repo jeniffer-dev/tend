@@ -4,8 +4,9 @@
 
 **Created**: 2026-09-23
 
-**Status**: Ready for planning — every decision settled and all twenty-one
-new strings approved (§"Screen copy")
+**Status**: Ready to implement — twenty-five of the twenty-six new strings
+approved, one awaiting approval (§"Screen copy"), and the concurrent-session
+transition settled
 
 **Input**: User description: "Feature 002: la lógica real detrás de las diez pantallas. Las mismas pantallas, los mismos textos, pero los valores se calculan en vez de estar escritos en el fixture, y el estado vive durante la sesión del navegador (sin persistencia todavía; eso es la 003)."
 
@@ -53,6 +54,7 @@ derivation is wrong or a rule was never written down.
 - Q: What does Review say when a session is still open? → A: It names it. Minutes report the closed sessions, and one sentence says one is still open, so a figure that looks short is explained rather than wrong.
 - Q: Does `Tending now` erase what was already attended today? → A: No. If the area already has minutes from a closed session today, the line keeps them and adds the tending clause. Only the first session of the day shows `Tending now` alone.
 - Q: Does the First run route apply to the whole app or to Home? → A: To Home. Every other route renders its own empty state, which is what keeps `None right now` on Areas reachable — you are standing on Areas when you remove the last one.
+- Q: What happens when a session is started while another is running? → A: The running one closes as `progressed` with an empty note, and nothing is blocked. The Picker says so before the action, in the pattern the removal confirmation set: state the consequence, then offer the button. At most one session is open at any moment, which is what makes `One still open.` true in the singular.
 
 ## Decisions already taken
 
@@ -89,6 +91,11 @@ open for reinterpretation during planning.
 - **First run is Home's rule, not the app's.** Only `/` routes to First
   run when there are no unarchived areas. Every other screen keeps its own
   empty state.
+- **At most one session is open at any moment.** Starting a session closes
+  a running one as `progressed` with an empty note. Nothing is blocked and
+  nothing is asked twice; the Picker states the consequence before the
+  action. This is what makes the singular in `One still open.` a fact
+  rather than an assumption.
 - **The rhythm is `sessions_per_week`, an integer from 1 to 5.**
   `weekly_budget_minutes` is gone from the model (`PRODUCT-SPEC.md` §3.1,
   amended 0.4). Minutes are recorded per session and shown in exactly three
@@ -292,7 +299,14 @@ renders it.
   week; the area is attended today either way.
 - **A session is open while Review is read.** It counts in the week's
   sessions and adds no minutes. Review names it, so the figure is short for
-  a stated reason rather than for an unstated one.
+  a stated reason rather than for an unstated one. There is never more than
+  one to name (FR-015d).
+- **A session is started while one is running elsewhere.** The running one
+  closes as progressed with an empty note, and the Picker said so before the
+  button. The minutes it ran are recorded, because they happened.
+- **A session is running and Home would say nothing is waiting.** The
+  all-attended note is not shown while a session is open. Something is
+  waiting: the session you are in.
 - **An area is tended again after being attended earlier today.** Home's
   line keeps the earlier minutes and adds the tending clause. The day is
   cumulative and a session in progress never subtracts from it.
@@ -367,6 +381,14 @@ renders it.
   session on it starts, not from when it closes. Leaving a session without
   closing it MUST NOT remove the area's attended state for that day.
 
+- **FR-015c**: Starting a session while one is running on a task in
+  **another area** MUST close the running session as `progressed` with an
+  empty note. It MUST NOT block, interrupt, or ask for a confirmation step
+  (FR-012), and the Picker MUST state the consequence before its primary
+  action. Starting one in the area the session is already running in MUST
+  switch the task and leave the session open, which is FR-015 and not this.
+- **FR-015d**: At most one session MUST be open at any moment. FR-015c is
+  what enforces it, and FR-008a's singular wording depends on it.
 - **FR-015b**: While a session is running, Home's line for that area MUST
   keep the minutes already attended today and add the tending clause. Only
   when the running session is the area's first of the day does the line read
@@ -487,8 +509,12 @@ renders it.
 ## Assumptions
 
 - **The screens and their copy do not change.** 001's `contracts/screens.md`
-  remains the UI contract, including FR-013a's ordering rule and the
-  addition-test removals from T048.
+  remains the UI contract, including **001's FR-013a** ordering rule — what
+  is still to be tended sorts above what was attended today — and the
+  addition-test removals from 001's T048. Requirement ids are per feature:
+  `FR-013a` belongs to 001's numbering and this feature's own `FR-013` is
+  about closing a session as done. Where a task cites an inherited rule it
+  names the feature it comes from.
 - **`default_session_minutes` stays at fifteen.** No screen offers a control
   for it, and the approved copy names fifteen minutes in the Picker's action.
 - **Minutes are recorded but never budgeted.** `PRODUCT-SPEC.md` §3.1 as
@@ -516,12 +542,13 @@ feature; every other word on every screen stays exactly as 001 approved it.
 Strings are reproduced verbatim, and where a value is interpolated the
 braces mark it.
 
-**Twenty-five strings.** The list closed at twenty-one before
-`/speckit-analyze`, and four were added after it: one on Home and three on
-Review, all of them consequences of the decision that a session counts from
-its start and measures from its close (FR-006a). The four are marked
-**pending approval** in the tables below and nothing may be built on them
-until that mark is gone (FR-027).
+**Twenty-six strings, twenty-five of them approved.** The list closed at
+twenty-one before `/speckit-analyze`. Four were added after it and approved
+on 2026-09-23: one on Home and three on Review, all of them consequences of
+the decision that a session counts from its start and measures from its
+close (FR-006a). The twenty-sixth is the Picker's consequence line, added
+with the concurrent-session decision and marked **pending approval** below.
+Nothing may be built on it until that mark is gone (FR-027).
 
 ### Areas
 
@@ -543,16 +570,23 @@ reorder against — so the whole footer note is replaced rather than trimmed.
 | Condition | Role | String |
 |---|---|---|
 | Areas exist, none daily | Note in place of the cards | `No area waits for you here. You set each one to appear when you add it, so Home fills as you do.` |
-| Every daily area attended today | Note | `Every daily area was attended today. Nothing is waiting.` |
+| Every daily area attended today, and no session is open | Note | `Every daily area was attended today. Nothing is waiting.` |
 | Every area is daily | — | No sentence. There is nothing to explain |
 | Two or more non-daily areas | Absence note | `{names} keep a weekly rhythm. They are not daily areas, so they do not wait for you here.` |
 | A session is running, and it is the area's first today | Replaces the attended line | `Tending now` |
-| A session is running, and the area was already attended today | The attended line | `Attended today, {n} minutes · tending now` — **pending approval** |
+| A session is running, and the area was already attended today | The attended line | `Attended today, {n} minutes · tending now` |
 | It is Monday | Review entry | `Last week closed. Look back on it.` |
 
 **Joining names**: `A and B` for two, `A, B and C` for three or more, in the
 Areas order. The one-area form stays the 001 string, which is singular
 throughout.
+
+**The all-attended note is not shown while a session is open.** An area
+counts as attended from the moment its session starts (FR-015a), so the
+condition can be met while someone is still tending — and
+`Nothing is waiting.` beside a card reading `Tending now` would be a
+sentence the screen contradicts one line below. The note returns when the
+session closes, which is when it becomes true.
 
 The line reports the day, and a session in progress is part of the day
 rather than a replacement for it (FR-015b). An area tended for the first
@@ -573,9 +607,26 @@ reason both screens can be read mid-session without either of them lying.
 | No tasks on the week list | Note | `Capture something for {area}, or give an inbox item this area.` |
 | Every task closed as done | Heading | `Nothing on the list` |
 | Every task closed as done | Note | `You closed everything on the {area} list. Put something new on it when there is something.` |
+| A session is running on a task in another area | Consequence, above the action | `A session on {task} is still running. Starting here closes it.` — **pending approval** |
 
 The heading is the same either way; only the note distinguishes never
 having started from having finished.
+
+**`{task}` is the running task's title, verbatim.** No truncation, no
+quotation marks, no ellipsis: a title is what the person wrote when they
+captured it, and `Look up the bike shop that does tune-ups` wraps to two
+lines rather than becoming `Look up the bike shop…`. Shortening it to fit
+would name the task badly at exactly the moment naming it is the point.
+The area the session runs in is not named — what is about to close is a
+session on a task, and the task is what identifies it.
+
+**The line does not appear when the session is running in this same area.**
+Picking another task there switches the task inside the open session and
+closes nothing (FR-015), which is what the 001 footer note
+`You can switch to another task inside the session.` already says. A
+consequence line where there is no consequence would fail Article III's
+addition test, and it would teach the person to distrust the line in the
+case where it is true.
 
 ### Inbox
 
@@ -609,9 +660,9 @@ rhythm`**, not a button. It is present on every day.
 | The week has no sessions | Note under the heading | `Nothing was attended this week.` |
 | Every area was attended | In place of the empty Unattended section | `Every area was attended this week.` |
 | An area attended with no note on any session | Row line | `{n} minutes. No note this time.` |
-| An area with closed sessions and one still open, with a note | Row line | `{n} minutes. One still open. Last note: {note}` — **pending approval** |
-| An area with closed sessions and one still open, with no note | Row line | `{n} minutes. One still open. No note this time.` — **pending approval** |
-| An area whose only session this week is the open one | Row line | `One still open. Minutes are recorded when it closes.` — **pending approval** |
+| An area with closed sessions and one still open, with a note | Row line | `{n} minutes. One still open. Last note: {note}` |
+| An area with closed sessions and one still open, with no note | Row line | `{n} minutes. One still open. No note this time.` |
+| An area whose only session this week is the open one | Row line | `One still open. Minutes are recorded when it closes.` |
 
 When every area was attended, the closing note `Unattended is a fact about
 the week, not about you. Next week starts with the same areas.` is **not
@@ -636,6 +687,26 @@ with two closed sessions and one open reads `Three sessions`.
 `Not attended yet.` is reserved for a task that has never been tended. A
 task attended without a note is a different thing and says so.
 
+## Why the Picker states what starting here closes
+
+The consequence line adds an element to the Picker, so Article III's
+addition test applies to it as it did to Week's link. It passes, and it is
+recorded here as passing rather than as an exception.
+
+The Picker's question is *what do I focus on for fifteen minutes?* Starting
+a session here ends one that is running somewhere else, and the minutes it
+ran are recorded as they stand. Without the line the screen answers its
+question by quietly discarding something the person chose earlier, and they
+find out afterwards on Review. Remove the line and the screen still renders,
+but it takes an action whose cost it declined to show.
+
+It is a statement, not a gate. Nothing is blocked, nothing is confirmed
+twice, and the primary action keeps its approved words and its place
+(FR-012, FR-015c). That is the difference between this and a dialog: the
+removal confirmation offers two buttons because removing an area is
+destructive and reversible only by retyping it, while starting a session is
+ordinary and its consequence is a session recorded rather than lost.
+
 ## Why Week carries a route to last week
 
 `Look back on last week` adds an element to Week, so Article III's addition
@@ -650,26 +721,18 @@ gets a worse answer.
 
 ## Open
 
-Two things, both opened by the post-analyze decisions and neither blocking
-Phase 1 or the parts of Phase 2 that do not touch them.
+One string, and nothing else.
 
-**The four new strings await approval.** They are marked in the tables
-above. FR-027 forbids building on provisional wording, so T002 may add the
-twenty-one approved strings and must leave these four until the mark is
-gone.
+**The Picker's consequence line awaits approval**:
+`A session on {task} is still running. Starting here closes it.` It is
+marked in §"Screen copy" with the rules that govern it — the title
+verbatim, and no line at all when the session is running in the same area.
+FR-027 forbids building on provisional wording, so T002 adds the
+twenty-five approved strings and T002a waits for this one. It blocks the
+Picker's consequence line and nothing else.
 
-**What happens when a session is started while one is already running.**
-`activeSessionId` holds one session, so starting a second leaves the first
-with no `endedAt` and no `actualMinutes` — the orphaned session that
-data-model.md says cannot arise while state is in memory. It can: navigate
-from a running session to another area's Picker and start one there. This
-matters now because Review's new copy says `One still open.` in the
-singular, and that is only true if one is the maximum.
-
-The recommendation is that **starting a session closes the running one as
-progressed**, with an empty note, since the person left it to tend
-something else and the minutes it ran are real. The alternative is to
-prevent the second start, which means a screen that refuses an action, and
-FR-012 is unfriendly to that. Either way it is a transition that must be
-written down in data-model.md before T005, and it is the product owner's
-call.
+Everything else that was open is closed. The concurrent-session question is
+now FR-015c and FR-015d, and it is the eleventh transition's second half in
+data-model.md: starting a session closes a running one as progressed with an
+empty note. That is what makes `One still open.` true in the singular rather
+than hopeful.

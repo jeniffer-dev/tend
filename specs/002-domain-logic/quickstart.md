@@ -97,6 +97,19 @@ An area whose only session this week is the open one shows no minute
 figure at all on Review. A zero would be a number where there is no
 measurement yet.
 
+### Starting a session while one is running
+
+From a running session, go Home, open another area and open its Picker.
+Above the action it should say which task is still running and that
+starting here closes it, naming the task in full. Start anyway: nothing
+asks twice, nothing is blocked, and the first session is recorded as
+progressed with the minutes it ran. Review then shows it as a closed
+session, not an open one.
+
+Do the same inside the area the session is already running in. There should
+be **no** line, because picking another task there switches the task without
+closing anything, which is what the footer note has always promised.
+
 ### Empty states, which 001 never reached
 
 Each of these needs its approved string and none of them should show a
@@ -130,6 +143,13 @@ unchanged.
 npm run test          # Vitest — the derivations, as pure functions
 npm run test:e2e      # Playwright — the screens, at 390px and 320px
 ```
+
+The clock tests do not wait fifteen minutes. Playwright's `page.clock`
+installs a controllable clock before the app mounts and fast-forwards it,
+which works because the app reads real time in exactly one place — the
+provider's tick — and derives everything else from what that tick
+publishes. On the phone you do wait, and that is the point of doing it
+there once.
 
 The unit suite grows enormously in this feature and that is the point. 001
 had nineteen assertions over a module of strings, because there was nothing

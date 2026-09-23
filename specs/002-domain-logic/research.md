@@ -80,6 +80,20 @@ feel calm.
   rule about purity and fails the only performance constraint the feature
   has.
 
+**How a browser test moves `now`.** Playwright's clock API — `page.clock`,
+available since 1.45 and the suite is on 1.49 — installs a controllable
+clock before the app mounts and fast-forwards it on demand. It is the right
+tool because the app reads real time in exactly one place, the provider's
+tick, and derives everything else from the `now` that tick publishes. A test
+can therefore jump the clock past fifteen minutes without waiting fifteen
+minutes, and without the app growing a test-only entry point.
+
+The alternative was a query parameter that sets the moment, e.g.
+`?seed=001&at=...`. Rejected: it is a second dev affordance to keep out of
+the default path, and it can only set a moment rather than move one, which
+is not what SC-003 asks for. The unit tests need none of this — they pass
+`now` as an argument, which is the whole reason it is one.
+
 ---
 
 ## 3. Date arithmetic without a date library
@@ -193,5 +207,7 @@ without seeding the time would make the criterion fail every day except one.
 ## Resolved
 
 No `NEEDS CLARIFICATION` markers remain. The spec's own open list closed at
-`/speckit-clarify`; all twenty-one new strings are approved and recorded in
-spec.md §"Screen copy".
+`/speckit-clarify`, and `/speckit-analyze` closed the five it raised.
+Twenty-five of the twenty-six new strings are approved and recorded in
+spec.md §"Screen copy"; the Picker's consequence line awaits approval and is
+the whole of spec.md §"Open".

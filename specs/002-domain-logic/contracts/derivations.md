@@ -61,7 +61,7 @@ which is what the footer note has always claimed.
 | A card's treatment | `to-tend` · `past-rhythm` · `attended` · `tending-now` |
 | The absence note | One sentence naming the non-daily areas, or nothing |
 | The review entry | The Sunday string, the Monday string, or nothing |
-| The empty cases | The no-daily-areas note, or the all-attended note |
+| The empty cases | The no-daily-areas note, or the all-attended note, which is withheld while a session is open |
 
 `tending-now` is new in 002 and exists because FR-015a made it possible to
 be attended and unfinished at once. It is a fourth treatment rather than a
@@ -86,10 +86,23 @@ area you are in the middle of.
 | The tasks | That area's week-list tasks, not done, each with its last-session note |
 | A last-session note | `Not attended yet.` · the note · `Attended. No note left.` |
 | The empty case | The never-started note, or the everything-closed note |
+| The consequence line | The sentence naming what starting here closes, or nothing |
 
 The two empty notes differ and the heading does not. A screen that has
 finished everything is not the same as one that never had anything, and the
 distinction is the note's whole job.
+
+**The consequence line** is given whole or not at all. It is present only
+when a session is running on a task in **another** area, and it names that
+task by its title verbatim (spec.md §"Screen copy"). A session running in
+this same area produces nothing: picking another task there switches the
+task inside the open session (FR-015), and the 001 footer note already says
+so.
+
+It sits above the primary action and gates nothing. The action keeps its
+approved words, both ways forward stay available, and no confirmation step
+is added (FR-012, FR-015c). The Picker is handed the finished sentence or
+`null`, never the running session to phrase itself from.
 
 ### `/session/[taskId]` — What am I doing for these fifteen minutes?
 
@@ -149,6 +162,11 @@ has no minutes for the omission to explain — the count is simply correct.
 
 Review resolves area names **including archived areas**, because the
 sessions happened (data-model.md). Every other screen excludes them.
+
+`One still open.` is singular by construction, not by optimism: starting a
+session closes any running one, so one is the maximum at any moment
+(FR-015c, FR-015d). A derivation that returned a count here would be
+answering a question the state cannot pose.
 
 **Counted and measured are two different questions** (FR-006a). The
 heading's session count and each row's sessions label include a session
