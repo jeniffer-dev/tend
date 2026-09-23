@@ -4,9 +4,8 @@
 
 **Created**: 2026-09-23
 
-**Status**: Ready to implement — twenty-five of the twenty-six new strings
-approved, one awaiting approval (§"Screen copy"), and the concurrent-session
-transition settled
+**Status**: Ready to implement — all twenty-six new strings approved
+(§"Screen copy"), every decision settled, and nothing open
 
 **Input**: User description: "Feature 002: la lógica real detrás de las diez pantallas. Las mismas pantallas, los mismos textos, pero los valores se calculan en vez de estar escritos en el fixture, y el estado vive durante la sesión del navegador (sin persistencia todavía; eso es la 003)."
 
@@ -576,13 +575,14 @@ feature; every other word on every screen stays exactly as 001 approved it.
 Strings are reproduced verbatim, and where a value is interpolated the
 braces mark it.
 
-**Twenty-six strings, twenty-five of them approved.** The list closed at
-twenty-one before `/speckit-analyze`. Four were added after it and approved
-on 2026-09-23: one on Home and three on Review, all of them consequences of
-the decision that a session counts from its start and measures from its
-close (FR-006a). The twenty-sixth is the Picker's consequence line, added
-with the concurrent-session decision and marked **pending approval** below.
-Nothing may be built on it until that mark is gone (FR-027).
+**Twenty-six strings, all approved.** The list closed at twenty-one before
+`/speckit-analyze`. Four were added after it and approved on 2026-09-23: one
+on Home and three on Review, all of them consequences of the decision that a
+session counts from its start and measures from its close (FR-006a). The
+twenty-sixth is the Picker's consequence line, added with the
+concurrent-session decision and approved on 2026-09-24 with its four rules:
+the title verbatim, only when the session runs in another area, nothing when
+it runs in this one, and inside the sticky bar above the action.
 
 ### Areas
 
@@ -641,7 +641,7 @@ reason both screens can be read mid-session without either of them lying.
 | No tasks on the week list | Note | `Capture something for {area}, or give an inbox item this area.` |
 | Every task closed as done | Heading | `Nothing on the list` |
 | Every task closed as done | Note | `You closed everything on the {area} list. Put something new on it when there is something.` |
-| A session is running on a task in another area | Consequence, above the action | `A session on {task} is still running. Starting here closes it.` — **pending approval** |
+| A session is running on a task in another area | Consequence, inside the sticky bar above the action | `A session on {task} is still running. Starting here closes it.` |
 
 The heading is the same either way; only the note distinguishes never
 having started from having finished.
@@ -776,18 +776,15 @@ gets a worse answer.
 
 ## Open
 
-One string, and nothing else.
+Nothing. Every decision is taken and all twenty-six strings are approved.
 
-**The Picker's consequence line awaits approval**:
-`A session on {task} is still running. Starting here closes it.` It is
-marked in §"Screen copy" with the rules that govern it — the title
-verbatim, and no line at all when the session is running in the same area.
-FR-027 forbids building on provisional wording, so T002 adds the
-twenty-five approved strings and T002a waits for this one. It blocks the
-Picker's consequence line and nothing else.
+The last one to close was the Picker's consequence line, approved on
+2026-09-24 with the four rules recorded in §"Screen copy". With it, the
+concurrent-session question is fully answered: FR-015c and FR-015d make the
+transition, and the line makes it visible before it happens. That is what
+lets `One still open.` on Review be singular by construction rather than by
+hope.
 
-Everything else that was open is closed. The concurrent-session question is
-now FR-015c and FR-015d, and it is the eleventh transition's second half in
-data-model.md: starting a session closes a running one as progressed with an
-empty note. That is what makes `One still open.` true in the singular rather
-than hopeful.
+Three analyze passes are recorded in the git history rather than here. The
+one pattern worth carrying forward is in `CLAUDE.md`: framing sentences get
+written before the decisions and nobody returns to them.

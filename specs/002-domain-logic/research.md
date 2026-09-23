@@ -208,6 +208,5 @@ without seeding the time would make the criterion fail every day except one.
 
 No `NEEDS CLARIFICATION` markers remain. The spec's own open list closed at
 `/speckit-clarify`, and `/speckit-analyze` closed the five it raised.
-Twenty-five of the twenty-six new strings are approved and recorded in
-spec.md §"Screen copy"; the Picker's consequence line awaits approval and is
-the whole of spec.md §"Open".
+All twenty-six new strings are approved and recorded in spec.md
+§"Screen copy". Nothing remains in spec.md §"Open".

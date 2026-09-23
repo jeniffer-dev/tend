@@ -64,8 +64,8 @@ every second.
 **Constraints**: In-memory only. `transition-colors` only. Six UI
 primitives. Single column, `max-w-[720px]`, 44px targets.
 
-**Scale/Scope**: 10 screens, 26 new strings (25 approved, 1 pending), ~26
-derivations, 11 state transitions.
+**Scale/Scope**: 10 screens, 26 new strings, ~26 derivations, 11 state
+transitions.
 
 ## Constitution Check
 
@@ -74,7 +74,7 @@ derivations, 11 state transitions.
 | Article | Gate for this feature | Pre-Phase 0 | Post-Phase 1 |
 |---|---|---|---|
 | I — What Tend is | No streak, badge, level or pressure framing. Passing the rhythm is extra; falling short is a fact about the week. | PASS (FR-004, FR-009) | PASS — the derivation returns `is past rhythm`, never a proportion |
-| II — Lexicon | No forbidden term. All 26 new strings reviewed. | PASS | PASS — the copy lint extends to the new strings, and the one still unapproved is held out of `copy.ts` until it is (FR-027) |
+| II — Lexicon | No forbidden term. All 26 new strings reviewed and approved. | PASS | PASS — the copy lint extends to every new string, templates called with a sample so their output is linted too |
 | III — Minimalism | No new screen. Two new elements: Week's link, and the Picker's consequence line. | PASS | PASS — each is argued on its merits in spec.md and neither is exempted. The Picker's line states a consequence and gates nothing |
 | IV — Visual system | No new visual value. Nothing in the design system changes. | PASS | PASS — 002 adds no component and no token. The Picker's line makes a fourth footer shape, and the sticky footer's pre-hydration reservation is recalculated for it (T025b); that constant is a layout guard, not a design system value, and §4's sticky-bar rule already covers a message that qualifies the action |
 | V — Motion | `transition-colors` only. The clock's tick changes a number, never a style. | PASS | PASS — one treatment in every clock state, as 001 established |
