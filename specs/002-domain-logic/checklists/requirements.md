@@ -43,13 +43,15 @@ appears Sunday and Monday with Week carrying a permanent route into the
 previous week's Review, Capture's chips are every area in the Areas order,
 and Home's absence note is one sentence naming the absent areas.
 
-**One thing still gates implementation**, and it is not a spec-quality
-defect: **twenty strings are pending**, listed in the spec's §Open with the
-condition that produces each and the 001 string it replaces or accompanies.
-FR-027 forbids inventing provisional wording, so they block the build
-rather than the plan.
+All twenty-one new strings were approved on 2026-09-23 and are recorded in
+the spec's §"Screen copy". The list closed at twenty-one rather than twenty
+because removing an area with neither tasks nor past sessions is its own
+case, which the pending list had missed.
 
-Two of the twenty are more than wording. #8 is the absence note 001
-deliberately left singular and said it would rewrite when a second
-non-daily area appeared; #16 adds a control to Week, so it faces Article
-III's addition test as well as needing a label.
+Two items that were more than wording are both settled. Home's absence note
+becomes one sentence naming the areas, with a joining rule now in FR-022b.
+And Week's `Look back on last week` passes Article III's addition test on
+its merits — setting this week's rhythm without seeing the last one is
+deciding blind — so it is recorded as passing rather than as an exception.
+
+**Nothing gates planning or implementation.**

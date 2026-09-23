@@ -4,8 +4,8 @@
 
 **Created**: 2026-09-23
 
-**Status**: Draft — every decision settled; twenty strings pending from the
-product owner (§Open)
+**Status**: Ready for planning — every decision settled and all twenty-one
+new strings approved (§"Screen copy")
 
 **Input**: User description: "Feature 002: la lógica real detrás de las diez pantallas. Las mismas pantallas, los mismos textos, pero los valores se calculan en vez de estar escritos en el fixture, y el estado vive durante la sesión del navegador (sin persistencia todavía; eso es la 003)."
 
@@ -347,6 +347,9 @@ renders it.
   no sentence.
 - **FR-022a**: Capture MUST offer every area as a chip, in the order set on
   Areas, with no cap and no filtering by whether the area is daily.
+- **FR-022b**: When two or more areas are non-daily, Home's absence note
+  MUST name them in one sentence, joined as `A and B` for two and
+  `A, B and C` for three or more, in the Areas order.
 
 #### Navigation
 
@@ -451,82 +454,122 @@ renders it.
   Article III's v1 exclusions.
 - Any new screen, and any new element on an existing screen.
 
+## Screen copy — the strings 002 adds
+
+Approved 2026-09-23. These are the only new user-facing strings in this
+feature; every other word on every screen stays exactly as 001 approved it.
+Strings are reproduced verbatim, and where a value is interpolated the
+braces mark it.
+
+**Twenty-one strings.** The list closed at twenty-one rather than twenty
+because removing an area with neither tasks nor past sessions is its own
+case, which the earlier list missed.
+
+### Areas
+
+| Condition | Role | String |
+|---|---|---|
+| No areas remain | Heading | `None right now` |
+| No areas remain | Note under the heading | `You removed the last one. Name another whenever you want.` |
+| Exactly one area | Heading | `One area` |
+| Exactly one area | Footer note | `Tap the area to change its name, color or rhythm.` |
+| Removing an area with no tasks | Confirmation | `Removing {area} keeps its {n} past sessions in Review.` |
+| Removing an area with no past sessions | Confirmation | `Removing {area} moves its {n} tasks to the inbox, carrying the name.` |
+| Removing an area with neither | Confirmation | `Removing {area} removes the name. Nothing else is in it.` |
+
+With one area the footer cannot say `Drag to reorder.` — there is nothing to
+reorder against — so the whole footer note is replaced rather than trimmed.
+
+### Home
+
+| Condition | Role | String |
+|---|---|---|
+| Areas exist, none daily | Note in place of the cards | `No area waits for you here. You set each one to appear when you add it, so Home fills as you do.` |
+| Every daily area attended today | Note | `Every daily area was attended today. Nothing is waiting.` |
+| Every area is daily | — | No sentence. There is nothing to explain |
+| Two or more non-daily areas | Absence note | `{names} keep a weekly rhythm. They are not daily areas, so they do not wait for you here.` |
+| A session is running | Replaces the attended line | `Tending now` |
+| It is Monday | Review entry | `Last week closed. Look back on it.` |
+
+**Joining names**: `A and B` for two, `A, B and C` for three or more, in the
+Areas order. The one-area form stays the 001 string, which is singular
+throughout.
+
+`Tending now` stands in for `Attended today, {n} minutes` until the session
+is closed, which is what FR-015a requires: the area is attended from the
+moment the session starts, and there is no final figure until it ends.
+
+### Picker
+
+| Condition | Role | String |
+|---|---|---|
+| No tasks on the week list | Heading | `Nothing on the list` |
+| No tasks on the week list | Note | `Capture something for {area}, or give an inbox item this area.` |
+| Every task closed as done | Heading | `Nothing on the list` |
+| Every task closed as done | Note | `You closed everything on the {area} list. Put something new on it when there is something.` |
+
+The heading is the same either way; only the note distinguishes never
+having started from having finished.
+
+### Inbox
+
+| Condition | Role | String |
+|---|---|---|
+| Nothing unsorted | Heading | `Nothing unsorted` |
+| Nothing unsorted | Note under the heading | `Everything you captured has an area.` |
+
+The 001 footer, `An item stays here until it has an area. Nothing here
+expires.`, is unchanged and still shown.
+
+### Week
+
+| Condition | Role | String |
+|---|---|---|
+| No area has tasks on its list | Note | `No tasks on any list. The rhythms are set; tasks are what fill them.` |
+| An area has a rhythm and no tasks | Row line | `No tasks on the list. {sessions} sessions attended.` |
+| Always | Link to last week's Review | `Look back on last week` |
+
+The row line's second sentence follows the ordinary rule; only the first is
+replaced.
+
+`Look back on last week` is a **tertiary text link beneath `Change the
+rhythm`**, not a button. It is present on every day.
+
+### Review
+
+| Condition | Role | String |
+|---|---|---|
+| The week has no sessions | Heading | `No sessions` |
+| The week has no sessions | Note under the heading | `Nothing was attended this week.` |
+| Every area was attended | In place of the empty Unattended section | `Every area was attended this week.` |
+| An area attended with no note on any session | Row line | `{n} minutes. No note this time.` |
+
+When every area was attended, the closing note `Unattended is a fact about
+the week, not about you. Next week starts with the same areas.` is **not
+shown**. There is nothing to explain.
+
+### A task's last session
+
+| Condition | String |
+|---|---|
+| The last session was closed with an empty note | `Attended. No note left.` |
+
+`Not attended yet.` is reserved for a task that has never been tended. A
+task attended without a note is a different thing and says so.
+
+## Why Week carries a route to last week
+
+`Look back on last week` adds an element to Week, so Article III's addition
+test applies to it. It passes, and it is recorded here as passing rather
+than as an exception.
+
+Week's question is *what am I committing to?* Setting this week's rhythm
+without being able to see the last one is deciding blind. The link is not
+history parked on a planning screen; it is the evidence the decision needs.
+Remove it and the screen still renders, but the question it exists to answer
+gets a worse answer.
+
 ## Open
 
-### The copy this feature needs
-
-The product owner writes these; no provisional wording is invented
-(FR-027). Each row gives the screen, the exact condition that produces the
-state, and the 001 string it replaces or sits beside — so each can be
-written with its context rather than in isolation.
-
-**Twenty items.** Eighteen are states 001's fixtures never reached; two are
-new controls that the Sunday-and-Monday decision and Week's permanent route
-into Review introduce.
-
-#### Areas
-
-| # | Condition | 001 string it replaces or accompanies |
-|---|---|---|
-| 1 | No areas remain (the last one was removed) | Heading `Five, in your order` — the count is now zero, and First run is not shown because areas existed a moment ago |
-| 2 | Exactly one area exists | Heading `Five, in your order` — "in your order" says nothing about one |
-| 3 | Removing an area that has no tasks | `Removing Money keeps its five tasks. They move to the inbox carrying the name, and its eleven past sessions stay in Review.` — the first clause has nothing to describe |
-| 4 | Removing an area that has no past sessions | Same string — the last clause has nothing to describe |
-
-#### Home
-
-| # | Condition | 001 string it replaces or accompanies |
-|---|---|---|
-| 5 | Areas exist, none of them daily | The card list is empty. Eyebrow `Tending today` and heading (the weekday) still render above nothing |
-| 6 | Every daily area is already attended today | Every card is the collapsed form, `Attended today, 15 minutes`. No Tend button is on the screen |
-| 7 | Every area is daily | Absence note `People keeps a rhythm of one session a week. It is not a daily area, so it does not wait for you here.` — there is nothing to account for, and per FR-022 no sentence is shown |
-| 8 | Two or more areas are non-daily | Same note, which is singular by construction. Per FR-022 it becomes one sentence naming them all |
-| 9 | A session is running right now on an area | `Attended today, 15 minutes` — the session has not ended, so there is no final figure yet (FR-015a) |
-| 10 | It is Monday and the week just closed | `The week closes tonight. Look back on it.` is false on Monday. The Monday form is a new string |
-
-#### Picker
-
-| # | Condition | 001 string it replaces or accompanies |
-|---|---|---|
-| 11 | The area has no tasks on this week's list | The task list is empty, under heading `Pick one thing` and beside scope note `Only what you put on the week list for Health shows here. Anything captured since sits in the inbox.` |
-| 12 | Every task on the list has been closed as done | The same empty list, reached by finishing rather than by never starting. It may or may not want different words from #11 |
-
-#### Inbox
-
-| # | Condition | 001 string it replaces or accompanies |
-|---|---|---|
-| 13 | Nothing is unsorted | Heading `Three unsorted` — the count is zero. Footer `An item stays here until it has an area. Nothing here expires.` still reads true |
-
-#### Week
-
-| # | Condition | 001 string it replaces or accompanies |
-|---|---|---|
-| 14 | No area has a task on the week list | Heading `Four areas, ten sessions` with nothing behind it |
-| 15 | An area has a rhythm but no tasks on the list | Row line `Three tasks on the list. Two sessions attended.` — the first sentence has nothing to count |
-| 16 | Week needs its permanent route into the previous week's Review | A new control beside `Change the rhythm`, with no approved label (FR-019b) |
-
-#### Review
-
-| # | Condition | 001 string it replaces or accompanies |
-|---|---|---|
-| 17 | The week has no sessions at all | Heading `Six sessions` counts zero, and the `Attended` section is empty above `Unattended` |
-| 18 | Every area was attended | The `Unattended` section is empty. Closing note `Unattended is a fact about the week, not about you. Next week starts with the same areas.` still needs to make sense |
-| 19 | An area was attended but no session carried a note | Row `52 minutes. Last note: found the lab, need the referral number.` — the minutes stand, the note does not exist |
-
-#### Anywhere a task's last session is shown
-
-| # | Condition | 001 string it replaces or accompanies |
-|---|---|---|
-| 20 | A session was closed leaving the progress note empty | `Not attended yet.` is wrong — it was attended — and there is no note to show |
-
-### Notes on two of these
-
-- **#8 was pre-decided and is now due.** 001 §"The one string that is not
-  transcribed" recorded that the absence note is singular deliberately and
-  would be *rewritten rather than generalised* when a second non-daily area
-  appeared. FR-022 now settles the shape — one sentence naming them — and
-  the wording is what is outstanding.
-- **#16 adds an element to a screen**, so it faces Article III's addition
-  test on Week as well as needing a label. The question it must serve is
-  *what am I committing to?*, and a route to last week is arguably a
-  different question — worth deciding deliberately rather than by default.
+Nothing. Every decision is taken and every string is approved. The feature
+is ready for `/speckit-plan`.
