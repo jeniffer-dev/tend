@@ -47,6 +47,13 @@ derivation is wrong or a rule was never written down.
 - Q: Which areas become Capture's chips? → A: All of them, in the Areas order. No cap and no filtering by daily.
 - Q: How does Home's absence note read with more than one non-daily area? → A: One sentence naming the absent areas, never a line per area. With none absent there is no sentence.
 
+### Session 2026-09-23, after `/speckit-analyze`
+
+- Q: Does a session that has started and not closed count as a session? → A: Yes, from the moment it starts. It counts as a session on Week and in Review's count, and it contributes no minutes until it is closed. Counting and measuring are two different questions and they close at two different moments.
+- Q: What does Review say when a session is still open? → A: It names it. Minutes report the closed sessions, and one sentence says one is still open, so a figure that looks short is explained rather than wrong.
+- Q: Does `Tending now` erase what was already attended today? → A: No. If the area already has minutes from a closed session today, the line keeps them and adds the tending clause. Only the first session of the day shows `Tending now` alone.
+- Q: Does the First run route apply to the whole app or to Home? → A: To Home. Every other route renders its own empty state, which is what keeps `None right now` on Areas reachable — you are standing on Areas when you remove the last one.
+
 ## Decisions already taken
 
 These are settled and this specification is bound by them. They are not
@@ -76,6 +83,12 @@ open for reinterpretation during planning.
   no filtering by daily.
 - **Home's absence note is one sentence naming the absent areas**, never a
   line each. With none absent there is no sentence.
+- **A session counts from its start and measures from its close.** An
+  open session is a session everywhere something is counted, and minutes
+  are the total of the closed ones.
+- **First run is Home's rule, not the app's.** Only `/` routes to First
+  run when there are no unarchived areas. Every other screen keeps its own
+  empty state.
 - **The rhythm is `sessions_per_week`, an integer from 1 to 5.**
   `weekly_budget_minutes` is gone from the model (`PRODUCT-SPEC.md` §3.1,
   amended 0.4). Minutes are recorded per session and shown in exactly three
@@ -277,6 +290,14 @@ renders it.
   than showing a gap.
 - **Two sessions on the same area on the same day.** Both count toward the
   week; the area is attended today either way.
+- **A session is open while Review is read.** It counts in the week's
+  sessions and adds no minutes. Review names it, so the figure is short for
+  a stated reason rather than for an unstated one.
+- **An area is tended again after being attended earlier today.** Home's
+  line keeps the earlier minutes and adds the tending clause. The day is
+  cumulative and a session in progress never subtracts from it.
+- **The last area is removed.** Areas shows `None right now` and Home shows
+  First run. Both are correct, and neither redirects the other.
 
 ## Requirements *(mandatory)*
 
@@ -304,9 +325,19 @@ renders it.
   local time, as one boundary for the whole system.
 - **FR-006**: A session MUST count toward the week containing its start,
   regardless of when or how it ends.
+- **FR-006a**: A session that has started and not closed MUST count as a
+  session wherever sessions are counted, and MUST contribute no minutes
+  until it closes. `actualMinutes` is the figure minutes are summed from
+  (FR-010a), and it does not exist until the session ends. Counting and
+  measuring answer different questions and close at different moments.
 - **FR-007**: Week MUST count in sessions and MUST NOT show minutes.
 - **FR-008**: Review MUST present the week that is closing or has closed,
   with Attended before Unattended, and MUST show minutes as plain figures.
+- **FR-008a**: When the week being reviewed contains a session that has not
+  closed, Review MUST say so on that area's row. The minute figure reports
+  the closed sessions, and the sentence naming the open one is what keeps a
+  short figure from reading as a wrong one. An area whose only session this
+  week is the open one MUST NOT render a minute figure of zero.
 - **FR-009**: An area with more sessions than its rhythm MUST be presented
   as having extra sessions. An area with fewer MUST be presented as a fact
   about the week and never about the person.
@@ -335,6 +366,12 @@ renders it.
 - **FR-015a**: An area MUST count as attended today from the moment a
   session on it starts, not from when it closes. Leaving a session without
   closing it MUST NOT remove the area's attended state for that day.
+
+- **FR-015b**: While a session is running, Home's line for that area MUST
+  keep the minutes already attended today and add the tending clause. Only
+  when the running session is the area's first of the day does the line read
+  `Tending now` alone. A session in progress adds to the day; it does not
+  replace it.
 
 #### Areas, tasks and capture
 
@@ -380,6 +417,10 @@ renders it.
   moves between screens.
 - **FR-025**: The app MUST start empty. With no areas, First run is what a
   person sees, and nothing is seeded or suggested (Article I).
+- **FR-025a**: The route to First run MUST live on `/` alone. No other
+  route may redirect to it, because every other screen has an approved empty
+  state of its own and `None right now` on Areas is reached by removing the
+  last area while standing on Areas.
 - **FR-026**: A development mode MUST be able to load state equivalent to
   001's fixtures, and MUST NOT be what the app does by default. It is what
   makes SC-001 runnable.
@@ -475,9 +516,12 @@ feature; every other word on every screen stays exactly as 001 approved it.
 Strings are reproduced verbatim, and where a value is interpolated the
 braces mark it.
 
-**Twenty-one strings.** The list closed at twenty-one rather than twenty
-because removing an area with neither tasks nor past sessions is its own
-case, which the earlier list missed.
+**Twenty-five strings.** The list closed at twenty-one before
+`/speckit-analyze`, and four were added after it: one on Home and three on
+Review, all of them consequences of the decision that a session counts from
+its start and measures from its close (FR-006a). The four are marked
+**pending approval** in the tables below and nothing may be built on them
+until that mark is gone (FR-027).
 
 ### Areas
 
@@ -502,16 +546,24 @@ reorder against — so the whole footer note is replaced rather than trimmed.
 | Every daily area attended today | Note | `Every daily area was attended today. Nothing is waiting.` |
 | Every area is daily | — | No sentence. There is nothing to explain |
 | Two or more non-daily areas | Absence note | `{names} keep a weekly rhythm. They are not daily areas, so they do not wait for you here.` |
-| A session is running | Replaces the attended line | `Tending now` |
+| A session is running, and it is the area's first today | Replaces the attended line | `Tending now` |
+| A session is running, and the area was already attended today | The attended line | `Attended today, {n} minutes · tending now` — **pending approval** |
 | It is Monday | Review entry | `Last week closed. Look back on it.` |
 
 **Joining names**: `A and B` for two, `A, B and C` for three or more, in the
 Areas order. The one-area form stays the 001 string, which is singular
 throughout.
 
-`Tending now` stands in for `Attended today, {n} minutes` until the session
-is closed, which is what FR-015a requires: the area is attended from the
-moment the session starts, and there is no final figure until it ends.
+The line reports the day, and a session in progress is part of the day
+rather than a replacement for it (FR-015b). An area tended for the first
+time today has no figure yet and reads `Tending now` alone. An area tended
+again keeps the minutes it already earned and adds the clause, because
+erasing a closed session's figure to describe an open one loses a fact to
+report a fact.
+
+The minutes in the line are always closed minutes. The running session
+joins them when it closes, which is the same rule Review follows and the
+reason both screens can be read mid-session without either of them lying.
 
 ### Picker
 
@@ -557,10 +609,23 @@ rhythm`**, not a button. It is present on every day.
 | The week has no sessions | Note under the heading | `Nothing was attended this week.` |
 | Every area was attended | In place of the empty Unattended section | `Every area was attended this week.` |
 | An area attended with no note on any session | Row line | `{n} minutes. No note this time.` |
+| An area with closed sessions and one still open, with a note | Row line | `{n} minutes. One still open. Last note: {note}` — **pending approval** |
+| An area with closed sessions and one still open, with no note | Row line | `{n} minutes. One still open. No note this time.` — **pending approval** |
+| An area whose only session this week is the open one | Row line | `One still open. Minutes are recorded when it closes.` — **pending approval** |
 
 When every area was attended, the closing note `Unattended is a fact about
 the week, not about you. Next week starts with the same areas.` is **not
 shown**. There is nothing to explain.
+
+The open session is named rather than hidden or silently counted. The
+week's heading counts it, because it is a session (FR-006a); the minute
+figure does not include it, because it has none yet. Without the sentence
+the two would look inconsistent, and the reader would have no way to tell a
+short figure from a wrong one. An area whose only session this week is the
+open one has no figure at all, and says why instead of rendering a zero.
+
+The row's sessions label counts the open session throughout, so an area
+with two closed sessions and one open reads `Three sessions`.
 
 ### A task's last session
 
@@ -585,5 +650,26 @@ gets a worse answer.
 
 ## Open
 
-Nothing. Every decision is taken and every string is approved. The feature
-is ready for `/speckit-plan`.
+Two things, both opened by the post-analyze decisions and neither blocking
+Phase 1 or the parts of Phase 2 that do not touch them.
+
+**The four new strings await approval.** They are marked in the tables
+above. FR-027 forbids building on provisional wording, so T002 may add the
+twenty-one approved strings and must leave these four until the mark is
+gone.
+
+**What happens when a session is started while one is already running.**
+`activeSessionId` holds one session, so starting a second leaves the first
+with no `endedAt` and no `actualMinutes` — the orphaned session that
+data-model.md says cannot arise while state is in memory. It can: navigate
+from a running session to another area's Picker and start one there. This
+matters now because Review's new copy says `One still open.` in the
+singular, and that is only true if one is the maximum.
+
+The recommendation is that **starting a session closes the running one as
+progressed**, with an empty note, since the person left it to tend
+something else and the minutes it ran are real. The alternative is to
+prevent the second start, which means a screen that refuses an action, and
+FR-012 is unfriendly to that. Either way it is a transition that must be
+written down in data-model.md before T005, and it is the product owner's
+call.

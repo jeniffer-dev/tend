@@ -55,12 +55,30 @@ reads the clock is none of those things. Passing `now` makes each rule a
 pure function of state and time, which is exactly what can be unit-tested —
 something 001 had no need for and therefore never established.
 
+**Who publishes it, and how often.** State and time are two contexts. The
+ticking `now` is subscribed to by the session clock and nothing else; every
+other screen subscribes to a `now` that changes only when the local date
+changes. Both are the same argument to the same pure functions, so no rule
+changes shape — what changes is how many screens React re-renders each
+second. One provider holding state and a one-second tick together would
+re-render every subscribed screen every second while a session runs, which
+is the constraint plan.md §"Performance Goals" names, lost to the more
+obvious structure.
+
+A day name, a captured label, a week boundary and a rhythm comparison
+cannot change more than once a day. Asking them every second is not wrong,
+it is merely waste — and on a phone, waste during the one screen that must
+feel calm.
+
 **Alternatives considered**:
 
 - *A `getNow()` helper inside `lib/`* — rejected. It hides the dependency
   rather than removing it, and every test then has to mock a module.
 - *Freezing time per render* — rejected for the running clock, which must
   advance; it is the same decision with a worse name.
+- *One context for state and time* — rejected above. It satisfies every
+  rule about purity and fails the only performance constraint the feature
+  has.
 
 ---
 
@@ -132,6 +150,21 @@ mechanism that satisfies both without storing anything: it is explicit, it
 is per-tab, it disappears on navigation, and it cannot leak into a normal
 session.
 
+**It starts the clock, it does not stop it.** The seeded `now` is
+`Sunday 13 September 2026, 13:00 local + the real time elapsed since
+mount`. A frozen clock would satisfy SC-001 and break everything else: the
+session clock derives from `startedAt` and `now`, so a `now` that never
+moves is a clock that never moves, and the session screen — the feature's
+centre — could not be exercised under the only state the parity test runs
+against. Quickstart asks for the clock to be watched past zero under seed,
+and a frozen clock cannot do it.
+
+The hour matters for one reason. Parity holds while the seeded moment is
+still Sunday, and at local midnight the heading becomes `Monday` and Home's
+Review entry changes string. Thirteen hundred leaves eleven hours, which is
+longer than any sitting, and it is an hour at which 001's fixture reads
+true: something has been attended today, and the week still closes tonight.
+
 **The fixed clock is not optional.** SC-001 compares rendered copy against
 001's approved strings, and those strings contain `Sunday`,
 `Last attended Monday.`, `Week of 7 September` and
@@ -151,6 +184,9 @@ without seeding the time would make the criterion fail every day except one.
   users are shown.
 - *Seeding data but not time* — rejected above. It is the difference between
   SC-001 being a regression test and being a calendar.
+- *Freezing the seeded clock rather than offsetting it* — rejected above. It
+  buys parity that does not expire and pays with a session screen that
+  cannot be tested at all.
 
 ---
 

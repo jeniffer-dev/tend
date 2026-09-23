@@ -26,9 +26,16 @@ device, and 001's T047 found three things no assertion had caught.
 First run. Name an area and the app has a Home.
 
 **Seeded, which is what SC-001 needs.** Open `/?seed=001`. This loads state
-equivalent to 001's fixtures *and* pins the clock to Sunday 13 September
-2026 — the moment 001's copy describes, with the closing week running
-Monday the 7th to Sunday the 13th.
+equivalent to 001's fixtures *and* starts the clock at Sunday 13 September
+2026, 13:00 local — the moment 001's copy describes, with the closing week
+running Monday the 7th to Sunday the 13th.
+
+The seeded clock **runs**. It starts at that moment and advances with real
+time, which is what lets you start a session and watch it pass zero under
+the same state the parity check uses. Parity itself holds until the seeded
+moment reaches local midnight, which is eleven hours: past that the heading
+reads `Monday` and Home's Review entry changes string, both correctly.
+Reload the tab and you are back at 13:00.
 
 Both matter. The empty path is the product; the seeded path is the
 regression test. Neither writes anything.
@@ -73,12 +80,31 @@ from date parts rather than by subtracting 24-hour days. Set the device
 clock to a DST changeover weekend and confirm Monday 00:00 is still Monday
 00:00.
 
+### A session that is still open
+
+Start a session, leave it running, and read the other screens.
+
+- **Week** counts it. A session counts from the moment it starts.
+- **Review** counts it too, and says `One still open.` on that area's row.
+  The minute figure covers only the closed sessions, which is why the
+  sentence is there — a short figure with no explanation reads as a wrong
+  one.
+- **Home** keeps what the day already holds. If the area was attended
+  earlier today the line reads `Attended today, 15 minutes · tending now`.
+  If this is its first session today it reads `Tending now` alone.
+
+An area whose only session this week is the open one shows no minute
+figure at all on Review. A zero would be a number where there is no
+measurement yet.
+
 ### Empty states, which 001 never reached
 
 Each of these needs its approved string and none of them should show a
 count of zero phrased as if it were a number:
 
-- Remove every area, and Areas reads `None right now`
+- Remove every area while standing on Areas, and Areas reads
+  `None right now`. It does not redirect — only `/` routes to First run, and
+  going Home afterwards is what shows it
 - Keep one area, and the footer stops saying `Drag to reorder.`
 - Make every area non-daily, and Home explains itself
 - Attend every daily area, and Home says so

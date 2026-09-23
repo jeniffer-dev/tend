@@ -25,8 +25,14 @@ combine them wrongly and the test has one thing to assert against.
 
 Shown when `areas` is empty. No derivation; the copy is static.
 
-**Contract**: the app MUST route here whenever there are no unarchived
-areas, and MUST NOT route here merely because Home would be empty.
+**Contract**: `/` MUST route here whenever there are no unarchived areas,
+and MUST NOT route here merely because Home would be empty.
+
+**The route lives on `/` alone** (FR-025a). No other screen redirects. Areas
+keeps its own `None right now`, which is what a person sees at the moment
+they remove the last area, because that is the screen they are standing on.
+A redirect from every route would make that approved string unreachable and
+would answer a question the person did not ask.
 
 ### `/areas` — What am I paying attention to?
 
@@ -58,9 +64,16 @@ which is what the footer note has always claimed.
 | The empty cases | The no-daily-areas note, or the all-attended note |
 
 `tending-now` is new in 002 and exists because FR-015a made it possible to
-be attended and unfinished at once. It renders `Tending now` in place of the
-minute figure, and it is a fourth treatment rather than a variant of
-`attended`, so the screen cannot render a figure that does not exist yet.
+be attended and unfinished at once. It is a fourth treatment rather than a
+variant of `attended`, so the screen cannot render a figure that does not
+exist yet.
+
+Its line depends on what the day already holds (FR-015b). With no closed
+session on that area today it reads `Tending now`. With minutes already
+attended today it keeps them and adds the clause:
+`Attended today, {n} minutes · tending now`. The figure is always the
+closed minutes; the running session joins it when it closes. The card is
+handed whichever of the two strings applies and never the pieces.
 
 **Ordering is unchanged**: FR-013a still puts attended areas below the ones
 still to be tended, and `tending-now` sorts with the open ones — it is the
@@ -119,18 +132,31 @@ states, and there is now one real clock.
 **Must not** receive minutes. Week counts in sessions (FR-007), and the
 derivation that would produce a minute total is not offered to this screen.
 
+Week counts a session from its start, so an open session is already in the
+figures here (FR-006a). Week says nothing about it being open, because Week
+has no minutes for the omission to explain — the count is simply correct.
+
 ### `/review` — What did I attend, and what went unattended?
 
 | Asks | Gets |
 |---|---|
 | Which week | The closing week on Sunday, last week on Monday and from Week's link |
 | The eyebrow | `Week of {date}` for whichever week it is showing |
-| Attended | Areas with sessions that week, with minutes and the last note |
+| Attended | Areas with sessions that week, with minutes from the closed ones and the last note |
+| An open session | Named on its area's row, so a short figure is explained (FR-008a) |
 | Unattended | Areas with none, or the every-area-attended line |
 | The closing note | Shown only when something went unattended |
 
 Review resolves area names **including archived areas**, because the
 sessions happened (data-model.md). Every other screen excludes them.
+
+**Counted and measured are two different questions** (FR-006a). The
+heading's session count and each row's sessions label include a session
+that has started and not closed; the minute figures do not, because
+`actualMinutes` does not exist until the close. The row says which session
+is the open one rather than leaving the arithmetic to look short for an
+unstated reason. An area whose only session this week is the open one gets
+no figure at all — a zero would be a number where there is no measurement.
 
 ## Contract-level invariants
 
@@ -138,6 +164,10 @@ sessions happened (data-model.md). Every other screen excludes them.
    formatting or string assembly. Verified by code review, as 001 verified
    FR-002.
 2. Every derivation is pure, synchronous and takes `now` as an argument.
+   The session clock is handed the ticking `now`; every other screen is
+   handed a `now` that changes only when the local date does. Which one a
+   screen subscribes to is a React question, not a domain one, and no
+   derivation can tell the difference.
 3. Every user-facing string comes from `lib/copy.ts`. Derivations choose
    between templates and fill them; they never concatenate prose.
 4. 001's `contracts/screens.md` holds unchanged — same screens, same routes,

@@ -19,10 +19,13 @@ Three decisions shape everything else:
    provide.
 2. **State is one in-memory store above the router.** Nothing is written
    anywhere, so a running session survives navigation but not a reload.
-3. **`?seed=001` loads 001-equivalent state *and* pins the clock** to Sunday
-   13 September 2026. SC-001 compares rendered copy against strings that
-   name a specific Sunday; seeding data without seeding time would make the
-   criterion a calendar rather than a test.
+3. **`?seed=001` loads 001-equivalent state *and* starts the clock** at
+   Sunday 13 September 2026, 13:00 local, advancing from there. SC-001
+   compares rendered copy against strings that name a specific Sunday;
+   seeding data without seeding time would make the criterion a calendar
+   rather than a test, and freezing time rather than offsetting it would
+   leave the session clock dead under the only state the parity test can
+   run against.
 
 ## Technical Context
 
@@ -48,11 +51,21 @@ feature or the next.
 re-renders once a second, and that tick must not re-render the whole app.
 Everything else is a pure function over collections of tens of items.
 
+**The mechanism, not the intention.** State and the ticking clock are two
+contexts, not one. A single provider holding both would re-render every
+subscribed screen every second while a session runs, which is the whole of
+this constraint lost to one convenience. The ticking `now` is consumed by
+the session clock alone; every other screen subscribes to a `now` that
+changes only when the local date does. Both are the same argument to the
+same pure functions — a day name, a week boundary and a rhythm comparison
+cannot change more than once a day, and nothing is gained by asking them
+every second.
+
 **Constraints**: In-memory only. `transition-colors` only. Six UI
 primitives. Single column, `max-w-[720px]`, 44px targets.
 
-**Scale/Scope**: 10 screens, 21 new strings, ~25 derivations, 10 state
-transitions.
+**Scale/Scope**: 10 screens, 25 new strings (21 approved, 4 pending), ~26
+derivations, 11 state transitions.
 
 ## Constitution Check
 
@@ -61,7 +74,7 @@ transitions.
 | Article | Gate for this feature | Pre-Phase 0 | Post-Phase 1 |
 |---|---|---|---|
 | I — What Tend is | No streak, badge, level or pressure framing. Passing the rhythm is extra; falling short is a fact about the week. | PASS (FR-004, FR-009) | PASS — the derivation returns `is past rhythm`, never a proportion |
-| II — Lexicon | No forbidden term. All 21 new strings reviewed. | PASS | PASS — the copy lint extends to the new strings |
+| II — Lexicon | No forbidden term. All 25 new strings reviewed. | PASS | PASS — the copy lint extends to the new strings, and the four added after analyze are held until approved (FR-027) |
 | III — Minimalism | No new screen. One new element, on Week. | PASS | PASS — `Look back on last week` is argued on its merits in spec.md, not exempted |
 | IV — Visual system | No new visual value. Nothing in the design system changes. | PASS | PASS — 002 adds no component and no token |
 | V — Motion | `transition-colors` only. The clock's tick changes a number, never a style. | PASS | PASS — one treatment in every clock state, as 001 established |
@@ -130,11 +143,12 @@ specs/002-domain-logic/
 
 ```text
 lib/
-├── copy.ts              # extended: 21 new strings, some as templates
+├── copy.ts              # extended: 25 new strings, some as templates
 ├── state/
 │   ├── types.ts         # Area, Task, Session, State
-│   ├── store.ts         # the reducer and its transitions
-│   └── provider.tsx     # the client provider, and the clock tick
+│   ├── store.ts         # the reducer and its eleven transitions
+│   ├── provider.tsx     # the client provider — state, and the seed
+│   └── clock.tsx        # two contexts: the ticking now, and the day
 ├── derive/
 │   ├── week.ts          # week bounds, which week a session is in
 │   ├── counting.ts      # sessions, minutes, past rhythm, attended today
