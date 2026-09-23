@@ -4,8 +4,8 @@
 
 **Created**: 2026-09-23
 
-**Status**: Draft — one open question (when the week closes) and the
-empty-state copy pending
+**Status**: Draft — every decision settled; twenty strings pending from the
+product owner (§Open)
 
 **Input**: User description: "Feature 002: la lógica real detrás de las diez pantallas. Las mismas pantallas, los mismos textos, pero los valores se calculan en vez de estar escritos en el fixture, y el estado vive durante la sesión del navegador (sin persistencia todavía; eso es la 003)."
 
@@ -43,6 +43,9 @@ derivation is wrong or a rule was never written down.
 - Q: How are numbers written? → A: Words up to twelve, figures from thirteen. That is what lets `Three sessions` and `52 minutes` coexist.
 - Q: How are past days named? → A: The day's name up to seven days back; beyond that, the date.
 - Q: When does an area count as attended today? → A: As soon as a session starts, not when it closes. Leaving mid-session must not erase the day.
+- Q: When does the week count as closing? → A: Home's Review entry appears on Sunday and on Monday — Sunday shows the week now closing, Monday the week that just closed. Review must not have a single door: Week gains a permanent way into the previous week's Review, because a finished week must stay lookable-at rather than vanishing at midnight.
+- Q: Which areas become Capture's chips? → A: All of them, in the Areas order. No cap and no filtering by daily.
+- Q: How does Home's absence note read with more than one non-daily area? → A: One sentence naming the absent areas, never a line per area. With none absent there is no sentence.
 
 ## Decisions already taken
 
@@ -65,6 +68,14 @@ open for reinterpretation during planning.
 - **A past day is named up to seven days back, and dated beyond that.**
 - **An area counts as attended today as soon as a session starts**, not when
   it closes. Leaving mid-session must not erase the day.
+- **The Review entry appears on Sunday and on Monday.** Sunday shows the
+  week closing; Monday shows the week that just closed.
+- **Week carries a permanent way into the previous week's Review.** A
+  finished week must stay reachable rather than disappearing at midnight.
+- **Capture's chips are all the areas, in the Areas order**, with no cap and
+  no filtering by daily.
+- **Home's absence note is one sentence naming the absent areas**, never a
+  line each. With none absent there is no sentence.
 - **The rhythm is `sessions_per_week`, an integer from 1 to 5.**
   `weekly_budget_minutes` is gone from the model (`PRODUCT-SPEC.md` §3.1,
   amended 0.4). Minutes are recorded per session and shown in exactly three
@@ -332,7 +343,21 @@ renders it.
   Capturing with an area MUST assign it and keep it out of the Inbox.
 - **FR-021**: Giving an Inbox item an area MUST remove it from the Inbox.
 - **FR-022**: Home MUST show only daily areas, and MUST account for the
-  others rather than omitting them silently.
+  others in a single sentence naming them. With no non-daily area there is
+  no sentence.
+- **FR-022a**: Capture MUST offer every area as a chip, in the order set on
+  Areas, with no cap and no filtering by whether the area is daily.
+
+#### Navigation
+
+- **FR-019a**: Home MUST show the Review entry on Sunday and on Monday, and
+  on no other day. On Sunday it MUST open the week that is closing; on
+  Monday, the week that has just closed.
+- **FR-019b**: Week MUST carry a permanent way into the previous week's
+  Review, available on every day of the week. A finished week MUST remain
+  reachable rather than ceasing to be at midnight.
+- **FR-019c**: Review MUST remain reachable on every day of the week by at
+  least one route, and MUST state which week it is showing.
 
 #### State
 
@@ -428,46 +453,80 @@ renders it.
 
 ## Open
 
-### One question remains
+### The copy this feature needs
 
-**When does the week count as closing?** Home carries the Review entry only
-when the week is ending, and Review's only inbound edge is that entry — so
-the answer decides how often Review is reachable at all. Options and their
-consequences were put to the product owner on 2026-09-23; the decision is
-pending and `/speckit-plan` should not start without it.
+The product owner writes these; no provisional wording is invented
+(FR-027). Each row gives the screen, the exact condition that produces the
+state, and the 001 string it replaces or sits beside — so each can be
+written with its context rather than in isolation.
 
-### The copy the empty states need
+**Twenty items.** Eighteen are states 001's fixtures never reached; two are
+new controls that the Sunday-and-Monday decision and Week's permanent route
+into Review introduce.
 
-The product owner writes these; no provisional wording is invented (FR-027).
-Each entry is a state a computed screen can reach, the condition that
-produces it, and what has no string today.
+#### Areas
 
-| # | Screen | Condition | What has no copy |
-|---|---|---|---|
-| 1 | Areas | The last area is removed | The heading, which derives from a count that is now zero |
-| 2 | Areas | One area exists | `Five, in your order` — "in your order" means nothing for one |
-| 3 | Areas | An area with no tasks is removed | The confirmation states what happens to tasks; there are none |
-| 4 | Areas | An area with no past sessions is removed | The confirmation states what happens to sessions; there are none |
-| 5 | Home | Areas exist but none is daily | The screen has no cards at all |
-| 6 | Home | Every daily area is attended today | Nothing is left to tend; every card is collapsed |
-| 7 | Home | No area is non-daily | The absence note has nothing to account for |
-| 8 | Home | Two or more areas are non-daily | The approved note is singular by construction, and 001 §"The one string that is not transcribed" says it is rewritten rather than generalised when a second appears. A second has appeared |
-| 9 | Home | A session is running right now | The attended line reports elapsed minutes for a session that has not ended (FR-015a) |
-| 10 | Picker | The area has no tasks on the week list | The list is empty, and 001 avoided this by giving every area a task |
-| 11 | Picker | Every task on the list is done | Same empty list, reached a different way |
-| 12 | Inbox | Nothing is unsorted | `Three unsorted` derives from a count that is now zero |
-| 13 | Week | No area has a rhythm or a task this week | `Four areas, ten sessions` with nothing behind it |
-| 14 | Week | An area has a rhythm but no tasks on the list | The row line names tasks on the list; there are none |
-| 15 | Review | The week has no sessions at all | The Attended section is empty and the heading counts zero |
-| 16 | Review | Every area was attended | The Unattended section is empty |
-| 17 | Review | An area was attended but its sessions carry no note | The row reads `52 minutes. Last note: …` and there is no note |
-| 18 | Task | A session closed with an empty progress note | The last-session note, which is neither a note nor `Not attended yet.` |
+| # | Condition | 001 string it replaces or accompanies |
+|---|---|---|
+| 1 | No areas remain (the last one was removed) | Heading `Five, in your order` — the count is now zero, and First run is not shown because areas existed a moment ago |
+| 2 | Exactly one area exists | Heading `Five, in your order` — "in your order" says nothing about one |
+| 3 | Removing an area that has no tasks | `Removing Money keeps its five tasks. They move to the inbox carrying the name, and its eleven past sessions stay in Review.` — the first clause has nothing to describe |
+| 4 | Removing an area that has no past sessions | Same string — the last clause has nothing to describe |
 
-**Two of these are rules rather than copy**, and are called out so they are
-not answered with a sentence:
+#### Home
 
-- **#8** was pre-decided in 001 and is now due. It may need a plural form, a
-  per-area line, or a different construction entirely.
-- **Which areas become Capture's chips** is unspecified. 001 hardcoded four
-  ids that happened to be the daily ones. Whether the chips are all areas,
-  the daily ones, or a capped list needs a rule before it needs copy.
+| # | Condition | 001 string it replaces or accompanies |
+|---|---|---|
+| 5 | Areas exist, none of them daily | The card list is empty. Eyebrow `Tending today` and heading (the weekday) still render above nothing |
+| 6 | Every daily area is already attended today | Every card is the collapsed form, `Attended today, 15 minutes`. No Tend button is on the screen |
+| 7 | Every area is daily | Absence note `People keeps a rhythm of one session a week. It is not a daily area, so it does not wait for you here.` — there is nothing to account for, and per FR-022 no sentence is shown |
+| 8 | Two or more areas are non-daily | Same note, which is singular by construction. Per FR-022 it becomes one sentence naming them all |
+| 9 | A session is running right now on an area | `Attended today, 15 minutes` — the session has not ended, so there is no final figure yet (FR-015a) |
+| 10 | It is Monday and the week just closed | `The week closes tonight. Look back on it.` is false on Monday. The Monday form is a new string |
+
+#### Picker
+
+| # | Condition | 001 string it replaces or accompanies |
+|---|---|---|
+| 11 | The area has no tasks on this week's list | The task list is empty, under heading `Pick one thing` and beside scope note `Only what you put on the week list for Health shows here. Anything captured since sits in the inbox.` |
+| 12 | Every task on the list has been closed as done | The same empty list, reached by finishing rather than by never starting. It may or may not want different words from #11 |
+
+#### Inbox
+
+| # | Condition | 001 string it replaces or accompanies |
+|---|---|---|
+| 13 | Nothing is unsorted | Heading `Three unsorted` — the count is zero. Footer `An item stays here until it has an area. Nothing here expires.` still reads true |
+
+#### Week
+
+| # | Condition | 001 string it replaces or accompanies |
+|---|---|---|
+| 14 | No area has a task on the week list | Heading `Four areas, ten sessions` with nothing behind it |
+| 15 | An area has a rhythm but no tasks on the list | Row line `Three tasks on the list. Two sessions attended.` — the first sentence has nothing to count |
+| 16 | Week needs its permanent route into the previous week's Review | A new control beside `Change the rhythm`, with no approved label (FR-019b) |
+
+#### Review
+
+| # | Condition | 001 string it replaces or accompanies |
+|---|---|---|
+| 17 | The week has no sessions at all | Heading `Six sessions` counts zero, and the `Attended` section is empty above `Unattended` |
+| 18 | Every area was attended | The `Unattended` section is empty. Closing note `Unattended is a fact about the week, not about you. Next week starts with the same areas.` still needs to make sense |
+| 19 | An area was attended but no session carried a note | Row `52 minutes. Last note: found the lab, need the referral number.` — the minutes stand, the note does not exist |
+
+#### Anywhere a task's last session is shown
+
+| # | Condition | 001 string it replaces or accompanies |
+|---|---|---|
+| 20 | A session was closed leaving the progress note empty | `Not attended yet.` is wrong — it was attended — and there is no note to show |
+
+### Notes on two of these
+
+- **#8 was pre-decided and is now due.** 001 §"The one string that is not
+  transcribed" recorded that the absence note is singular deliberately and
+  would be *rewritten rather than generalised* when a second non-daily area
+  appeared. FR-022 now settles the shape — one sentence naming them — and
+  the wording is what is outstanding.
+- **#16 adds an element to a screen**, so it faces Article III's addition
+  test on Week as well as needing a label. The question it must serve is
+  *what am I committing to?*, and a route to last week is arguably a
+  different question — worth deciding deliberately rather than by default.

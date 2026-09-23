@@ -38,13 +38,18 @@ product owner, numbers as words to twelve and figures from thirteen, day
 names to seven days back, and an area counting as attended from the moment
 a session starts.
 
-**Two things still gate implementation**, neither of which is a spec-quality
-defect:
+Three further decisions were settled on 2026-09-23: the Review entry
+appears Sunday and Monday with Week carrying a permanent route into the
+previous week's Review, Capture's chips are every area in the Areas order,
+and Home's absence note is one sentence naming the absent areas.
 
-1. **One decision is open** — when the week counts as closing. It also
-   decides how often Review is reachable, since Home's entry is its only
-   inbound edge.
-2. **Eighteen empty states need copy**, listed in the spec's §Open with
-   their screens and the conditions that produce them. FR-027 forbids
-   inventing provisional wording, so those strings block the build rather
-   than the plan.
+**One thing still gates implementation**, and it is not a spec-quality
+defect: **twenty strings are pending**, listed in the spec's §Open with the
+condition that produces each and the 001 string it replaces or accompanies.
+FR-027 forbids inventing provisional wording, so they block the build
+rather than the plan.
+
+Two of the twenty are more than wording. #8 is the absence note 001
+deliberately left singular and said it would rewrite when a second
+non-daily area appeared; #16 adds a control to Week, so it faces Article
+III's addition test as well as needing a label.
