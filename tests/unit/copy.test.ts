@@ -44,18 +44,35 @@ const FORBIDDEN = [
 const EMOJI =
   /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{1F1E6}-\u{1F1FF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}]/u;
 
+/** Samples for the holes in a template, by position. Real-shaped values:
+ *  an area name, a count, a note, a day. They exist so the linted text is
+ *  the sentence a person would read. */
+const SAMPLES = ['Health', 'two', 'found the lab, need the referral number', 'Monday'];
+
 /** Walk an export tree and yield every string in it, keyed by its path so a
  *  failure names the offending entry rather than just the offending word.
- *  Functions of an area name are called with a fixture area so their output
- *  is linted too. */
+ *  Templates are called with samples so their output is linted too. */
 function collect(value: unknown, path: string, out: Array<[string, string]>) {
   if (typeof value === 'string') {
     out.push([path, value]);
     return;
   }
   if (typeof value === 'function') {
-    const produced = (value as (areaName: string) => unknown)('Health');
-    if (typeof produced === 'string') out.push([`${path}('Health')`, produced]);
+    /* T003 — call every template with a sample so its output is linted
+       too, not just the literals. Arity matters: 002's templates take two
+       and three holes, and calling a three-hole template with one argument
+       lints the word `undefined` rather than the sentence.
+
+       Each is called twice, with `One` and with `Three` in the first
+       position, because agreement is part of the sentence: `One session`
+       and `Three sessions` are two strings and both must pass. */
+    const fn = value as (...args: unknown[]) => unknown;
+    const arity = Math.max(fn.length, 1);
+    for (const lead of ['One', 'Three']) {
+      const args = Array.from({ length: arity }, (_, i) => (i === 0 ? lead : SAMPLES[i % SAMPLES.length]));
+      const produced = fn(...args);
+      if (typeof produced === 'string') out.push([`${path}(${lead})`, produced]);
+    }
     return;
   }
   if (Array.isArray(value)) {
@@ -110,6 +127,17 @@ const all = [...userFacing, ...fixtureStrings];
 describe('the copy lint', () => {
   it('finds strings to lint', () => {
     expect(all.length).toBeGreaterThan(60);
+  });
+
+  it('lints every 002 template by calling it, not by skipping it', () => {
+    /* A template that silently produced a non-string would vanish from the
+       lint without failing it. Name the sections so a new export cannot be
+       added to copy.ts and go unscanned. */
+    for (const section of ['areas002', 'home002', 'picker002', 'inbox002', 'week002', 'review002']) {
+      const scanned = all.filter(([key]) => key.startsWith(`copy.${section}.`));
+      expect(scanned.length, `nothing linted under ${section}`).toBeGreaterThan(0);
+    }
+    expect(all.some(([, text]) => text.includes('undefined'))).toBe(false);
   });
 
   describe('FR-026 — no word from Article II\'s forbidden lexicon', () => {
