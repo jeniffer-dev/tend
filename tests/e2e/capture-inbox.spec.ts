@@ -65,6 +65,10 @@ test.describe('Capture — what did I just remember?', () => {
   });
 
   test('returns to Home', async ({ page }) => {
+    /* Seeded, so `/` is where the back link stops. Unseeded, `/` replaces
+       itself with `/first-run` after mount, and `toHaveURL` passed or failed
+       by whether it polled first (navigation.spec.ts, FR-028). */
+    await page.goto('/capture?seed=001');
     await page.getByTestId('back-link').click();
     await expect(page).toHaveURL(/\/$/);
   });
@@ -104,6 +108,8 @@ test.describe('Inbox — what have I not sorted yet?', () => {
   });
 
   test('returns to Home', async ({ page }) => {
+    /* Seeded for the same reason as Capture's. */
+    await page.goto('/inbox?seed=001');
     await page.getByTestId('back-link').click();
     await expect(page).toHaveURL(/\/$/);
   });

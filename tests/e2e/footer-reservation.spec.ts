@@ -36,11 +36,13 @@ async function pickerWithConsequence(page: Page) {
 
 const footer = (page: Page) => page.getByTestId('picker-consequence').locator('..');
 
-test('the tallest footer fits the pre-hydration reservation', async ({ page }, testInfo) => {
-  /* 320px is where the consequence line wraps furthest. The reservation is
-     one constant for every width, so the narrow one is what has to fit. */
-  test.skip(testInfo.project.name !== '320', 'the tallest wrap is at 320px');
-
+/* 320px is where the consequence line wraps furthest. The reservation is
+   one constant for every width, so the narrow one is what has to fit. The
+   tag, not a skip, is what scopes it: playwright.config.ts keeps `@320-only`
+   out of the 390 project, so the test never appears there as skipped. */
+test('the tallest footer fits the pre-hydration reservation', { tag: '@320-only' }, async ({
+  page,
+}) => {
   await pickerWithConsequence(page);
 
   const height = (await footer(page).boundingBox())!.height;

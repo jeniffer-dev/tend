@@ -34,7 +34,14 @@ test.describe('FR-028 — the back rule', () => {
     test(`${route.screen} ${expected ? `returns to ${expected.href}` : 'is a root'}`, async ({
       page,
     }) => {
-      await page.goto(route.href);
+      /* Seeded, and the seed is what makes the last assertion mean anything.
+         Unseeded, `/` has no areas and replaces itself with `/first-run`
+         from an effect after mount, so `/` is a URL the page passes through
+         rather than one it lands on. `toHaveURL` then passed whenever it
+         polled before the effect ran and failed whenever it polled after —
+         a different handful each run, and a pass that proved nothing when
+         it came. With areas, `/` is where the back link stops. */
+      await page.goto(`${route.href}?seed=001`);
       const back = page.getByTestId('back-link');
 
       if (!expected) {

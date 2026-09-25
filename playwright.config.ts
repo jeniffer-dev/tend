@@ -21,6 +21,10 @@ export default defineConfig({
     {
       name: '390',
       use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 } },
+      /* A test only meaningful at the narrow width says so with a tag and is
+         scoped here, not skipped inside itself: a skip reports a test that
+         did not run, and Article VII does not let a test disappear quietly. */
+      grepInvert: /@320-only/,
     },
     {
       name: '320',
@@ -34,10 +38,14 @@ export default defineConfig({
      minute against a built server took 16 minutes parallel and 29 minutes
      serial against `next dev`, failing a different handful of navigations
      each run. Port 3001 and NEXT_DIST_DIR keep this off whatever is serving
-     the phone on 3000. */
+     the phone on 3000.
+
+     NEXT_DIST_DIR goes through `env`, not a `VAR=value cmd` prefix: the
+     prefix is POSIX shell syntax, and on Windows the command runs in
+     cmd.exe, which does not understand it. `&&` means the same in both. */
   webServer: {
-    command:
-      'NEXT_DIST_DIR=.next-test npm run build && NEXT_DIST_DIR=.next-test npx next start --port 3001',
+    command: 'npm run build && npx next start --port 3001',
+    env: { NEXT_DIST_DIR: '.next-test' },
     url: 'http://127.0.0.1:3001',
     reuseExistingServer: false,
     timeout: 240_000,
