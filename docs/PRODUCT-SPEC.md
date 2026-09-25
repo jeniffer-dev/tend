@@ -1,10 +1,10 @@
 # Tend — Especificación de producto
 
 **Estado:** Borrador
-**Versión:** 0.3
+**Versión:** 0.4
 **Fecha:** 2026-09-07
-**Última enmienda:** 2026-09-09 — la semana empieza el lunes; `abandoned`
-sale del enum de `Session.outcome`
+**Última enmienda:** 2026-09-23 — el ritmo es `sessions_per_week` (1–5);
+`weekly_budget_minutes` sale del modelo
 
 ---
 
@@ -26,7 +26,7 @@ La unidad de éxito de este sistema es la **sesión cumplida**, no la tarea comp
 
 ### En alcance (v1)
 
-- Definir áreas de vida con presupuesto de tiempo semanal.
+- Definir áreas de vida con un ritmo semanal en sesiones.
 - Capturar tareas rápido, sin clasificar (inbox).
 - Clasificar tareas en un área.
 - Subdividir tareas en subtareas jerárquicas.
@@ -34,7 +34,7 @@ La unidad de éxito de este sistema es la **sesión cumplida**, no la tarea comp
 - Lista de prioridades de la semana.
 - Ejecutar sesiones cronometradas contra una tarea.
 - Registrar tiempo planeado vs. tiempo real por sesión.
-- Aviso (no bloqueo) cuando un área excede su presupuesto semanal.
+- Constatación (nunca bloqueo) cuando un área pasa su ritmo semanal.
 - Ritual de revisión semanal.
 
 ### Fuera de alcance (v1)
@@ -60,12 +60,16 @@ Un ámbito de vida al que le dedico atención recurrente.
 |---|---|---|
 | `id` | uuid | |
 | `name` | string | Ej: "Personal / alma", "Admin life", "Crecimiento profesional" |
-| `weekly_budget_minutes` | int | Presupuesto semanal objetivo |
+| `sessions_per_week` | int | Ritmo semanal: entero de 1 a 5 |
 | `default_session_minutes` | int | Duración por defecto de una sesión (ej. 15) |
 | `is_daily` | bool | Si aparece en la pantalla principal cada día |
 | `sort_order` | int | |
 
 **Restricción:** se recomiendan 3–5 áreas. La app no impone un máximo duro, pero advierte al crear la sexta.
+
+**El ritmo se cuenta en sesiones, no en minutos (enmienda 0.4).** `sessions_per_week` es un entero de 1 a 5 y sustituye a `weekly_budget_minutes`, que desaparece del modelo. Un ritmo es aquello a lo que uno se propone volver, no una cuota que se gasta.
+
+Los minutos **se siguen registrando** por sesión (`Session.actual_minutes`, §3.3) y son el dato central del sistema. Lo que cambia es que no son un presupuesto: no se suman contra un objetivo, no se comparan con nada y no producen un aviso. Aparecen en exactamente tres sitios — la revisión semanal, el reloj de la sesión y la línea de lo atendido hoy en la pantalla principal — siempre como un hecho sobre lo que pasó.
 
 ### 3.2 Task
 
@@ -119,12 +123,13 @@ Un bloque de tiempo trabajado contra una tarea.
 - **RF-02** El sistema NO DEBE exigir área, fecha ni prioridad al momento de capturar.
 - **RF-03** Una tarea sin `area_id` DEBE aparecer en el inbox.
 
-### 4.2 Áreas y presupuesto
+### 4.2 Áreas y ritmo
 
 - **RF-04** El usuario DEBE poder crear, editar y archivar áreas.
-- **RF-05** Cada área DEBE tener un presupuesto semanal en minutos.
-- **RF-06** CUANDO la suma de `actual_minutes` de un área en la semana en curso (lunes 00:00 a domingo 23:59, hora local) supere su `weekly_budget_minutes`, el sistema DEBE mostrar un aviso visible.
-- **RF-07** El sistema NO DEBE bloquear la creación ni la ejecución de sesiones por exceso de presupuesto. Solo avisa y sigue registrando.
+- **RF-05** Cada área DEBE tener un ritmo semanal: `sessions_per_week`, un entero de 1 a 5.
+- **RF-06** CUANDO el número de sesiones atendidas de un área en la semana en curso (lunes 00:00 a domingo 23:59, hora local) supere su `sessions_per_week`, el sistema DEBE constatarlo de forma visible y tratar las sesiones de más como extra. No es un aviso de exceso: pasar el ritmo no es un problema.
+- **RF-06a** CUANDO el número de sesiones atendidas quede por debajo del ritmo al cerrar la semana, el sistema DEBE presentarlo como un hecho sobre la semana y nunca sobre la persona. Sin porcentajes, sin rachas y sin marcadores (Artículo I).
+- **RF-07** El sistema NO DEBE bloquear la creación ni la ejecución de sesiones por haber pasado el ritmo. Lo constata y sigue registrando.
 
 ### 4.3 Tareas y subdivisión
 
@@ -138,7 +143,7 @@ Un bloque de tiempo trabajado contra una tarea.
 
 ### 4.4 Lista semanal
 
-**La semana empieza el lunes.** El presupuesto semanal de cada área se corta el lunes a las 00:00 hora local, y la revisión semanal cierra la semana que termina el domingo. Este corte es único para todo el sistema: no hay semanas por área ni semana configurable.
+**La semana empieza el lunes.** El ritmo semanal de cada área se corta el lunes a las 00:00 hora local, y la revisión semanal cierra la semana que termina el domingo. Este corte es único para todo el sistema: no hay semanas por área ni semana configurable.
 
 - **RF-13** El usuario DEBE poder marcar tareas como prioridad de la semana.
 - **RF-14** El sistema DEBE ofrecer un flujo de revisión semanal que: (a) muestre el inbox para clasificar, (b) muestre el resumen de la semana que termina, (c) permita armar la lista de la semana entrante.
@@ -166,9 +171,9 @@ Un bloque de tiempo trabajado contra una tarea.
 ## 5. Criterios de aceptación
 
 1. Puedo capturar una tarea en menos de 5 segundos sin tocar ningún selector.
-2. Puedo crear un área con presupuesto de 105 min/semana y sesión por defecto de 15 min.
+2. Puedo crear un área con un ritmo de tres sesiones por semana y sesión por defecto de 15 min.
 3. Si hago una sesión de 15 min planeados y gasto 120 reales, el resumen semanal refleja 120 y no 15.
-4. Si un área tiene 105 min de presupuesto y llevo 260 gastados, veo un aviso y puedo seguir trabajando igual.
+4. Si un área tiene un ritmo de dos sesiones y llevo tres, la tercera se presenta como extra y puedo seguir trabajando igual.
 5. Una tarea con `target_date` en 2050 y sin subtareas no me deja marcarla como prioridad semanal.
 6. Al cerrar una sesión sin terminar, la tarea sigue en la lista con mi nota de avance visible la próxima vez.
 7. Al cerrar una sesión eligiendo "crear tarea nueva", la original queda `done` y la nueva aparece en la misma área.

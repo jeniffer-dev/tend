@@ -46,3 +46,9 @@ No emoji. No exclamation marks. No apologies in error copy.
 
 This project uses spec-driven development. If there is no reviewed spec
 and plan on disk for what you are about to build, stop and say so.
+
+## Before you close a feature
+
+Framing and summary sentences get written before the decisions and nobody
+goes back to them. Re-read the openings of spec and plan against what was
+actually decided, and fix every sentence the finished feature contradicts.

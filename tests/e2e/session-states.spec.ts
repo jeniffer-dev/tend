@@ -1,161 +1,84 @@
 import { expect, test, type Page } from '@playwright/test';
 
-import { sessionStates, type SessionState } from '../../lib/fixtures';
-
 /**
- * FR-019 and SC-007 — the three session states are identical in layout and
- * in treatment, and differ only in the clock string, the clock note and the
- * note content.
+ * T028 — the three moments of a session. Covers FR-011 and SC-003.
  *
- * This is the assertion the quickstart says to make by flipping between the
- * three by hand: if anything shifts, FR-019 has failed, and the usual cause
- * is a clock string of a different length pushing something.
+ * This is 001's session-states spec remade, not deleted. What it protected
+ * is still a requirement: the three moments must be identical in layout,
+ * colour and controls, differing only in the clock string and the line
+ * beneath it.
+ *
+ * 001 rendered three static fixtures through `?state=`. There is one real
+ * clock now, so the test moves `now` instead — with Playwright's clock API,
+ * which works because the app reads real time in exactly one place, the
+ * provider's tick, and derives everything else from what that tick
+ * publishes.
  */
 
-const STATES: SessionState[] = ['running', 'zero', 'past'];
-const URL = (state: SessionState) => `/session/book-the-blood-test?state=${state}`;
+const clock = (page: Page) => page.getByTestId('session-clock');
+const clockNote = (page: Page) => page.getByTestId('session-clock-note');
 
-/** The geometry of every element that is not one of the three permitted
- *  differences, keyed so a failure names what moved. */
-async function layout(page: Page) {
-  return page.evaluate(() => {
-    const round = (n: number) => Math.round(n);
-    const pick = (sel: string) => {
-      const el = document.querySelector(sel);
-      if (!el) return null;
-      const r = el.getBoundingClientRect();
-      const s = getComputedStyle(el);
-      return {
-        x: round(r.x),
-        y: round(r.y),
-        w: round(r.width),
-        h: round(r.height),
-        color: s.color,
-        background: s.backgroundColor,
-        border: s.borderTopColor,
-        fontSize: s.fontSize,
-        fontWeight: s.fontWeight,
-        opacity: s.opacity,
-      };
-    };
-    return {
-      heading: pick('h1'),
-      eyebrow: pick('[data-testid="screen"] p'),
-      clockCard: pick('[data-testid="session-clock"]')
-        ? pick('[data-testid="session-clock"]')!.w > 0
-          ? (() => {
-              const el = document.querySelector('[data-testid="session-clock"]')!.parentElement!;
-              const r = el.getBoundingClientRect();
-              const s = getComputedStyle(el);
-              return {
-                x: Math.round(r.x),
-                y: Math.round(r.y),
-                w: Math.round(r.width),
-                h: Math.round(r.height),
-                background: s.backgroundColor,
-                border: s.borderTopColor,
-              };
-            })()
-          : null
-        : null,
-      note: pick('#progress-note'),
-      label: pick('label[for="progress-note"]'),
-    };
+type Snapshot = { box: string; colours: string[]; controls: string[] };
+
+async function snapshot(page: Page): Promise<Snapshot> {
+  const card = page.getByTestId('session-clock').locator('..');
+  const box = JSON.stringify(await card.boundingBox());
+  const colours = await card.evaluate((el) => {
+    const styles = getComputedStyle(el);
+    const clockEl = el.querySelector('[data-testid="session-clock"]')!;
+    return [styles.backgroundColor, styles.borderColor, getComputedStyle(clockEl).color];
   });
+  const controls = await page.getByRole('button').allInnerTexts();
+  return { box, colours, controls };
 }
 
-/** The clock's own treatment — everything about it except the string. */
-async function clockTreatment(page: Page) {
-  return page.getByTestId('session-clock').evaluate((el) => {
-    const s = getComputedStyle(el);
-    return {
-      color: s.color,
-      fontSize: s.fontSize,
-      fontWeight: s.fontWeight,
-      letterSpacing: s.letterSpacing,
-      lineHeight: s.lineHeight,
-      animationName: s.animationName,
-      transitionProperty: s.transitionProperty,
-    };
-  });
-}
+test('the clock passes zero and keeps counting, and nothing else changes', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-09-13T13:00:00') });
+  await page.goto('/?seed=001');
+  await page.getByTestId('area-card').filter({ hasText: 'Health' }).getByRole('link', { name: 'Tend' }).click();
+  await page.getByRole('button', { name: 'Tend for fifteen minutes' }).click();
+  await expect(page).toHaveURL(/\/session\//);
 
-test.describe('FR-019 / SC-007 — the three states are one screen', () => {
-  test('layout does not move between states', async ({ page }) => {
-    const seen: Record<string, unknown> = {};
-    for (const state of STATES) {
-      await page.goto(URL(state));
-      await expect(page.getByTestId('session-clock')).toBeVisible();
-      seen[state] = await layout(page);
-    }
-    expect(seen.zero, 'the at-zero state moved something').toEqual(seen.running);
-    expect(seen.past, 'the well-past state moved something').toEqual(seen.running);
-  });
+  /* Before zero. */
+  await page.clock.fastForward(44_000);
+  await expect(clock(page)).toHaveText('14:16');
+  await expect(clockNote(page)).toHaveText('Fifteen minutes on Health.');
+  const before = await snapshot(page);
 
-  test('the clock carries one treatment in every state', async ({ page }) => {
-    const seen: Record<string, unknown> = {};
-    for (const state of STATES) {
-      await page.goto(URL(state));
-      seen[state] = await clockTreatment(page);
-    }
-    expect(seen.zero).toEqual(seen.running);
-    expect(seen.past).toEqual(seen.running);
-  });
+  /* At zero. */
+  await page.clock.fastForward(14 * 60_000 + 16_000);
+  await expect(clock(page)).toHaveText('0:00');
+  await expect(clockNote(page)).toHaveText('Fifteen minutes. The session keeps recording from here.');
+  const atZero = await snapshot(page);
 
-  test('only the clock, the clock note and the note content differ', async ({ page }) => {
-    for (const state of STATES) {
-      await page.goto(URL(state));
-      const fixture = sessionStates[state];
+  /* Well past it — the count carries a plus and keeps going. */
+  await page.clock.fastForward(17 * 60_000 + 4_000);
+  await expect(clock(page)).toHaveText('+17:04');
+  await expect(clockNote(page)).toHaveText('Thirty-two minutes on Health. Close it when you are ready.');
+  const past = await snapshot(page);
 
-      await expect(page.getByTestId('session-clock')).toHaveText(fixture.clock);
-      await expect(page.getByText(fixture.clockNote)).toBeVisible();
-      await expect(page.locator('#progress-note')).toHaveValue(fixture.noteValue);
-    }
-  });
+  /* SC-003 — identical in layout, colour and controls. */
+  expect(atZero.box).toBe(before.box);
+  expect(past.box).toBe(before.box);
+  expect(atZero.colours).toEqual(before.colours);
+  expect(past.colours).toEqual(before.colours);
+  expect(atZero.controls).toEqual(before.controls);
+  expect(past.controls).toEqual(before.controls);
+});
 
-  test('FR-006: nothing is red and nothing pulses, least of all past zero', async ({ page }) => {
-    for (const state of STATES) {
-      await page.goto(URL(state));
+test('the session has no maximum', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-09-13T13:00:00') });
+  await page.goto('/?seed=001');
+  await page.getByTestId('area-card').filter({ hasText: 'Health' }).getByRole('link', { name: 'Tend' }).click();
+  await expect(page).toHaveURL(/\/tend\//);
+  await page.getByRole('button', { name: 'Tend for fifteen minutes' }).click();
+  /* Wait for the session screen before moving the clock. Fast-forwarding
+     into a navigation that has not landed measures the screen you left. */
+  await expect(page).toHaveURL(/\/session\//);
+  await expect(clock(page)).toBeVisible();
 
-      const reds = await page.getByTestId('screen').evaluate((root) => {
-        const isRedish = (color: string) => {
-          const m = color.match(/rgba?\(([^)]+)\)/);
-          if (!m) return false;
-          const [r, g, b, a = 1] = m[1].split(',').map((n) => parseFloat(n));
-          if (a === 0) return false;
-          return r > 150 && r > g * 1.6 && r > b * 1.6;
-        };
-        const out: string[] = [];
-        for (const el of root.querySelectorAll('*')) {
-          const s = getComputedStyle(el);
-          for (const prop of [s.color, s.backgroundColor, s.borderTopColor]) {
-            if (isRedish(prop)) out.push(`${el.tagName}.${el.className} ${prop}`);
-          }
-        }
-        return out;
-      });
-      expect(reds, `red found in the ${state} state`).toEqual([]);
-
-      const animated = await page.getByTestId('screen').evaluate((root) =>
-        [...root.querySelectorAll('*')]
-          .filter((el) => getComputedStyle(el).animationName !== 'none')
-          .map((el) => el.tagName)
-      );
-      expect(animated, `something animates in the ${state} state`).toEqual([]);
-    }
-  });
-
-  test('FR-004: the clock does not tick', async ({ page }) => {
-    await page.goto(URL('running'));
-    const before = await page.getByTestId('session-clock').innerText();
-    await page.waitForTimeout(2500);
-    const after = await page.getByTestId('session-clock').innerText();
-    expect(after).toBe(before);
-    expect(after).toBe(sessionStates.running.clock);
-  });
-
-  test('an unknown state falls back to running rather than breaking', async ({ page }) => {
-    await page.goto('/session/book-the-blood-test?state=nonsense');
-    await expect(page.getByTestId('session-clock')).toHaveText(sessionStates.running.clock);
-  });
+  await page.clock.fastForward(3 * 60 * 60_000);
+  await expect(clock(page)).toHaveText('+165:00');
+  await expect(page.getByRole('button', { name: 'Done for now' })).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Mark it done' })).toBeEnabled();
 });

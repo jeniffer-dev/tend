@@ -16,7 +16,7 @@ import { backForScreen } from '@/lib/routes';
 export default function CapturePage() {
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col gap-6 pb-[var(--footer-h,9rem)]">
+      <div className="flex flex-1 flex-col gap-6 pb-[var(--footer-h,15rem)]">
         <BackLink target={backForScreen('/capture')} />
 
         <p className="text-xs uppercase tracking-widest text-muted-foreground/45">{copy.eyebrow}</p>
