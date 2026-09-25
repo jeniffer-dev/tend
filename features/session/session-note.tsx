@@ -1,3 +1,5 @@
+'use client';
+
 import { Textarea } from '@/components/ui/textarea';
 import { session as copy } from '@/lib/copy';
 
@@ -10,11 +12,18 @@ import { session as copy } from '@/lib/copy';
  * field that scrolls its own content horizontally hides exactly that
  * (Article VI, the Textarea justification).
  *
- * `defaultValue` rather than `value`: the field is genuinely typeable and
- * genuinely unsaved. Nothing persists, and a reload returns it to the
- * fixture's content (FR-003).
+ * Controlled in 002, where 001 could leave it uncontrolled: the note is
+ * what a closing action records, so the screen has to be holding it when
+ * the action fires. It still persists nowhere — a reload loses it with the
+ * session it belonged to (FR-023).
  */
-export function SessionNote({ value }: { value: string }) {
+export function SessionNote({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
   return (
     <div className="flex flex-col gap-2">
       <label
@@ -26,7 +35,8 @@ export function SessionNote({ value }: { value: string }) {
       <Textarea
         id="progress-note"
         rows={5}
-        defaultValue={value}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
         placeholder={copy.notePlaceholder}
         className="min-h-[110px] bg-card leading-relaxed"
       />

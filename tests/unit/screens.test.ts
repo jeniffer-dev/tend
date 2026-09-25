@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { homeView, pickerView, rhythmLabel, sessionView, weekView } from '@/lib/derive/screens';
 import { SEED_001, SEED_001_ORIGIN } from '@/lib/seed/fixture-001';
-import { reduce } from '@/lib/state/store';
+import { reduce, type Action } from '@/lib/state/store';
 import { EMPTY_STATE, type State } from '@/lib/state/types';
 
 /**
@@ -209,19 +209,21 @@ describe('the empty cases', () => {
   });
 
   it('says so when every daily area was attended today', () => {
-    const attended = [
+    const steps: Action[] = [
       { type: 'capture', now: NOW, id: 't', title: 'Change the filter', areaId: 'health' },
       { type: 'startSession', now: NOW, id: 's', taskId: 't', areaId: 'health' },
       { type: 'closeSession', now: new Date(NOW.getTime() + 900_000), outcome: 'completed', note: '' },
-    ].reduce(reduce, oneArea as State);
+    ];
+    const attended = steps.reduce(reduce, oneArea);
     expect(homeView(attended, NOW).emptyNote).toBe('Every daily area was attended today. Nothing is waiting.');
   });
 
   it('withholds that note while a session is open, because something is waiting', () => {
-    const tending = [
+    const steps: Action[] = [
       { type: 'capture', now: NOW, id: 't', title: 'Change the filter', areaId: 'health' },
       { type: 'startSession', now: NOW, id: 's', taskId: 't', areaId: 'health' },
-    ].reduce(reduce, oneArea as State);
+    ];
+    const tending = steps.reduce(reduce, oneArea);
     expect(homeView(tending, NOW).emptyNote).toBeNull();
   });
 
@@ -232,11 +234,12 @@ describe('the empty cases', () => {
       'Capture something for Health, or give an inbox item this area.',
     ]);
 
-    const finished = [
+    const steps: Action[] = [
       { type: 'capture', now: NOW, id: 't', title: 'Change the filter', areaId: 'health' },
       { type: 'startSession', now: NOW, id: 's', taskId: 't', areaId: 'health' },
       { type: 'closeSession', now: new Date(NOW.getTime() + 900_000), outcome: 'completed', note: '' },
-    ].reduce(reduce, oneArea as State);
+    ];
+    const finished = steps.reduce(reduce, oneArea);
     const done = pickerView(finished, 'health', NOW)!;
     expect([done.emptyHeading, done.emptyNote]).toEqual([
       'Nothing on the list',
@@ -245,11 +248,12 @@ describe('the empty cases', () => {
   });
 
   it('names two absent areas in one sentence, joined', () => {
-    const twoAbsent = [
+    const steps: Action[] = [
       { type: 'editArea', areaId: 'health', changes: { isDaily: false } },
       { type: 'createArea', id: 'money', name: 'Money', color: 'load', sessionsPerWeek: 2, isDaily: false },
       { type: 'createArea', id: 'home', name: 'Home', color: 'soft', sessionsPerWeek: 2, isDaily: true },
-    ].reduce(reduce, oneArea as State);
+    ];
+    const twoAbsent = steps.reduce(reduce, oneArea);
     expect(homeView(twoAbsent, NOW).absenceNote).toBe(
       'Health and Money keep a weekly rhythm. They are not daily areas, so they do not wait for you here.'
     );

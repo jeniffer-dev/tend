@@ -46,12 +46,23 @@ import { cn } from '@/lib/utils';
  * differ — one action, one action and a note, two actions — and the note
  * wraps to a second line at 320px.
  *
- * **The `9rem` fallback in `pb-[var(--footer-h,9rem)]` is not decoration.**
+ * **The `15rem` fallback in `pb-[var(--footer-h,15rem)]` is not decoration.**
  * This effect runs at hydration, and until it does the variable is unset.
  * Without a fallback the first paint reserves nothing, which is the bug
- * again — briefly on a fast machine, and not briefly on a slow phone. 9rem
- * is the tallest footer, so the pre-hydration reservation is never short;
- * the observer only ever refines it downwards.
+ * again — briefly on a fast machine, and not briefly on a slow phone. The
+ * fallback is the tallest footer, so the pre-hydration reservation is never
+ * short; the observer only ever refines it downwards.
+ *
+ * **It was 9rem until feature 002.** The Picker's consequence line made a
+ * fourth shape — a line, the action, the existing note — and it is taller
+ * than the three that existed before. At 320px the container's `px-5`
+ * leaves 280px, and the shape measures `pt-7` 28 + three wrapped lines of
+ * `text-sm leading-relaxed` 69 + `gap-2` 8 + `h-11` 44 + `gap-2` 8 + two
+ * wrapped lines of `text-xs` 32 + `pb-6` 24, about 213px. 15rem is 240px,
+ * which also covers a four-line wrap.
+ *
+ * tests/e2e/footer-reservation.spec.ts is what pins it: a longer string or
+ * a fourth line fails a test rather than a slow phone.
  */
 export function StickyFooter({
   children,
