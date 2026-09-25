@@ -83,6 +83,16 @@ pushes live work below the fold, which is the one thing Home cannot do
 on the Areas screen is never rearranged — only the attended ones are
 moved as a block.
 
+> **Superseded in part by feature 002 (2026-09-25).** 001's FR-014 drew the
+> attended card collapsed to one line, faded, and with no Tend button. The
+> card now keeps a Tend in the outline variant and takes the past-rhythm
+> card's full shape, with no collapse and no `opacity-55`: an area attended
+> today can be tended again, and a faded button reads as disabled. Its line
+> is unchanged, it still sinks below what is still to be tended, and no
+> string is added. Argued through Article III's addition test in 002
+> spec.md §"Why an attended area keeps its Tend" (FR-015e), not exempted
+> from it.
+
 **Must not have**: any inbox item, any week list, any history, any minute
 count other than the attended line's, any Areas entry in the bottom
 navigation (FR-029).

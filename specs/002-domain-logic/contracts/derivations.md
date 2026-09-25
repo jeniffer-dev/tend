@@ -79,6 +79,13 @@ handed whichever of the two strings applies and never the pieces.
 still to be tended, and `tending-now` sorts with the open ones — it is the
 area you are in the middle of.
 
+**Every treatment carries a Tend** (FR-015e). `to-tend` is solid;
+`past-rhythm` and `attended` are outline; `tending-now` is solid, as a card
+still open. The button's variant follows from the treatment the card is
+handed, so the card still decides nothing. `attended` no longer collapses or
+fades: it takes the past-rhythm card's shape, and its line and its place
+below the open cards are what say it was attended.
+
 ### `/tend/[areaId]` — What do I focus on for fifteen minutes?
 
 | Asks | Gets |
@@ -193,9 +200,11 @@ no figure at all — a zero would be a number where there is no measurement.
 3. Every user-facing string comes from `lib/copy.ts`. Derivations choose
    between templates and fill them; they never concatenate prose.
 4. 001's `contracts/screens.md` holds unchanged — same screens, same routes,
-   same back rule, same ordering. Two elements are added, each argued
+   same back rule, same ordering. Three elements are added, each argued
    through Article III's addition test in spec.md rather than exempted from
-   it: Week's `Look back on last week`, and the Picker's line naming what
-   starting here closes. Both are recorded as additions in 001's contract.
+   it: Week's `Look back on last week`, the Picker's line naming what
+   starting here closes, and the Tend an attended card keeps on Home. All
+   three are recorded in 001's contract, the last as superseding part of
+   001's FR-014.
 5. Given `?seed=001`, every screen renders 001's approved copy character for
    character (SC-001).

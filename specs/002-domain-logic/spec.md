@@ -5,7 +5,9 @@
 **Created**: 2026-09-23
 
 **Status**: Ready to implement — all twenty-six new strings approved
-(§"Screen copy"), every decision settled, and nothing open
+(§"Screen copy"), every decision settled, and nothing open. The last to
+close was FR-015e, approved 2026-09-25: an attended area keeps an outline
+Tend, and no string is added for it
 
 **Input**: User description: "Feature 002: la lógica real detrás de las diez pantallas. Las mismas pantallas, los mismos textos, pero los valores se calculan en vez de estar escritos en el fixture, y el estado vive durante la sesión del navegador (sin persistencia todavía; eso es la 003)."
 
@@ -24,10 +26,11 @@ take the props they always took.
 
 **Two things are genuinely new, and both are argued rather than assumed.**
 Twenty-six strings for states 001 never reached — empty lists, a week with
-nothing in it, a session still running — and two elements that passed
-Article III's addition test in writing: Week's route to last week, and the
-Picker's line naming what starting here closes. No sentence 001 approved is
-reworded, and no screen changes the question it answers.
+nothing in it, a session still running — and three elements that passed
+Article III's addition test in writing: Week's route to last week, the
+Picker's line naming what starting here closes, and the Tend an attended
+area keeps. No sentence 001 approved is reworded, and no screen changes the
+question it answers.
 
 State lives for as long as the browser session. Nothing is written to disk;
 persistence is feature 003.
@@ -62,6 +65,10 @@ derivation is wrong or a rule was never written down.
 - Q: Does the First run route apply to the whole app or to Home? → A: To Home. Every other route renders its own empty state, which is what keeps `None right now` on Areas reachable — you are standing on Areas when you remove the last one.
 - Q: What happens when a session is started while another is running? → A: The running one closes as `progressed` with an empty note, and nothing is blocked. The Picker says so before the action, in the pattern the removal confirmation set: state the consequence, then offer the button. At most one session is open at any moment, which is what makes `One still open.` true in the singular.
 
+### Session 2026-09-25
+
+- Q: An attended card loses its Tend button, so `Attended today, {n} minutes · tending now` can only be reached by a route Home no longer offers. Does an area attended today stay tendable from Home? → A: Yes. The attended card keeps a Tend, in the outline variant, as Money's does when it passes its rhythm. Nothing is blocked, and tending the same area twice in a day is valid.
+
 ## Decisions already taken
 
 These are settled and this specification is bound by them. They are not
@@ -83,6 +90,11 @@ open for reinterpretation during planning.
 - **A past day is named up to seven days back, and dated beyond that.**
 - **An area counts as attended today as soon as a session starts**, not when
   it closes. Leaving mid-session must not erase the day.
+- **An area attended today stays tendable from Home.** Its card keeps a Tend
+  in the outline variant, the way a card past its rhythm does. Tending the
+  same area twice in a day is valid, and nothing blocks it. This supersedes
+  001's FR-014 on one point only: the attended treatment no longer loses its
+  button, and with it goes the collapse and the fade.
 - **The Review entry appears on Sunday and on Monday.** Sunday shows the
   week closing; Monday shows the week that just closed.
 - **Week carries a permanent way into the previous week's Review.** A
@@ -324,9 +336,10 @@ renders it.
 - **A session is running and Home would say nothing is waiting.** The
   all-attended note is not shown while a session is open. Something is
   waiting: the session you are in.
-- **An area is tended again after being attended earlier today.** Home's
-  line keeps the earlier minutes and adds the tending clause. The day is
-  cumulative and a session in progress never subtracts from it.
+- **An area is tended again after being attended earlier today.** It is
+  reached from the attended card's outline Tend (FR-015e). Home's line keeps
+  the earlier minutes and adds the tending clause. The day is cumulative and
+  a session in progress never subtracts from it.
 - **The last area is removed.** Areas shows `None right now` and Home shows
   First run. Both are correct, and neither redirects the other.
 
@@ -411,6 +424,13 @@ renders it.
   when the running session is the area's first of the day does the line read
   `Tending now` alone. A session in progress adds to the day; it does not
   replace it.
+- **FR-015e**: An area attended today MUST keep a Tend action on Home, in
+  the outline variant, leading to its Picker exactly as any other card's
+  does. Its line stays `Attended today, {n} minutes`, it still sorts below
+  the areas still to be tended (001's FR-013a), and nothing about it may
+  read as disabled. This is what makes FR-015b reachable by tapping: without
+  it, the second session of the day could only be started from a route Home
+  does not offer.
 
 #### Areas, tasks and capture
 
@@ -528,9 +548,11 @@ renders it.
 - **001's approved copy is not rewritten, and its screens keep their
   shape.** Every sentence 001 approved says the same words here; what this
   feature adds, it adds — twenty-six new strings for states 001 never
-  reached, and two elements that passed the addition test in writing.
+  reached, and three elements that passed the addition test in writing.
   Nothing approved is reworded and no screen changes the question it
-  answers. 001's `contracts/screens.md` remains the UI contract, including
+  answers. One 001 rule is superseded rather than inherited: FR-014's
+  attended treatment no longer loses its Tend button (FR-015e). 001's
+  `contracts/screens.md` remains the UI contract otherwise, including
   **001's FR-013a** ordering rule — what is still to be tended sorts above
   what was attended today — and the addition-test removals from 001's T048. Requirement ids are per feature:
   `FR-013a` belongs to 001's numbering and this feature's own `FR-013` is
@@ -556,9 +578,10 @@ renders it.
   Article III's v1 exclusions.
 - Any new screen.
 - Any element that has not passed Article III's addition test **in
-  writing**. Two have, and each is argued in its own section rather than
-  exempted: Week's `Look back on last week`, and the Picker's line naming
-  what starting here closes. An element arrives by being argued, not by
+  writing**. Three have, and each is argued in its own section rather than
+  exempted: Week's `Look back on last week`, the Picker's line naming what
+  starting here closes, and the Tend an attended area keeps on Home. An
+  element arrives by being argued, not by
   being useful, and "it might help" remains a rejection.
 
   This bullet used to read "and any new element on an existing screen",
@@ -632,6 +655,17 @@ report a fact.
 The minutes in the line are always closed minutes. The running session
 joins them when it closes, which is the same rule Review follows and the
 reason both screens can be read mid-session without either of them lying.
+
+**The attended card's Tend adds no string** (FR-015e). The button says
+`Tend`, 001's approved label, and the line above it stays
+`Attended today, {n} minutes`. The outline variant is the whole of the
+difference from a card still to be tended, as it already is for a card past
+its rhythm. Nothing says "again": the line already states the day, and a
+second word for the same action would imply the first one was special.
+
+The all-attended note is unchanged. `Nothing is waiting.` stays true when every
+card carries an outline button: an area that can be tended again is available, not
+waiting.
 
 ### Picker
 
@@ -762,6 +796,38 @@ removal confirmation offers two buttons because removing an area is
 destructive and reversible only by retyping it, while starting a session is
 ordinary and its consequence is a session recorded rather than lost.
 
+## Why an attended area keeps its Tend
+
+001 took the button away from an attended card, and 002 gives it back, so
+Article III's addition test applies to it as it did to the other two. It
+passes, and it is recorded here as passing rather than as an exception.
+
+Home's question is *what am I tending right now?* Someone who sat down for
+fifteen minutes this morning and wants fifteen more tonight is answering
+that question, and the answer is an area Home already shows. Without the
+button the screen shows the area and withholds the one action that area
+exists for. Home stops being actionable in one tap for exactly the person
+who is tending most (Article III), and the approved
+`Attended today, {n} minutes · tending now` becomes a string no tap can
+reach.
+
+Leaving it off also blocks, without saying so. Article I lets a budget warn
+but never block, and a card past its rhythm keeps its Tend for that reason.
+A card that is attended today has done less than one past its rhythm, so
+removing its button is a stricter rule for a smaller cause.
+
+The outline variant keeps 001's ordering meaningful. What is still to be
+tended keeps the solid button and sits above; what was attended today sinks
+below with the quieter one (001's FR-013a). The day still reads as
+attended, and it stays open.
+
+**What this costs.** The attended card no longer collapses to one line, and
+it is no longer faded. `opacity-55` is the design system's treatment for a
+finished, inactive thing (§6). An area that can be tended again is not
+inactive, and a faded button reads as disabled, which is the one thing
+FR-015e forbids. The card takes the past-rhythm card's shape. Its line and
+its position are what say it was attended.
+
 ## Why Week carries a route to last week
 
 `Look back on last week` adds an element to Week, so Article III's addition
@@ -778,8 +844,16 @@ gets a worse answer.
 
 Nothing. Every decision is taken and all twenty-six strings are approved.
 
-The last one to close was the Picker's consequence line, approved on
-2026-09-24 with the four rules recorded in §"Screen copy". With it, the
+The last one to close was FR-015e, approved on 2026-09-25: an attended area
+keeps an outline Tend, the card takes the past-rhythm card's full shape with
+no collapse and no fade, and no string is added. 001's
+`contracts/screens.md` records it as superseding part of 001's FR-014.
+001's `home-picker-session.spec.ts` asserts the attended card has no Tend;
+T059 changes that assertion because the requirement changed, and it is not
+deleted to make a test pass.
+
+Before it, the Picker's consequence line closed on 2026-09-24 with the four
+rules recorded in §"Screen copy". With it, the
 concurrent-session question is fully answered: FR-015c and FR-015d make the
 transition, and the line makes it visible before it happens. That is what
 lets `One still open.` on Review be singular by construction rather than by
