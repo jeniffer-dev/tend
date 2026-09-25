@@ -94,3 +94,33 @@ test('the area being tended sorts with the ones still open', async ({ page }) =>
   const attended = order.findIndex((t) => t.includes('Attended today'));
   expect(money).toBeLessThan(attended);
 });
+
+test('an area attended today can be tended again from Home, and the day keeps its minutes', async ({
+  page,
+}) => {
+  /* T021b — FR-015e, and FR-015b reached by tapping. Before FR-015e the
+     attended card had no Tend, so `· tending now` after a closed session
+     was an approved string no tap could reach. */
+  await page.clock.install({ time: new Date('2026-09-13T13:00:00') });
+  await page.goto('/?seed=001');
+
+  await startOn(page, 'Health');
+  await page.clock.fastForward('16:00');
+  await page.getByLabel('Where you got to').fill('Referral number found.');
+  await page.getByRole('button', { name: 'Done for now' }).click();
+  await backHome(page);
+
+  /* Attended, and still tendable: an outline Tend, enabled, not faded. */
+  await expect(card(page, 'Health')).toHaveAttribute('data-treatment', 'attended');
+  await expect(card(page, 'Health')).toContainText('Attended today, 16 minutes');
+  await expect(card(page, 'Health')).toHaveCSS('opacity', '1');
+  await expect(card(page, 'Health').getByRole('link', { name: 'Tend' })).toBeEnabled();
+
+  /* Tend it again. The line keeps the sixteen minutes and adds the clause;
+     a session in progress adds to the day rather than replacing it. */
+  await startOn(page, 'Health');
+  await leaveSession(page);
+  await backHome(page);
+  await expect(card(page, 'Health')).toHaveAttribute('data-treatment', 'tending-now');
+  await expect(card(page, 'Health')).toContainText('Attended today, 16 minutes · tending now');
+});

@@ -6,7 +6,7 @@ import { AreaDot } from '@/components/area-dot';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { home as copy } from '@/lib/copy';
-import type { HomeCard } from '@/lib/derive/screens';
+import type { HomeCard, HomeTreatment } from '@/lib/derive/screens';
 import { pickerHref } from '@/lib/routes';
 
 /**
@@ -18,35 +18,37 @@ import { pickerHref } from '@/lib/routes';
  * and handing this component two numbers is how it would eventually be
  * asked to divide them (Article VI, plan.md §"The second gate").
  *
+ * **Every treatment carries a Tend** (FR-015e). The four share one shape —
+ * the line, then the button — and differ by the line and by the button's
+ * variant alone: solid for an area still open (`to-tend`, `tending-now`),
+ * outline for one past its rhythm or already attended today. There is no
+ * red, no warning icon, no disabled state and no fade. A budget warns and
+ * keeps recording, it never blocks (Article I), and an area attended this
+ * morning can be tended again tonight — which is the only way Home reaches
+ * `Attended today, {n} minutes · tending now` by tapping.
+ *
+ * The attended card used to collapse to one line at `opacity-55`, with no
+ * button (001's FR-014). The fade is the design system's treatment for a
+ * finished, inactive thing (§6), and an area that can be tended again is
+ * neither; a faded button reads as disabled. Its line and its place below
+ * the open cards (001's FR-013a) are what say it was attended.
+ *
  * `tending-now` is 002's fourth treatment and a treatment in its own right,
  * not a variant of `attended`: the card must not be able to render a figure
  * that does not exist yet (FR-015a). Its line is whichever of the two
  * sentences applies, and the card is handed the finished one.
- *
- * `past-rhythm` differs from `to-tend` by the button's variant and by the
- * line above it, and by nothing else. There is no red, no warning icon and
- * no disabled state: a budget warns and keeps recording, it never blocks
- * (Article I).
  */
-export function AreaCard({ card }: { card: HomeCard }) {
-  if (card.treatment === 'attended') {
-    /* Collapsed to one line, and it loses its Tend button — there is
-       nothing left to do here today. `opacity-55` is the entire treatment
-       for a finished thing (design system §6): no strikethrough, no grey
-       palette swap. It wraps rather than truncating at 320px. */
-    return (
-      <Card
-        data-testid="area-card"
-        data-treatment={card.treatment}
-        className="flex min-h-11 flex-wrap items-center gap-x-2 gap-y-1 px-4 py-2 opacity-55"
-      >
-        <AreaDot color={card.color} />
-        <span className="text-base font-semibold tracking-tight">{card.name}</span>
-        <span className="text-sm text-muted-foreground">{card.line}</span>
-      </Card>
-    );
-  }
 
+/** Which treatments are quieter. A lookup, not a comparison: the card
+ *  reads the treatment it was handed and decides nothing about the area. */
+const outline: Record<HomeTreatment, boolean> = {
+  'to-tend': false,
+  'tending-now': false,
+  'past-rhythm': true,
+  attended: true,
+};
+
+export function AreaCard({ card }: { card: HomeCard }) {
   return (
     <Card
       data-testid="area-card"
@@ -62,7 +64,7 @@ export function AreaCard({ card }: { card: HomeCard }) {
       </div>
       <Button
         asChild
-        variant={card.treatment === 'past-rhythm' ? 'outline' : 'default'}
+        variant={outline[card.treatment] ? 'outline' : 'default'}
         className="w-full"
       >
         <Link href={pickerHref(card.areaId)}>{copy.tendAction}</Link>

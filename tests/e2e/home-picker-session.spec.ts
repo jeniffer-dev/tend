@@ -67,7 +67,7 @@ test.describe('Home — what am I tending right now?', () => {
     );
   });
 
-  test('FR-014: renders all three treatments — solid, outline, and collapsed', async ({ page }) => {
+  test('FR-014: renders all three treatments — solid, outline, and attended with an outline Tend', async ({ page }) => {
     // To tend: a solid Tend button.
     const solid = page.getByTestId('area-card').filter({ hasText: 'Health' }).getByRole('link', { name: home.tendAction });
     await expect(solid).toBeVisible();
@@ -77,10 +77,13 @@ test.describe('Home — what am I tending right now?', () => {
     await expect(money).toContainText('Past the two sessions you set for this week.');
     await expect(money.getByRole('link', { name: home.tendAction })).toBeEnabled();
 
-    // Attended today: collapsed to one line, and no Tend button on it.
+    // Attended today: it keeps its Tend, and nothing about it reads as
+    // disabled. 001 asserted no button here; 002's FR-015e changed the
+    // requirement on 2026-09-25, so the assertion changes with it.
     const attended = page.getByTestId('area-card').filter({ hasText: 'Attended today, 15 minutes' });
     await expect(attended).toBeVisible();
-    await expect(attended.getByRole('link', { name: home.tendAction })).toHaveCount(0);
+    await expect(attended.getByRole('link', { name: home.tendAction })).toBeEnabled();
+    await expect(attended).toHaveCSS('opacity', '1');
   });
 
   test('FR-006: the past-rhythm treatment uses no red and no animation', async ({ page }) => {
