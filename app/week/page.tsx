@@ -10,7 +10,7 @@ import { week as copy, week002 } from '@/lib/copy';
 import { weekView } from '@/lib/derive/screens';
 import { useToday } from '@/lib/state/clock';
 import { useAppState } from '@/lib/state/provider';
-import { areasHref, backForScreen } from '@/lib/routes';
+import { areasHref, backForScreen, lastWeekReviewHref } from '@/lib/routes';
 
 /**
  * Week — what am I committing to?
@@ -63,7 +63,7 @@ export default function WeekPage() {
           <Link href={areasHref('week')}>{copy.action}</Link>
         </Button>
         <Link
-          href="/review?week=last"
+          href={lastWeekReviewHref}
           className="inline-flex min-h-11 items-center justify-center self-center rounded-md px-2.5 text-center text-xs text-muted-foreground/50 transition-colors hover:text-foreground"
         >
           {week002.lastWeekLink}

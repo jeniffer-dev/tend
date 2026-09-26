@@ -149,3 +149,15 @@ export const newAreaHref = '/areas/new';
 export function sessionHref(taskId: string): string {
   return `/session/${taskId}`;
 }
+
+/** Review with no parameter: the week closing on Sunday, and the week that
+ *  last closed on any other day (FR-019d). Home's Review entry opens it. */
+export const reviewHref = '/review';
+
+/**
+ * Week's `Look back on last week` (FR-019b): the week before the current
+ * one, on every day. On Monday to Saturday that is the same week plain
+ * `/review` shows, so returning from Areas lands where Review was; only on
+ * Sunday do the two differ, and there the parameter is what says so.
+ */
+export const lastWeekReviewHref = '/review?week=last';

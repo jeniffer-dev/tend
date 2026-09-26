@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { reviewHref } from '@/lib/routes';
+
 /**
  * The way into Review, at the top of Home when the week is ending.
  *
@@ -21,7 +23,7 @@ import Link from 'next/link';
 export function ReviewEntry({ line }: { line: string }) {
   return (
     <Link
-      href="/review"
+      href={reviewHref}
       className="-ml-2.5 inline-flex min-h-11 items-center self-start rounded-md px-2.5 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
     >
       {line}
