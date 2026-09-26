@@ -1,47 +1,59 @@
 import { AreaDot } from '@/components/area-dot';
 import { Card } from '@/components/ui/card';
-import { areaById, type ReviewRow } from '@/lib/fixtures';
+import type { ReviewRow } from '@/lib/derive/screens';
 
 /**
  * One labelled section of the Review — `Attended` or `Unattended`.
+ *
+ * Every string arrives derived (`lib/derive/screens.ts`): the sessions
+ * label, the minutes inside the line, the note, and whether a row is the
+ * one-line single-session form. Nothing here counts, sums or compares.
  *
  * Minutes live inside the row strings and appear nowhere else in the
  * product but the session clock and Home's attended line (SC-006). They are
  * a plain figure about what happened, not a score.
  *
- * An unattended area is faded to `opacity-55`, the whole treatment for a
- * thing that is not live (design system §6). It is not red, it is not
- * marked, and it carries no icon: absence is a fact about the week, and
- * Article I forbids the screen making it a fact about the person.
+ * An unattended row is the area's name and nothing else (FR-008b), faded to
+ * `opacity-55`, the whole treatment for a thing that is not live (design
+ * system §6). It is not red, it is not marked, and it carries no icon:
+ * absence is a fact about the week, and the closing note beneath the
+ * section is what says so.
  */
-export function ReviewSection({ label, rows }: { label: string; rows: ReviewRow[] }) {
+export function ReviewSection({
+  label,
+  rows,
+  faded = false,
+}: {
+  label: string;
+  rows: ReviewRow[];
+  faded?: boolean;
+}) {
   return (
     <section data-testid="review-section" data-label={label} className="flex flex-col gap-3">
       <p className="text-xs uppercase tracking-widest text-muted-foreground/45">{label}</p>
 
       {rows.map((row) => {
-        const area = areaById(row.areaId);
-        if (!area) return null;
-
         const name = (
           <span className="flex items-center gap-2">
-            <AreaDot color={area.color} />
-            <span className="text-base font-semibold tracking-tight">{area.name}</span>
+            <AreaDot color={row.color} />
+            <span className="text-base font-semibold tracking-tight">{row.name}</span>
           </span>
         );
 
-        /* The row with a sessions label and no line — Home's `One session,
-           15 minutes` — sits on one line, as drawn. */
-        if (row.sessionsLabel && !row.line) {
+        /* A label and no line — `One session, 15 minutes` — sits on one
+           line, as drawn. So does an unattended row, which has neither. */
+        if (!row.line) {
           return (
             <Card
               key={row.areaId}
               data-testid="review-row"
-              data-area={area.id}
-              className="flex flex-wrap items-center justify-between gap-3 p-5"
+              data-area={row.areaId}
+              className={`flex flex-wrap items-center justify-between gap-3 p-5${faded ? ' opacity-55' : ''}`}
             >
               {name}
-              <span className="text-sm text-muted-foreground">{row.sessionsLabel}</span>
+              {row.sessionsLabel && (
+                <span className="text-sm text-muted-foreground">{row.sessionsLabel}</span>
+              )}
             </Card>
           );
         }
@@ -50,8 +62,8 @@ export function ReviewSection({ label, rows }: { label: string; rows: ReviewRow[
           <Card
             key={row.areaId}
             data-testid="review-row"
-            data-area={area.id}
-            className={`flex flex-col gap-1.5 p-5${row.attended ? '' : ' opacity-55'}`}
+            data-area={row.areaId}
+            className={`flex flex-col gap-1.5 p-5${faded ? ' opacity-55' : ''}`}
           >
             <div className="flex flex-wrap items-center justify-between gap-3">
               {name}
@@ -59,7 +71,7 @@ export function ReviewSection({ label, rows }: { label: string; rows: ReviewRow[
                 <span className="text-sm text-muted-foreground">{row.sessionsLabel}</span>
               )}
             </div>
-            {row.line && <p className="text-sm text-muted-foreground text-pretty">{row.line}</p>}
+            <p className="text-sm text-muted-foreground text-pretty">{row.line}</p>
           </Card>
         );
       })}
