@@ -813,6 +813,12 @@ closing note beneath the section. 001's
 `No sessions this week. The pages are where you left them.` was prose about
 one area and is not carried forward.
 
+**No label over nothing** (approved 2026-09-26). When every area was
+attended, `Every area was attended this week.` takes the place of the whole
+Unattended section, label included, and the closing note goes with it. When
+the week has no sessions, the Attended section is not drawn. A section
+label above no rows is worse than no section.
+
 ### A task's last session
 
 | Condition | String |
