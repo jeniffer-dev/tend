@@ -149,8 +149,8 @@ states, and there is now one real clock.
 | Asks | Gets |
 |---|---|
 | The heading | Areas and total committed sessions, or the no-tasks note |
-| The rows | Unarchived areas with a rhythm, each with a sessions label and a line |
-| A row's line | Tasks on the list and sessions attended, or the no-tasks form |
+| The rows | Every unarchived area, daily or not (FR-007a), each with a sessions label and a line |
+| A row's line | Tasks on the list and sessions attended; `No tasks on the list.` and `No sessions attended.` replace a zero in either sentence |
 | The link out | `Look back on last week`, always |
 
 **Must not** receive minutes. Week counts in sessions (FR-007), and the
@@ -164,11 +164,11 @@ has no minutes for the omission to explain — the count is simply correct.
 
 | Asks | Gets |
 |---|---|
-| Which week | The closing week on Sunday, last week on Monday and from Week's link |
+| Which week | With no parameter, the closing week on Sunday and the week that last closed on any other day; `?week=last`, the week before the current one (FR-019d) |
 | The eyebrow | `Week of {date}` for whichever week it is showing |
-| Attended | Areas with sessions that week, with minutes from the closed ones and the last note |
+| Attended | Areas with sessions that week, with minutes from the closed ones and the most recent non-empty note; one closed session and no note is the one-line `One session, {n} minutes` (FR-008b) |
 | An open session | Named on its area's row, so a short figure is explained (FR-008a) |
-| Unattended | Areas with none, or the every-area-attended line |
+| Unattended | Every unarchived area with none, each as a name and no line, or the every-area-attended line |
 | The closing note | Shown only when something went unattended |
 
 Review resolves area names **including archived areas**, because the

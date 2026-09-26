@@ -208,7 +208,7 @@ without seeding the time would make the criterion fail every day except one.
 
 No `NEEDS CLARIFICATION` markers remain. The spec's own open list closed at
 `/speckit-clarify`, and `/speckit-analyze` closed the five it raised.
-All twenty-six new strings are approved and recorded in spec.md
-§"Screen copy". Nothing remains in spec.md §"Open". The last decision to
-close there, on 2026-09-25, was that an attended card keeps an outline Tend
-(FR-015e); it needed no research and added no string.
+All twenty-seven new strings are approved and recorded in spec.md
+§"Screen copy". Nothing remains in spec.md §"Open". FR-015e closed on
+2026-09-25 and the five Week and Review decisions on 2026-09-26; none
+needed research, and together they added one string.

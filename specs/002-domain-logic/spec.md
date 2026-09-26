@@ -4,10 +4,10 @@
 
 **Created**: 2026-09-23
 
-**Status**: Ready to implement — all twenty-six new strings approved
+**Status**: Ready to implement — all twenty-seven new strings approved
 (§"Screen copy"), every decision settled, and nothing open. The last to
-close was FR-015e, approved 2026-09-25: an attended area keeps an outline
-Tend, and no string is added for it
+close were the five Week and Review decisions of 2026-09-26, recorded in
+§"Clarifications" and §"Open"
 
 **Input**: User description: "Feature 002: la lógica real detrás de las diez pantallas. Las mismas pantallas, los mismos textos, pero los valores se calculan en vez de estar escritos en el fixture, y el estado vive durante la sesión del navegador (sin persistencia todavía; eso es la 003)."
 
@@ -25,12 +25,14 @@ replaces those literals with functions in `lib/`, and the components mostly
 take the props they always took.
 
 **Two things are genuinely new, and both are argued rather than assumed.**
-Twenty-six strings for states 001 never reached — empty lists, a week with
+Twenty-seven strings for states 001 never reached — empty lists, a week with
 nothing in it, a session still running — and three elements that passed
 Article III's addition test in writing: Week's route to last week, the
 Picker's line naming what starting here closes, and the Tend an attended
 area keeps. No sentence 001 approved is reworded, and no screen changes the
-question it answers.
+question it answers. One is retired rather than reworded — Review's line for
+an unattended area, which was prose about one area and cannot be derived —
+and 001's clarification Q3 is superseded: every area is on Week.
 
 State lives for as long as the browser session. Nothing is written to disk;
 persistence is feature 003.
@@ -68,6 +70,18 @@ derivation is wrong or a rule was never written down.
 ### Session 2026-09-25
 
 - Q: An attended card loses its Tend button, so `Attended today, {n} minutes · tending now` can only be reached by a route Home no longer offers. Does an area attended today stay tendable from Home? → A: Yes. The attended card keeps a Tend, in the outline variant, as Money's does when it passes its rhythm. Nothing is blocked, and tending the same area twice in a day is valid.
+
+### Session 2026-09-26, before Phase 4
+
+Deriving Week and Review from state surfaced five places where 001's
+fixtures had stored an answer no rule produces. Each was decided by the
+product owner rather than resolved in code.
+
+- Q: Are non-daily areas on Week and in Review? 001's clarification Q3 kept People off Week, and 002's contract says Week lists every area with a rhythm. → A: Every unarchived area, daily or not. A non-daily area keeps a weekly rhythm — Home's absence note says so — and Week is where rhythms are counted. This supersedes 001's Q3: with 001-equivalent state Week reads `Five areas, eleven sessions` and lists People.
+- Q: An area whose closed sessions this week carry no note — 001 draws `One session, 15 minutes` on one line, and 002 approved `{n} minutes. No note this time.` for the same state. Which applies? → A: Both, by count. Exactly one closed session and no note keeps 001's one-line form, `One session, {n} minutes`. Two or more keep the sessions label and take 002's line.
+- Q: What line does an unattended area carry in Review? 001's `No sessions this week. The pages are where you left them.` is prose about Morning pages and cannot be derived. → A: None. The row is the area's name, faded. The closing note beneath the section is what explains absence, and a line per row would say the same thing once per area.
+- Q: Which week does `/review` show with no parameter on Tuesday to Saturday, or when Areas returns to it? → A: The week that last closed. On Sunday the week that is closing; on every other day the one before. `?week=last` always means the week before the current one.
+- Q: How does a Week row say an area has no sessions yet this week? The ordinary template produced `Zero sessions attended.`, an unapproved string and a zero phrased as a number. → A: `No sessions attended.`, in the pattern of the approved `No tasks on the list.` It is the twenty-seventh string.
 
 ## Decisions already taken
 
@@ -375,8 +389,17 @@ renders it.
   (FR-010a), and it does not exist until the session ends. Counting and
   measuring answer different questions and close at different moments.
 - **FR-007**: Week MUST count in sessions and MUST NOT show minutes.
+- **FR-007a**: Week MUST list every unarchived area, daily or not
+  (supersedes 001's clarification Q3). A row with no sessions this week
+  MUST say `No sessions attended.` rather than write a zero.
 - **FR-008**: Review MUST present the week that is closing or has closed,
   with Attended before Unattended, and MUST show minutes as plain figures.
+- **FR-008b**: Review MUST list every unarchived area, attended or not, and
+  every archived area with a session that week. An unattended row carries
+  the area's name and no line. An area with exactly one closed session and
+  no note reads `One session, {n} minutes` on one line; with two or more
+  and no note it takes the sessions label and `{n} minutes. No note this
+  time.` The last note is the most recent non-empty note that week.
 - **FR-008a**: When the week being reviewed contains a session that has not
   closed, Review MUST say so on that area's row. The minute figure reports
   the closed sessions, and the sentence naming the open one is what keeps a
@@ -464,6 +487,11 @@ renders it.
   reachable rather than ceasing to be at midnight.
 - **FR-019c**: Review MUST remain reachable on every day of the week by at
   least one route, and MUST state which week it is showing.
+- **FR-019d**: With no parameter, Review MUST show the week closing on
+  Sunday and the week that last closed on every other day. `?week=last`
+  MUST show the week before the current one on every day. Returning from
+  Areas therefore lands on the same week wherever Review was opened from,
+  except when Week's link is followed on a Sunday.
 
 #### State
 
@@ -547,11 +575,14 @@ renders it.
 
 - **001's approved copy is not rewritten, and its screens keep their
   shape.** Every sentence 001 approved says the same words here; what this
-  feature adds, it adds — twenty-six new strings for states 001 never
+  feature adds, it adds — twenty-seven new strings for states 001 never
   reached, and three elements that passed the addition test in writing.
   Nothing approved is reworded and no screen changes the question it
-  answers. One 001 rule is superseded rather than inherited: FR-014's
-  attended treatment no longer loses its Tend button (FR-015e). 001's
+  answers. Three 001 rules are superseded rather than inherited: FR-014's
+  attended treatment no longer loses its Tend button (FR-015e); clarification
+  Q3's Week without People gives way to every area on Week (FR-007a); and
+  Review's per-area unattended line is retired, since no rule produces it
+  (FR-008b). 001's
   `contracts/screens.md` remains the UI contract otherwise, including
   **001's FR-013a** ordering rule — what is still to be tended sorts above
   what was attended today — and the addition-test removals from 001's T048. Requirement ids are per feature:
@@ -598,14 +629,16 @@ feature; every other word on every screen stays exactly as 001 approved it.
 Strings are reproduced verbatim, and where a value is interpolated the
 braces mark it.
 
-**Twenty-six strings, all approved.** The list closed at twenty-one before
+**Twenty-seven strings, all approved.** The list closed at twenty-one before
 `/speckit-analyze`. Four were added after it and approved on 2026-09-23: one
 on Home and three on Review, all of them consequences of the decision that a
 session counts from its start and measures from its close (FR-006a). The
 twenty-sixth is the Picker's consequence line, added with the
 concurrent-session decision and approved on 2026-09-24 with its four rules:
 the title verbatim, only when the session runs in another area, nothing when
-it runs in this one, and inside the sticky bar above the action.
+it runs in this one, and inside the sticky bar above the action. The
+twenty-seventh is Week's `No sessions attended.`, approved on 2026-09-26
+when putting every area on Week made a row with no sessions ordinary.
 
 ### Areas
 
@@ -733,10 +766,13 @@ expires.`, is unchanged and still shown.
 |---|---|---|
 | No area has tasks on its list | Note | `No tasks on any list. The rhythms are set; tasks are what fill them.` |
 | An area has a rhythm and no tasks | Row line | `No tasks on the list. {sessions} sessions attended.` |
+| An area has no sessions this week | Second sentence of the row line | `No sessions attended.` |
 | Always | Link to last week's Review | `Look back on last week` |
 
 The row line's second sentence follows the ordinary rule; only the first is
-replaced.
+replaced. With no sessions it is replaced too, never written as a zero
+(approved 2026-09-26): `One task on the list. No sessions attended.` and
+`No tasks on the list. No sessions attended.`
 
 `Look back on last week` is a **tertiary text link beneath `Change the
 rhythm`**, not a button. It is present on every day.
@@ -766,6 +802,16 @@ open one has no figure at all, and says why instead of rendering a zero.
 
 The row's sessions label counts the open session throughout, so an area
 with two closed sessions and one open reads `Three sessions`.
+
+**Which row form applies** (FR-008b, decided 2026-09-26). An area with
+exactly one closed session and no note keeps 001's one-line form,
+`One session, {n} minutes`. With two or more closed sessions and no note it
+takes the sessions label and `{n} minutes. No note this time.` Any note
+takes the `Last note:` line, and the note is the most recent non-empty one
+that week. An **unattended row has no line** — the name, faded, and the
+closing note beneath the section. 001's
+`No sessions this week. The pages are where you left them.` was prose about
+one area and is not carried forward.
 
 ### A task's last session
 
@@ -842,9 +888,23 @@ gets a worse answer.
 
 ## Open
 
-Nothing. Every decision is taken and all twenty-six strings are approved.
+Nothing. Every decision is taken and all twenty-seven strings are approved.
 
-The last one to close was FR-015e, approved on 2026-09-25: an attended area
+The last to close were the five Week and Review decisions of 2026-09-26
+(§"Clarifications"): every area on Week and in Review, superseding 001's
+Q3; the one-session row keeping 001's form; no line on an unattended row;
+the week `/review` shows by default; and `No sessions attended.`
+
+**What they cost SC-001 on Review.** 001's fixtures disagree with
+themselves, and `lib/seed/fixture-001.ts` follows Home and Week where they
+do. Derived from that state, Review reads `Seven sessions` where 001 read
+`Six sessions`, lists Morning pages as attended with one session, Money with
+three, Health's and Money's last notes as the seed's, and People under
+Unattended. The minute figures, 52 and 31, still match. SC-001 holds on
+Review for the strings the decisions kept and cannot hold for the rest;
+T058 asserts it that way and names each exception.
+
+Before them, FR-015e closed on 2026-09-25, approved on 2026-09-25: an attended area
 keeps an outline Tend, the card takes the past-rhythm card's full shape with
 no collapse and no fade, and no string is added. 001's
 `contracts/screens.md` records it as superseding part of 001's FR-014.

@@ -236,6 +236,13 @@ attended; `Change the rhythm`.
 **Must not have**: minutes (FR-022), a percentage, a progress bar framed as
 a target, People (clarification Q3).
 
+> **Superseded in part by feature 002 (2026-09-26).** Q3 is superseded:
+> Week lists every unarchived area, daily or not, so People is on it and
+> the heading reads `Five areas, eleven sessions` with 001-equivalent state.
+> A non-daily area keeps a weekly rhythm, and Week is where rhythms are
+> counted (002 FR-007a). A row with no sessions reads
+> `No sessions attended.` rather than a zero.
+
 **Goes to**: `/areas` from `Change the rhythm`; back to `/`.
 
 ---
@@ -248,6 +255,16 @@ closing note; `Set this week's rhythm`.
 
 **Must not have**: a chart, a trend, a comparison with last week, a total
 framed as a score, any word suggesting failure.
+
+> **Superseded in part by feature 002 (2026-09-26).** Review lists every
+> unarchived area, attended or not, plus archived areas with a session
+> that week. An unattended row is the area's name, faded, with **no line**:
+> `No sessions this week. The pages are where you left them.` was prose
+> about one area and no rule produces it. The one-line
+> `One session, {n} minutes` stays, for an area with exactly one closed
+> session and no note (002 FR-008b). With no parameter Review shows the
+> week closing on Sunday and the week that last closed on any other day
+> (002 FR-019d).
 
 **Goes to**: `/areas` from `Set this week's rhythm`; back to `/`.
 

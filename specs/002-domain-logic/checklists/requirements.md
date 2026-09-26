@@ -43,7 +43,7 @@ appears Sunday and Monday with Week carrying a permanent route into the
 previous week's Review, Capture's chips are every area in the Areas order,
 and Home's absence note is one sentence naming the absent areas.
 
-All twenty-six new strings are approved and recorded in the spec's
+All twenty-seven new strings are approved and recorded in the spec's
 §"Screen copy". The list closed at twenty-one before
 `/speckit-analyze`, because removing an area with neither tasks nor past
 sessions is its own case, which the pending list had missed. Five were added
