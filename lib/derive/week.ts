@@ -66,8 +66,17 @@ export function weekClosing(now: Date): 'sunday' | 'monday' | null {
 
 export const isWeekClosing = (now: Date) => weekClosing(now) !== null;
 
-/** Which week Review shows when it is reached from Home: the one closing on
- *  Sunday, the one that just closed on Monday (FR-019a). */
-export function reviewWeekFor(now: Date): Week {
-  return weekClosing(now) === 'monday' ? previousWeek(now) : weekContaining(now);
+/**
+ * Which week Review shows (FR-019a, FR-019d).
+ *
+ * With no parameter: the week closing on Sunday, and the week that last
+ * closed on every other day — Monday's entry from Home, and Tuesday to
+ * Saturday by whatever route. `'last'` is Week's link: the week before the
+ * current one, on every day. The two agree from Monday to Saturday, which
+ * is what lets Areas return to `/review` without losing the week; Sunday
+ * is the one day they differ, and there the parameter carries it.
+ */
+export function reviewWeekFor(now: Date, which: 'default' | 'last' = 'default'): Week {
+  if (which === 'last') return previousWeek(now);
+  return weekClosing(now) === 'sunday' ? weekContaining(now) : previousWeek(now);
 }

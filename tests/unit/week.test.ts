@@ -91,6 +91,21 @@ describe('when the week closes (FR-019a)', () => {
     expect(reviewWeekFor(new Date(2026, 8, 14, 9, 0)).start.getDate()).toBe(7);
   });
 
+  it('shows the week that last closed on Tuesday to Saturday (FR-019d)', () => {
+    for (const day of [15, 16, 17, 18, 19]) {
+      expect(reviewWeekFor(new Date(2026, 8, day, 12, 0)).start.getDate(), `the ${day}th`).toBe(7);
+    }
+  });
+
+  it('with ?week=last, shows the week before the current one on every day (FR-019d)', () => {
+    /* Sunday is the one day it differs from the default: the closing week
+       is this one, and last week is the one before it. */
+    expect(reviewWeekFor(new Date(2026, 8, 13, 13, 0), 'last').start.getDate()).toBe(31);
+    for (const day of [14, 15, 16, 17, 18, 19]) {
+      expect(reviewWeekFor(new Date(2026, 8, day, 12, 0), 'last').start.getDate(), `the ${day}th`).toBe(7);
+    }
+  });
+
   it('reaches the previous week from any day', () => {
     expect(previousWeek(new Date(2026, 8, 10)).start.getDate()).toBe(31);
   });
