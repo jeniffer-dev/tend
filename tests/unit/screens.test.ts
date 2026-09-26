@@ -186,6 +186,25 @@ describe('Week counts sessions and shows no minutes', () => {
     expect(everything.some((text) => /minute/i.test(text))).toBe(false);
   });
 
+  it('lists every area, daily or not (FR-007a, superseding 001 Q3)', () => {
+    expect(view.rows.map((r) => r.areaId)).toEqual(['morning-pages', 'health', 'home', 'people', 'money']);
+    expect(view.heading).toBe('Five areas, eleven sessions');
+  });
+
+  it('says a row has no sessions rather than writing a zero (FR-007a)', () => {
+    const people = view.rows.find((r) => r.areaId === 'people')!;
+    expect(people.sessionsLabel).toBe('One session');
+    expect(people.line).toBe('One task on the list. No sessions attended.');
+    expect(view.rows.some((r) => /\bzero\b|\b0\b/i.test(r.line))).toBe(false);
+  });
+
+  it('replaces both sentences when an area has neither tasks nor sessions', () => {
+    const bare = reduce(EMPTY_STATE, {
+      type: 'createArea', id: 'health', name: 'Health', color: 'primary', sessionsPerWeek: 3, isDaily: true,
+    });
+    expect(weekView(bare, NOW).rows[0].line).toBe('No tasks on the list. No sessions attended.');
+  });
+
   it('counts an open session as a session, and says nothing about it being open', () => {
     const running = reduce(SEED_001, {
       type: 'startSession', now: NOW, id: 'live', taskId: 'book-the-blood-test', areaId: 'health',

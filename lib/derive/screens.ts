@@ -275,24 +275,33 @@ export type WeekView = { heading: string; rows: WeekRow[]; emptyNote: string | n
  * An open session is already counted here (FR-006a) and Week says nothing
  * about it being open, because Week has no minutes for the omission to
  * explain — the count is simply correct.
+ *
+ * Every unarchived area is a row, daily or not (FR-007a): a non-daily area
+ * keeps a weekly rhythm, and this is where rhythms are counted. That
+ * supersedes 001's clarification Q3, which kept People off this screen.
  */
+/** A zero in either sentence is replaced by its `No …` form, never written
+ *  as a number (FR-007a). Four whole templates, one per case. */
+function weekRowLine(tasks: number, sessions: number): string {
+  if (tasks === 0 && sessions === 0) return week002.rowLineNothing;
+  if (tasks === 0) return week002.rowLineNoTasks(numberWordCapital(sessions));
+  if (sessions === 0) return week002.rowLineNoSessions(numberWordCapital(tasks));
+  return week002.rowLine(numberWordCapital(tasks), numberWordCapital(sessions));
+}
+
 export function weekView(state: State, now: Date): WeekView {
   const week = weekContaining(now);
   const areas = unarchivedAreas(state);
-  const rows = areas.map((area) => {
-    const taskCount = weekListTasks(state, area.id).length;
-    const attended = sessionsInWeek(state, area.id, week);
-    return {
-      areaId: area.id,
-      name: area.name,
-      color: area.color,
-      sessionsLabel: week002.sessionsLabel(numberWordCapital(area.sessionsPerWeek)),
-      line:
-        taskCount === 0
-          ? week002.rowLineNoTasks(numberWordCapital(attended))
-          : week002.rowLine(numberWordCapital(taskCount), numberWordCapital(attended)),
-    };
-  });
+  const rows = areas.map((area) => ({
+    areaId: area.id,
+    name: area.name,
+    color: area.color,
+    sessionsLabel: week002.sessionsLabel(numberWordCapital(area.sessionsPerWeek)),
+    line: weekRowLine(
+      weekListTasks(state, area.id).length,
+      sessionsInWeek(state, area.id, week)
+    ),
+  }));
 
   const committed = areas.reduce((total, a) => total + a.sessionsPerWeek, 0);
   const anyTasks = areas.some((a) => weekListTasks(state, a.id).length > 0);

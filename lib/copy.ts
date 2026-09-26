@@ -324,6 +324,12 @@ export const week002 = {
    *  rule, agreement included (spec.md §"Screen copy"). */
   rowLineNoTasks: (sessions: string) =>
     `No tasks on the list. ${sessions} session${s(sessions)} attended.`,
+  /** String 27, approved 2026-09-26 (FR-007a). A row with no sessions says
+   *  so rather than writing `Zero sessions attended.`; whole sentences for
+   *  both cases, so nothing is joined from fragments. */
+  rowLineNoSessions: (tasks: string) =>
+    `${tasks} task${s(tasks)} on the list. No sessions attended.`,
+  rowLineNothing: 'No tasks on the list. No sessions attended.',
   noTasksAnywhere:
     'No tasks on any list. The rhythms are set; tasks are what fill them.',
   /** A tertiary text link beneath `Change the rhythm`, not a button, and

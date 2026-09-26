@@ -22,9 +22,16 @@ test.describe('Week — what am I committing to?', () => {
     }
   });
 
-  test('clarification Q3: People is absent from Week', async ({ page }) => {
-    await expect(page.locator('[data-area="people"]')).toHaveCount(0);
-    await expect(page.getByTestId('screen')).not.toContainText('People');
+  test('FR-007a: every area is on Week, People included', async ({ page }) => {
+    /* 001's clarification Q3 asserted People was absent. 002 superseded it
+       on 2026-09-26: a non-daily area keeps a weekly rhythm, and Week is
+       where rhythms are counted. Unseeded, the old assertion passed on an
+       empty Week, which proved nothing, so this one is seeded. */
+    await page.goto('/week?seed=001');
+    await expect(page.getByTestId('week-row')).toHaveCount(5);
+    await expect(page.locator('[data-area="people"]')).toContainText(
+      'One task on the list. No sessions attended.'
+    );
   });
 
   test('FR-022: no minutes on this screen', async ({ page }) => {
