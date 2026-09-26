@@ -112,7 +112,7 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 - [X] T034 [US2] Implement which week Review shows in `app/review/page.tsx` — with no parameter the closing week on Sunday and the week that last closed on every other day, and `?week=last` the week before the current one on every day (FR-019a, FR-019c, FR-019d). Review must state which week it is showing
 - [X] T035 [US2] Resolve area names in Review **including archived areas**, because the sessions happened. Every other screen excludes them (data-model.md, FR-018)
 - [ ] T036 [US2] Update `features/home/review-entry.tsx` — the Sunday string, the Monday string, or nothing on other days (FR-019a)
-- [ ] T037 [US2] Write `tests/e2e/week-review-live.spec.ts` — figures match the sessions, no minutes on Week, Attended before Unattended, and an area past its rhythm presented as extra rather than as an excess. Covers FR-007, FR-008, FR-009
+- [X] T037 [US2] Write `tests/e2e/week-review-live.spec.ts` — figures match the sessions, no minutes on Week, Attended before Unattended, and an area past its rhythm presented as extra rather than as an excess. Covers FR-007, FR-008, FR-009
 - [ ] T038 [P] [US2] Write `tests/e2e/review-reachable.spec.ts` — Review is reachable on every day of the week by at least one route, and Week's link always reaches last week. Covers FR-019a, FR-019b, FR-019c
 
 ---
