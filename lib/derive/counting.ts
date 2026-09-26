@@ -44,6 +44,16 @@ export const minutesInWeek = (state: State, areaId: string, week: Week): number 
 export const openSessionInWeek = (state: State, areaId: string, week: Week): Session | null =>
   sessionsInWeekFor(state, areaId, week).find((s) => s.endedAt === null) ?? null;
 
+/** FR-008b — the most recent non-empty note among that area's **closed**
+ *  sessions that week, or null. An open session's note is still being
+ *  written, and a closed session with an empty note has nothing to say. */
+export function lastNoteInWeek(state: State, areaId: string, week: Week): string | null {
+  const noted = sessionsInWeekFor(state, areaId, week)
+    .filter((s) => s.endedAt !== null && s.progressNote !== '')
+    .sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime());
+  return noted[0]?.progressNote ?? null;
+}
+
 /** FR-009 — more sessions than the rhythm means the extra ones are extra.
  *  Never a proportion, never a verdict. */
 export const isPastRhythm = (area: Area, state: State, week: Week): boolean =>

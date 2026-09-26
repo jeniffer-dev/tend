@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { homeView, pickerView, rhythmLabel, sessionView, weekView } from '@/lib/derive/screens';
+import { homeView, pickerView, reviewView, rhythmLabel, sessionView, weekView } from '@/lib/derive/screens';
 import { SEED_001, SEED_001_ORIGIN } from '@/lib/seed/fixture-001';
 import { reduce, type Action } from '@/lib/state/store';
 import { EMPTY_STATE, type State } from '@/lib/state/types';
@@ -280,5 +280,138 @@ describe('the empty cases', () => {
 
   it('says nothing about absence when every area is daily', () => {
     expect(homeView(oneArea, NOW).absenceNote).toBeNull();
+  });
+});
+
+describe('Review — what was attended, and what went unattended (T033, T035)', () => {
+  const apply = (state: State, ...actions: Action[]) => actions.reduce(reduce, state);
+  const at = (minutes: number) => new Date(NOW.getTime() + minutes * 60_000);
+  const start = (taskId: string, areaId: string, when = NOW): Action => ({
+    type: 'startSession', now: when, id: `s-${taskId}-${when.getTime()}`, taskId, areaId,
+  });
+  const close = (when: Date, note = ''): Action => ({ type: 'closeSession', now: when, outcome: 'progressed', note });
+  const row = (view: ReturnType<typeof reviewView>, areaId: string) =>
+    [...view.attended, ...view.unattended].find((r) => r.areaId === areaId)!;
+
+  const view = reviewView(SEED_001, NOW);
+
+  it('names the week, and counts every session in it', () => {
+    expect(view.eyebrow).toBe('Week of 7 September');
+    expect(view.heading).toBe('Seven sessions');
+    expect(view.headingNote).toBeNull();
+  });
+
+  it('lists Attended in the Areas order, then every area with none (FR-008b)', () => {
+    expect(view.attended.map((r) => r.areaId)).toEqual(['morning-pages', 'health', 'home', 'money']);
+    expect(view.unattended.map((r) => r.areaId)).toEqual(['people']);
+  });
+
+  it('gives each attended row its minutes and its most recent note', () => {
+    expect(row(view, 'health')).toMatchObject({
+      sessionsLabel: 'Two sessions',
+      line: '52 minutes. Last note: Found the lab. Need the referral number from the clinic.',
+    });
+    /* Money's most recent session has a note; the one before it has none,
+       and the most recent non-empty note is what the line carries. */
+    expect(row(view, 'money')).toMatchObject({
+      sessionsLabel: 'Three sessions',
+      line: '31 minutes. Last note: Cancelled. The new one arrives next week.',
+    });
+  });
+
+  it('keeps 001\'s one-line form for one closed session with no note', () => {
+    expect(row(view, 'home')).toMatchObject({ sessionsLabel: 'One session, 15 minutes', line: null });
+  });
+
+  it('takes the no-note line for two or more closed sessions with no note', () => {
+    const twice = apply(
+      SEED_001,
+      start('change-the-filter', 'home', at(10)), close(at(30)),
+    );
+    expect(row(reviewView(twice, at(40)), 'home')).toMatchObject({
+      sessionsLabel: 'Two sessions',
+      line: '35 minutes. No note this time.',
+    });
+  });
+
+  it('writes minutes as words to twelve, capitalised where they open the line (FR-029)', () => {
+    const short = apply(SEED_001, start('write-to-nan', 'people', at(10)), close(at(19), 'Started the letter.'));
+    expect(row(reviewView(short, at(20)), 'people').line).toBe('Nine minutes. Last note: Started the letter.');
+
+    const bare = apply(SEED_001, start('write-to-nan', 'people', at(10)), close(at(19)));
+    expect(row(reviewView(bare, at(20)), 'people').sessionsLabel).toBe('One session, nine minutes');
+  });
+
+  it('gives an unattended row its name and no line (FR-008b)', () => {
+    expect(row(view, 'people')).toMatchObject({ name: 'People', sessionsLabel: null, line: null });
+  });
+
+  it('shows the closing note, because something went unattended', () => {
+    expect(view.closingNote).toBe(
+      'Unattended is a fact about the week, not about you. Next week starts with the same areas.'
+    );
+    expect(view.everyAreaAttended).toBeNull();
+  });
+
+  describe('an open session (FR-006a, FR-008a)', () => {
+    it('counts it, adds no minutes, and names it', () => {
+      const running = apply(SEED_001, start('book-the-blood-test', 'health'));
+      const v = reviewView(running, at(5));
+      expect(v.heading).toBe('Eight sessions');
+      expect(row(v, 'health')).toMatchObject({
+        sessionsLabel: 'Three sessions',
+        line: '52 minutes. One still open. Last note: Found the lab. Need the referral number from the clinic.',
+      });
+    });
+
+    it('says so without a note when the closed ones have none', () => {
+      const running = apply(SEED_001, start('change-the-filter', 'home'));
+      expect(row(reviewView(running, at(5)), 'home').line).toBe(
+        '15 minutes. One still open. No note this time.'
+      );
+    });
+
+    it('renders no figure at all when the open one is the only session', () => {
+      const running = apply(SEED_001, start('write-to-nan', 'people'));
+      const v = reviewView(running, at(5));
+      expect(row(v, 'people')).toMatchObject({
+        sessionsLabel: 'One session',
+        line: 'One still open. Minutes are recorded when it closes.',
+      });
+      expect(row(v, 'people').line).not.toMatch(/\b0\b|zero/i);
+    });
+  });
+
+  it('says every area was attended, and drops the closing note', () => {
+    const all = apply(SEED_001, start('write-to-nan', 'people', at(10)), close(at(25)));
+    const v = reviewView(all, at(30));
+    expect(v.unattended).toEqual([]);
+    expect(v.everyAreaAttended).toBe('Every area was attended this week.');
+    expect(v.closingNote).toBeNull();
+  });
+
+  it('keeps an archived area\'s sessions under its name, and forgets it otherwise (T035, FR-018)', () => {
+    const archived = apply(SEED_001, { type: 'removeArea', now: NOW, areaId: 'health' });
+    expect(row(reviewView(archived, NOW), 'health')).toMatchObject({ name: 'Health', sessionsLabel: 'Two sessions' });
+
+    const quiet = apply(SEED_001, { type: 'removeArea', now: NOW, areaId: 'people' });
+    expect(reviewView(quiet, NOW).unattended.map((r) => r.areaId)).toEqual([]);
+  });
+
+  it('shows the week before on ?week=last, and says which (FR-019d)', () => {
+    const last = reviewView(SEED_001, NOW, 'last');
+    expect(last.eyebrow).toBe('Week of 31 August');
+    expect(last.heading).toBe('No sessions');
+    expect(last.headingNote).toBe('Nothing was attended this week.');
+    expect(last.attended).toEqual([]);
+  });
+
+  it('shows the week that closed, on the Monday after', () => {
+    expect(reviewView(SEED_001, new Date(2026, 8, 14, 9, 0)).eyebrow).toBe('Week of 7 September');
+  });
+
+  it('never puts a percentage or a ratio on the screen (FR-004)', () => {
+    const text = JSON.stringify(view);
+    expect(text).not.toMatch(/%|\bout of\b|\d\/\d/);
   });
 });

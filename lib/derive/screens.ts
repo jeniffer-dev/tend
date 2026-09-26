@@ -13,6 +13,8 @@ import {
   areas002,
   home002 as homeCopy,
   picker002,
+  review as reviewCopy,
+  review002,
   session as sessionCopy,
   week002,
 } from '@/lib/copy';
@@ -22,9 +24,12 @@ import {
   attendedToday,
   dailyAreas,
   isPastRhythm,
+  lastNoteInWeek,
   lastSessionForArea,
   lastSessionForTask,
+  minutesInWeek,
   minutesToday,
+  openSessionInWeek,
   sessionsInWeek,
   taskById,
   unarchivedAreas,
@@ -32,6 +37,7 @@ import {
 } from '@/lib/derive/counting';
 import {
   clockString,
+  dateLabel,
   dayName,
   elapsedMinutes,
   joinNames,
@@ -39,7 +45,7 @@ import {
   numberWordCapital,
   spellNumberCapital,
 } from '@/lib/derive/format';
-import { weekClosing, weekContaining } from '@/lib/derive/week';
+import { reviewWeekFor, weekClosing, weekContaining, type Week } from '@/lib/derive/week';
 import type { Area, State } from '@/lib/state/types';
 
 /** The rhythm line Areas, and only Areas, renders whole. 001 stored it as
@@ -310,5 +316,113 @@ export function weekView(state: State, now: Date): WeekView {
     heading: week002.heading(numberWordCapital(areas.length), numberWord(committed)),
     rows,
     emptyNote: anyTasks ? null : week002.noTasksAnywhere,
+  };
+}
+
+/* ------------------------------------------------------------- Review */
+
+export type ReviewRow = {
+  areaId: string;
+  name: string;
+  color: Area['color'];
+  /** Null on an unattended row, which is the name and nothing else. */
+  sessionsLabel: string | null;
+  /** Null on an unattended row, and on the one-line single-session form. */
+  line: string | null;
+};
+
+export type ReviewView = {
+  eyebrow: string;
+  heading: string;
+  /** `Nothing was attended this week.` when the week has no sessions. */
+  headingNote: string | null;
+  attended: ReviewRow[];
+  unattended: ReviewRow[];
+  /** In place of an empty Unattended section. */
+  everyAreaAttended: string | null;
+  /** Shown only when something went unattended: otherwise there is nothing
+   *  for it to explain. */
+  closingNote: string | null;
+};
+
+/**
+ * One attended row: its sessions label and its line, chosen together.
+ *
+ * Counted and measured are two questions (FR-006a). The label counts the
+ * open session; the minutes are the closed ones', and the line names the
+ * open one so a short figure reads as explained rather than wrong (FR-008a).
+ * With the open one alone there is no figure at all, never a zero.
+ *
+ * Otherwise (FR-008b, 2026-09-26): any note takes the `Last note:` line;
+ * exactly one closed session and no note keeps 001's one-line form; two or
+ * more and no note take the sessions label and the no-note line.
+ */
+function attendedRow(state: State, area: Area, week: Week): ReviewRow {
+  const count = sessionsInWeek(state, area.id, week);
+  const open = openSessionInWeek(state, area.id, week) !== null;
+  const closed = count - (open ? 1 : 0);
+  const minutes = minutesInWeek(state, area.id, week);
+  const note = lastNoteInWeek(state, area.id, week);
+  const label = review002.sessionsLabel(numberWordCapital(count));
+  const common = { areaId: area.id, name: area.name, color: area.color };
+
+  if (open && closed === 0) return { ...common, sessionsLabel: label, line: review002.rowLineOnlyOpen };
+  if (open) {
+    const figure = numberWordCapital(minutes);
+    return {
+      ...common,
+      sessionsLabel: label,
+      line: note ? review002.rowLineOpenWithNote(figure, note) : review002.rowLineOpenNoNote(figure),
+    };
+  }
+  if (note) return { ...common, sessionsLabel: label, line: review002.rowLine(numberWordCapital(minutes), note) };
+  if (count === 1) {
+    return {
+      ...common,
+      sessionsLabel: review002.sessionsLabelWithMinutes(numberWordCapital(count), numberWord(minutes)),
+      line: null,
+    };
+  }
+  return { ...common, sessionsLabel: label, line: review002.rowLineNoNote(numberWordCapital(minutes)) };
+}
+
+/**
+ * Review — the week being reviewed, in two parts (FR-008, FR-008b).
+ *
+ * Every unarchived area appears, attended or not. An archived area appears
+ * only if it has a session that week, under the name it had: the session
+ * happened, and Review is the one screen that must be able to say where
+ * (T035, FR-018). Both parts follow the Areas order.
+ *
+ * Which week is FR-019d's, decided in `reviewWeekFor`.
+ */
+export function reviewView(
+  state: State,
+  now: Date,
+  which: 'default' | 'last' = 'default'
+): ReviewView {
+  const week = reviewWeekFor(now, which);
+  const listed = state.areas
+    .filter((a) => a.archivedAt === null || sessionsInWeek(state, a.id, week) > 0)
+    .sort((a, b) => a.sortOrder - b.sortOrder);
+
+  const attended = listed
+    .filter((a) => sessionsInWeek(state, a.id, week) > 0)
+    .map((a) => attendedRow(state, a, week));
+  const unattended = listed
+    .filter((a) => sessionsInWeek(state, a.id, week) === 0)
+    .map((a) => ({ areaId: a.id, name: a.name, color: a.color, sessionsLabel: null, line: null }));
+
+  const total = listed.reduce((sum, a) => sum + sessionsInWeek(state, a.id, week), 0);
+  const everyAttended = unattended.length === 0 && attended.length > 0;
+
+  return {
+    eyebrow: review002.eyebrow(dateLabel(week.start)),
+    heading: total === 0 ? review002.headingNone : review002.heading(numberWordCapital(total)),
+    headingNote: total === 0 ? review002.noteNone : null,
+    attended,
+    unattended,
+    everyAreaAttended: everyAttended ? review002.everyAreaAttended : null,
+    closingNote: unattended.length > 0 ? reviewCopy.closingNote : null,
   };
 }
