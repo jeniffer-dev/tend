@@ -4,18 +4,18 @@
 
 **Created**: 2026-09-23
 
-**Status**: Ready to implement — all twenty-seven new strings approved
+**Status**: Ready to implement — all twenty-nine new strings approved
 (§"Screen copy"), every decision settled, and nothing open. The last to
-close were the five Week and Review decisions of 2026-09-26, recorded in
-§"Clarifications" and §"Open"
+close was User Story 6 on 2026-10-04: a non-daily area can be added to Home
+for the day from its Week row
 
 **Input**: User description: "Feature 002: la lógica real detrás de las diez pantallas. Las mismas pantallas, los mismos textos, pero los valores se calculan en vez de estar escritos en el fixture, y el estado vive durante la sesión del navegador (sin persistencia todavía; eso es la 003)."
 
 ## What this feature is
 
-The same ten screens, answering the same ten questions. What changes is
-underneath: **every value a screen shows is derived from state, where
-feature 001 stored the finished sentence.**
+The same ten screens, answering the same ten questions. Most of what
+changes is underneath: **every value a screen shows is derived from state,
+where feature 001 stored the finished sentence.**
 
 Feature 001 built `lib/fixtures.ts` so that `Week` could read
 `Three tasks on the list. Two sessions attended.` as a literal string. That
@@ -24,15 +24,27 @@ fail by accident, and it left this feature's job visible. This feature
 replaces those literals with functions in `lib/`, and the components mostly
 take the props they always took.
 
-**Two things are genuinely new, and both are argued rather than assumed.**
-Twenty-seven strings for states 001 never reached — empty lists, a week with
-nothing in it, a session still running — and three elements that passed
-Article III's addition test in writing: Week's route to last week, the
+**What is genuinely new is argued rather than assumed.** Twenty-nine
+strings for states 001 never reached — empty lists, a week with nothing in
+it, a session still running, an area added to Home for the day — and four
+elements that passed Article III's addition test in writing: Week's route
+to last week, Week's way to add a non-daily area to Home for the day, the
 Picker's line naming what starting here closes, and the Tend an attended
-area keeps. No sentence 001 approved is reworded, and no screen changes the
-question it answers. One is retired rather than reworded — Review's line for
-an unattended area, which was prose about one area and cannot be derived —
-and 001's clarification Q3 is superseded: every area is on Week.
+area keeps.
+
+**And one behaviour 001 promised and never built** (User Story 6). Area
+edit offers `When I add it`, and Home says each area appears "when you add
+it", but no screen could add one. Deriving the week from real sessions is
+what made the gap a defect: a non-daily area had no route to a session, so
+Review listed it as unattended every week for something the app would not
+let anyone do. This feature exposed that, so this feature closes it.
+
+**What it supersedes, and what it does not.** No sentence 001 approved is
+reworded, and no screen changes the question it answers. Three 001 rules
+give way, each recorded where it is decided: the attended card keeps its
+Tend (FR-015e), every area is on Week (FR-007a, superseding clarification
+Q3), and Review's per-area unattended line is retired, since it was prose
+about one area and no rule produces it (FR-008b).
 
 State lives for as long as the browser session. Nothing is written to disk;
 persistence is feature 003.
@@ -44,6 +56,11 @@ same copy 001 rendered, character for character.** 001's approved strings
 become this feature's regression anchor: if the derivation is right, the
 sentences come back identical. If a single word differs, either the
 derivation is wrong or a rule was never written down.
+
+Where 001's fixtures disagreed with each other, no state can reproduce
+both sides, and the decisions above changed what Week and Review say. The
+test holds with those exceptions named one by one (§"Open", T058), so a new
+difference fails rather than hiding among the known ones.
 
 ## Clarifications
 
@@ -82,6 +99,14 @@ product owner rather than resolved in code.
 - Q: What line does an unattended area carry in Review? 001's `No sessions this week. The pages are where you left them.` is prose about Morning pages and cannot be derived. → A: None. The row is the area's name, faded. The closing note beneath the section is what explains absence, and a line per row would say the same thing once per area.
 - Q: Which week does `/review` show with no parameter on Tuesday to Saturday, or when Areas returns to it? → A: The week that last closed. On Sunday the week that is closing; on every other day the one before. `?week=last` always means the week before the current one.
 - Q: How does a Week row say an area has no sessions yet this week? The ordinary template produced `Zero sessions attended.`, an unapproved string and a zero phrased as a number. → A: `No sessions attended.`, in the pattern of the approved `No tasks on the list.` It is the twenty-seventh string.
+
+### Session 2026-10-04, User Story 6
+
+- Q: A non-daily area has no route to a session, so Review lists it as unattended for something nothing allows. Which route? → A: Build the "add to Home" that `When I add it` and `…appear when you add it` already promise, with the action on the area's Week row. Rejected: a Week row that opens the Picker (it skips Home instead of filling it, and acting fails Week's question), and the names in Home's absence note as links (a word inside a wrapped sentence cannot hold a 44px target, and it contradicts the sentence it would live in).
+- Q: The action's words? → A: `Add it to Home today`. The person chose `When I add it`, so the button that keeps that promise uses its word.
+- Q: What does the row say once used? → A: `On Home today.` in the action's place. No undo: a mistaken tap costs one day of an area on Home, which is not a cost.
+- Q: Does the Home card say it is there only today? → A: No. It is an ordinary card. Home's heading is the day, so everything on Home is today's, and tomorrow the absence note explains the area again.
+- Q: Does this belong in 002? → A: Yes, as User Story 6, built before User Story 3. 002 created the reproach, so 002 removes it.
 
 ## Decisions already taken
 
@@ -123,6 +148,10 @@ open for reinterpretation during planning.
 - **First run is Home's rule, not the app's.** Only `/` routes to First
   run when there are no unarchived areas. Every other screen keeps its own
   empty state.
+- **A non-daily area can be added to Home for the day, from its Week row.**
+  It is then an ordinary Home card until local midnight. This is what
+  `When I add it` has always meant, and it is the only route from a
+  non-daily area to a session.
 - **At most one session is open at any moment.** Starting a session closes
   a running one as `progressed` with an empty note. Nothing is blocked and
   nothing is asked twice; the Picker states the consequence before the
@@ -144,13 +173,13 @@ The table is the feature. Everything on the left was a literal string in
 | Areas | `Five, in your order` | the number of areas |
 | Areas | the removal explanation's counts | that area's tasks and past sessions |
 | Home | `Sunday` | today's date |
-| Home | which areas appear | `is_daily` |
+| Home | which areas appear | `is_daily`, or added to Home today (FR-022c) |
 | Home | the treatment of each area | sessions this week vs rhythm; attended today |
 | Home | `Last attended Monday.` | the most recent session on that area |
 | Home | `Past the two sessions you set for this week.` | sessions this week, rhythm |
 | Home | `Attended today, 15 minutes` | today's sessions on that area |
 | Home | whether the Review entry appears | whether the week is closing |
-| Home | the absence note | the non-daily areas |
+| Home | the absence note | the non-daily areas not added today |
 | Picker | which tasks appear | the area's week-list tasks |
 | Picker | each task's last-session note | that task's most recent session |
 | Session | the clock and its note | elapsed time since the session started |
@@ -318,6 +347,50 @@ renders it.
 
 ---
 
+### User Story 6 - Add a non-daily area to Home for the day (Priority: P2, built after User Story 2)
+
+Someone keeps People at one session a week, set to appear on Home
+`When I add it`. On Week, People's row offers `Add it to Home today`. They
+tap it, the row reads `On Home today.`, and Home has a People card with a
+Tend. They tend it, and Review counts People as attended. Tomorrow People
+is off Home again and the absence note explains it, as it always has.
+
+**Why this priority**: Without it, User Story 2's Review lists a non-daily
+area as unattended every week for something no screen lets anyone do —
+a fact about the app presented as a fact about the week, which Article I
+does not allow. Its priority is User Story 2's, and it is numbered 6 only
+because it was found after the others were numbered; ids do not move.
+
+**Independent Test**: With a non-daily area, add it to Home from Week,
+tend it from Home, and confirm Review counts it. Move to the next day and
+confirm it has left Home and the absence note names it again.
+
+**Acceptance Scenarios**:
+
+1. **Given** a non-daily area not on Home today, **When** the person opens
+   Week, **Then** its row offers `Add it to Home today`, and no daily
+   area's row offers anything.
+2. **Given** that row, **When** the person taps the action, **Then** the
+   row reads `On Home today.` in its place, the action is not offered again
+   that day, and the person is still on Week.
+3. **Given** an area added today, **When** the person opens Home, **Then**
+   it is a card with a Tend, in the Areas order and under 001's FR-013a
+   grouping, with the line any card would have, nothing saying it is there
+   only today, and the absence note no longer naming it.
+4. **Given** that card, **When** the person tends the area and closes the
+   session, **Then** Home, Week and Review treat it exactly as they treat a
+   daily area tended the same way.
+5. **Given** an area added yesterday, **When** the person opens Home today,
+   **Then** it is not on Home, the absence note names it again, and its
+   Week row offers the action again.
+6. **Given** Home holds only added areas and every one was attended today,
+   **When** the person reads Home, **Then**
+   `Every daily area was attended today. Nothing is waiting.` is not shown.
+7. **Given** no daily area, **When** an area is added today, **Then** Home
+   shows its card and not `No area waits for you here…`.
+
+---
+
 ### Edge Cases
 
 - **The clock passes zero and keeps going.** At 0:00 and beyond the session
@@ -331,7 +404,17 @@ renders it.
 - **An area is past its rhythm.** Its extra sessions are extra. It stays
   tendable, nothing is blocked, and no red appears.
 - **An area has no week-list tasks.** The Picker has nothing to offer.
-- **A week has no sessions at all.** Review has an empty Attended section.
+- **A week has no sessions at all.** Review reads `No sessions` and draws no
+  Attended section; a label above no rows is worse than no section.
+- **An area is added to Home, and then made daily.** It is daily; the
+  addition no longer matters. Made non-daily again the same day, it is
+  still on Home until midnight, because it was added today.
+- **An area is added to Home and not tended.** It leaves at midnight.
+  Nothing records that it was added and not tended, and nothing on any
+  screen mentions it afterwards.
+- **An area is named "Home".** A non-daily area of that name would read
+  `Add it to Home today` and `On Home today.`, as a daily one has read
+  `in Home daily` since 001. Recorded on 2026-10-04 and not decided.
 - **The Inbox is empty.** Nothing is unsorted.
 - **There are no areas.** First run is the whole app.
 - **One area, or more than five.** The counts in headings must read
@@ -468,9 +551,24 @@ renders it.
 - **FR-020**: Capturing with no area MUST place the item in the Inbox.
   Capturing with an area MUST assign it and keep it out of the Inbox.
 - **FR-021**: Giving an Inbox item an area MUST remove it from the Inbox.
-- **FR-022**: Home MUST show only daily areas, and MUST account for the
-  others in a single sentence naming them. With no non-daily area there is
-  no sentence.
+- **FR-022**: Home MUST show the daily areas and the areas added to Home
+  today (FR-022c), and MUST account for every other unarchived area in a
+  single sentence naming them. With none left over there is no sentence.
+- **FR-022c**: Week MUST offer `Add it to Home today` on the row of every
+  unarchived non-daily area not added today, and nothing on any other row.
+  Using it adds the area to Home until local midnight, starts no session,
+  and keeps the person on Week, where the row reads `On Home today.` in the
+  action's place. There is no undo.
+- **FR-022d**: An area added today MUST be an ordinary Home card — the same
+  treatments, lines, Tend and ordering as a daily area — with nothing saying
+  it is there only today. It MUST leave Home at local midnight without any
+  transition: being on Home today is derived from the day it was added and
+  `now`.
+- **FR-022e**: Home's notes MUST follow Home's cards, not the daily flag.
+  `No area waits for you here…` is shown only when Home has no cards.
+  `Every daily area was attended today. Nothing is waiting.` is shown only
+  when at least one card is a daily area, every card is attended, and no
+  session is open.
 - **FR-022a**: Capture MUST offer every area as a chip, in the order set on
   Areas, with no cap and no filtering by whether the area is daily.
 - **FR-022b**: When two or more areas are non-daily, Home's absence note
@@ -528,7 +626,8 @@ renders it.
 ### Key Entities
 
 - **Area**: a name, a colour, `sessions_per_week` (1–5), whether it appears
-  on Home daily, and its order.
+  on Home daily, its order, and the moment it was last added to Home, if it
+  ever was.
 - **Task**: a title, the area it belongs to or none, whether it is on this
   week's list, and when it was captured.
 - **Session**: the task and area it was against, when it started and ended,
@@ -570,13 +669,19 @@ renders it.
 - **SC-010**: No value displayed on any screen is stored as a display string
   — verified by code review against `lib/`, as FR-001's property is about how
   the code is written rather than what it renders.
+- **SC-011**: Every area can be tended on a day the person chooses. A
+  non-daily area reaches a running session in four taps from Week —
+  `Add it to Home today`, back to Home, its Tend, and the Picker's action —
+  and no area is listed as unattended in a week in which nothing could have
+  attended it.
 
 ## Assumptions
 
 - **001's approved copy is not rewritten, and its screens keep their
   shape.** Every sentence 001 approved says the same words here; what this
-  feature adds, it adds — twenty-seven new strings for states 001 never
-  reached, and three elements that passed the addition test in writing.
+  feature adds, it adds — twenty-nine new strings for states 001 never
+  reached, four elements that passed the addition test in writing, and
+  the add-to-Home behaviour 001's copy promised (User Story 6).
   Nothing approved is reworded and no screen changes the question it
   answers. Three 001 rules are superseded rather than inherited: FR-014's
   attended treatment no longer loses its Tend button (FR-015e); clarification
@@ -609,9 +714,10 @@ renders it.
   Article III's v1 exclusions.
 - Any new screen.
 - Any element that has not passed Article III's addition test **in
-  writing**. Three have, and each is argued in its own section rather than
-  exempted: Week's `Look back on last week`, the Picker's line naming what
-  starting here closes, and the Tend an attended area keeps on Home. An
+  writing**. Four have, and each is argued in its own section rather than
+  exempted: Week's `Look back on last week`, Week's
+  `Add it to Home today`, the Picker's line naming what starting here
+  closes, and the Tend an attended area keeps on Home. An
   element arrives by being argued, not by
   being useful, and "it might help" remains a rejection.
 
@@ -629,7 +735,7 @@ feature; every other word on every screen stays exactly as 001 approved it.
 Strings are reproduced verbatim, and where a value is interpolated the
 braces mark it.
 
-**Twenty-seven strings, all approved.** The list closed at twenty-one before
+**Twenty-nine strings, all approved.** The list closed at twenty-one before
 `/speckit-analyze`. Four were added after it and approved on 2026-09-23: one
 on Home and three on Review, all of them consequences of the decision that a
 session counts from its start and measures from its close (FR-006a). The
@@ -638,7 +744,9 @@ concurrent-session decision and approved on 2026-09-24 with its four rules:
 the title verbatim, only when the session runs in another area, nothing when
 it runs in this one, and inside the sticky bar above the action. The
 twenty-seventh is Week's `No sessions attended.`, approved on 2026-09-26
-when putting every area on Week made a row with no sessions ordinary.
+when putting every area on Week made a row with no sessions ordinary. The
+twenty-eighth and twenty-ninth are Week's `Add it to Home today` and
+`On Home today.`, approved on 2026-10-04 with User Story 6.
 
 ### Areas
 
@@ -659,10 +767,10 @@ reorder against — so the whole footer note is replaced rather than trimmed.
 
 | Condition | Role | String |
 |---|---|---|
-| Areas exist, none daily | Note in place of the cards | `No area waits for you here. You set each one to appear when you add it, so Home fills as you do.` |
-| Every daily area attended today, and no session is open | Note | `Every daily area was attended today. Nothing is waiting.` |
-| Every area is daily | — | No sentence. There is nothing to explain |
-| Two or more non-daily areas | Absence note | `{names} keep a weekly rhythm. They are not daily areas, so they do not wait for you here.` |
+| Areas exist, and Home has no card — none daily, none added today | Note in place of the cards | `No area waits for you here. You set each one to appear when you add it, so Home fills as you do.` |
+| Every card attended today, at least one of them a daily area, and no session is open | Note | `Every daily area was attended today. Nothing is waiting.` |
+| Every area is on Home today | — | No sentence. There is nothing to explain |
+| Two or more non-daily areas not added today | Absence note | `{names} keep a weekly rhythm. They are not daily areas, so they do not wait for you here.` |
 | A session is running, and it is the area's first today | Replaces the attended line | `Tending now` |
 | A session is running, and the area was already attended today | The attended line | `Attended today, {n} minutes · tending now` |
 | It is Monday | Review entry | `Last week closed. Look back on it.` |
@@ -768,6 +876,8 @@ expires.`, is unchanged and still shown.
 | An area has a rhythm and no tasks | Row line | `No tasks on the list. {sessions} sessions attended.` |
 | An area has no sessions this week | Second sentence of the row line | `No sessions attended.` |
 | Always | Link to last week's Review | `Look back on last week` |
+| A non-daily area not added to Home today | Action on its row | `Add it to Home today` |
+| A non-daily area added to Home today | In the action's place | `On Home today.` |
 
 The row line's second sentence follows the ordinary rule; only the first is
 replaced. With no sessions it is replaced too, never written as a zero
@@ -776,6 +886,15 @@ replaced. With no sessions it is replaced too, never written as a zero
 
 `Look back on last week` is a **tertiary text link beneath `Change the
 rhythm`**, not a button. It is present on every day.
+
+`Add it to Home today` sits **inside the row, beneath its line**, as the
+Button primitive's `ghost` variant at `size="touch"` — the design system's
+workhorse quiet control, 44px tall, with no new value. It is an action, not
+a link: it changes state and leaves the person on Week. `On Home today.`
+replaces it in the same place as plain `text-sm text-muted-foreground`
+text. The verb is the one Area edit's `When I add it` already uses: the
+person chose that option, and the button that keeps its promise says it in
+the same word.
 
 ### Review
 
@@ -880,6 +999,31 @@ inactive, and a faded button reads as disabled, which is the one thing
 FR-015e forbids. The card takes the past-rhythm card's shape. Its line and
 its position are what say it was attended.
 
+## Why a Week row can add an area to Home
+
+The action adds an element to Week, so Article III's addition test applies
+to it as it did to `Look back on last week`. It passes, and it is recorded
+here as passing rather than as an exception. Approved 2026-10-04.
+
+Week's question is *what am I committing to?* For a daily area the answer
+is already made every morning: Home puts it in front of you. For an area
+set to `When I add it`, the rhythm is a commitment with no day attached,
+and Week is the only screen where it is counted. Choosing that today is
+the day is the smallest commitment the screen can hold, and it is a
+commitment, not an act: the action starts no session. Tending still
+happens from Home, which stays the one door to a session.
+
+Remove it and the screen still renders, but a non-daily area's rhythm
+becomes a commitment the app offers no way to keep. RF-16 says any area
+can be tended, and three approved strings promise the area appears "when
+you add it". Review would then list the area as Unattended every week, and
+that is a fact about the app, not about the week. Article I lets Review
+state a fact about the week and never about the person. This would state
+neither.
+
+It appears only on rows of non-daily areas not already on Home today, and
+it gates nothing. Once used, the row says `On Home today.` in its place.
+
 ## Why Week carries a route to last week
 
 `Look back on last week` adds an element to Week, so Article III's addition
@@ -894,9 +1038,15 @@ gets a worse answer.
 
 ## Open
 
-Nothing. Every decision is taken and all twenty-seven strings are approved.
+Nothing. Every decision is taken and all twenty-nine strings are approved.
 
-The last to close were the five Week and Review decisions of 2026-09-26
+The last to close was User Story 6, on 2026-10-04: the add-to-Home
+behaviour, its two strings, their place on the row, the card saying nothing
+about today, and its addition-test argument. One thing is recorded and
+deliberately not decided — an area named "Home" reads oddly in Home's own
+strings, as it has since 001 (§"Edge Cases").
+
+Before it, the last to close were the five Week and Review decisions of 2026-09-26
 (§"Clarifications"): every area on Week and in Review, superseding 001's
 Q3; the one-session row keeping 001's form; no line on an unattended row;
 the week `/review` shows by default; and `No sessions attended.`
