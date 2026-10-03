@@ -110,6 +110,22 @@ Do the same inside the area the session is already running in. There should
 be **no** line, because picking another task there switches the task without
 closing anything, which is what the footer note has always promised.
 
+### A non-daily area reaches a session (User Story 6)
+
+With the seed, open Week. People's row offers `Add it to Home today`, and
+no daily area's row offers anything. Tap it: you stay on Week, and the row
+now reads `On Home today.` where the action was, with nothing to tap. Go
+back to Home. People is a card like any other, with a Tend, and the absence
+note about People is gone. Count the taps from Week to a running session on
+People — the action, `Back to home`, its Tend, `Tend for fifteen minutes` —
+there should be four. Close the session and open Review: People is under
+Attended.
+
+The day boundary takes longer by hand. Leave the tab open past local
+midnight (or move the device's clock forward, as for the clock past zero)
+and People is off Home, the absence note is back, and Week offers the
+action again.
+
 ### Empty states, which 001 never reached
 
 Each of these needs its approved string and none of them should show a

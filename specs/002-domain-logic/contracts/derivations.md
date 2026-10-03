@@ -154,9 +154,12 @@ states, and there is now one real clock.
 | The link out | `Look back on last week`, always |
 | A row's way to Home | `Add it to Home today` on a non-daily row not added today; `On Home today.` once added; nothing on a daily row (FR-022c) |
 
-The row is handed one of the two strings or neither, and a flag saying
-which, never the area's `isDaily` or `addedToHomeOn` to decide from.
-Tapping the action dispatches the twelfth transition and stays on Week.
+The row is handed `homeAction` and `onHomeNote`, each a finished string or
+`null`, and at most one of them present; which one is present is what says
+which to render. It is never handed the area's `isDaily` or
+`addedToHomeOn` to decide from. Tapping the action dispatches the twelfth
+transition with the moment from `useNowGetter()`, as every other
+transition does, and stays on Week.
 
 **Must not** receive minutes. Week counts in sessions (FR-007), and the
 derivation that would produce a minute total is not offered to this screen.

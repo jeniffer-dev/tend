@@ -180,6 +180,7 @@ The table is the feature. Everything on the left was a literal string in
 | Home | `Attended today, 15 minutes` | today's sessions on that area |
 | Home | whether the Review entry appears | whether the week is closing |
 | Home | the absence note | the non-daily areas not added today |
+| Week | `Add it to Home today` · `On Home today.` | `is_daily`, `added_to_home_on`, today's date |
 | Picker | which tasks appear | the area's week-list tasks |
 | Picker | each task's last-session note | that task's most recent session |
 | Session | the clock and its note | elapsed time since the session started |
@@ -409,6 +410,11 @@ confirm it has left Home and the absence note names it again.
 - **An area is added to Home, and then made daily.** It is daily; the
   addition no longer matters. Made non-daily again the same day, it is
   still on Home until midnight, because it was added today.
+- **A daily area attended today is made non-daily the same day.** It leaves
+  Home at once, attended or not: it was never added, so nothing keeps it
+  there (FR-022d). Its session still counts on Week and in Review, and the
+  absence note names it. Its Week row offers the action, which brings it
+  back for the rest of the day.
 - **An area is added to Home and not tended.** It leaves at midnight.
   Nothing records that it was added and not tended, and nothing on any
   screen mentions it afterwards.
@@ -669,11 +675,11 @@ confirm it has left Home and the absence note names it again.
 - **SC-010**: No value displayed on any screen is stored as a display string
   — verified by code review against `lib/`, as FR-001's property is about how
   the code is written rather than what it renders.
-- **SC-011**: Every area can be tended on a day the person chooses. A
-  non-daily area reaches a running session in four taps from Week —
-  `Add it to Home today`, back to Home, its Tend, and the Picker's action —
-  and no area is listed as unattended in a week in which nothing could have
-  attended it.
+- **SC-011**: Every area can be tended on a day the person chooses. From
+  Week, a non-daily area reaches a running session in exactly four taps —
+  `Add it to Home today`, `Back to home`, its Tend, and
+  `Tend for fifteen minutes` — and once that session is closed, Review lists
+  the area under Attended.
 
 ## Assumptions
 
