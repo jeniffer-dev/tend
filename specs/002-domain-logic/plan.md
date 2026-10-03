@@ -7,9 +7,17 @@
 ## Summary
 
 Replace 001's stored sentences with derivations, and give the app somewhere
-to keep facts while a tab is open. The ten screens, their routes, their back
-rule and their copy all stay as approved; what changes is that every value
-is now computed from state and a moment.
+to keep facts while a tab is open. The ten screens, their routes and their
+back rule stay as approved, and most of the work is that every value is now
+computed from state and a moment.
+
+Not all of it. Deriving the week from real sessions exposed one behaviour
+001's copy promised and never built — adding a non-daily area to Home for
+the day — and without it Review would report as unattended an area nothing
+could attend. It is built here as User Story 6: one field, one transition,
+two derivations widened, and one quiet action on Week's row. Three 001
+rules are superseded along the way and each is recorded where it was
+decided (spec.md §"What this feature is").
 
 Three decisions shape everything else:
 
@@ -64,7 +72,7 @@ every second.
 **Constraints**: In-memory only. `transition-colors` only. Six UI
 primitives. Single column, `max-w-[720px]`, 44px targets.
 
-**Scale/Scope**: 10 screens, 27 new strings, ~26 derivations, 11 state
+**Scale/Scope**: 10 screens, 29 new strings, ~28 derivations, 12 state
 transitions.
 
 ## Constitution Check
@@ -74,8 +82,8 @@ transitions.
 | Article | Gate for this feature | Pre-Phase 0 | Post-Phase 1 |
 |---|---|---|---|
 | I — What Tend is | No streak, badge, level or pressure framing. Passing the rhythm is extra; falling short is a fact about the week. | PASS (FR-004, FR-009) | PASS — the derivation returns `is past rhythm`, never a proportion |
-| II — Lexicon | No forbidden term. All 27 new strings reviewed and approved. | PASS | PASS — the copy lint extends to every new string, templates called with a sample so their output is linted too |
-| III — Minimalism | No new screen. Three new elements: Week's link, the Picker's consequence line, and the Tend an attended card keeps. | PASS | PASS — each is argued on its merits in spec.md and none is exempted. The Picker's line states a consequence and gates nothing; the attended card's Tend removes a block rather than adding a control |
+| II — Lexicon | No forbidden term. All 29 new strings reviewed and approved. | PASS | PASS — the copy lint extends to every new string, templates called with a sample so their output is linted too |
+| III — Minimalism | No new screen. Four new elements: Week's link, Week's `Add it to Home today`, the Picker's consequence line, and the Tend an attended card keeps. | PASS | PASS — each is argued on its merits in spec.md and none is exempted. The Picker's line states a consequence and gates nothing; the attended card's Tend removes a block rather than adding a control; Week's action commits a day and starts no session, so Home stays the one door to tending. Week now carries two additions, and T065 reads it with that in mind |
 | IV — Visual system | No new visual value. Nothing in the design system changes. | PASS | PASS — 002 adds no component and no token. The Picker's line makes a fourth footer shape, and the sticky footer's pre-hydration reservation is recalculated for it (T025b); that constant is a layout guard, not a design system value, and §4's sticky-bar rule already covers a message that qualifies the action |
 | V — Motion | `transition-colors` only. The clock's tick changes a number, never a style. | PASS | PASS — one treatment in every clock state, as 001 established |
 | VI — Architecture | No business logic in components; domain rules pure, synchronous, unit-tested, isolated from React and persistence. | PASS — this feature is where that article finally has something to govern | PASS — see the gate below |
@@ -143,10 +151,10 @@ specs/002-domain-logic/
 
 ```text
 lib/
-├── copy.ts              # extended: 27 new strings, some as templates
+├── copy.ts              # extended: 29 new strings, some as templates
 ├── state/
 │   ├── types.ts         # Area, Task, Session, State
-│   ├── store.ts         # the reducer and its eleven transitions
+│   ├── store.ts         # the reducer and its twelve transitions
 │   ├── provider.tsx     # the client provider — state, and the seed
 │   └── clock.tsx        # two contexts: the ticking now, and the day
 ├── derive/
@@ -178,11 +186,14 @@ they always did — a line, a treatment, a label — and those props now arrive
 derived instead of literal. That almost every component is rewired rather
 than rewritten is the clearest evidence 001's fixture rule did its job.
 
-Three change, and each for a reason the spec argues on the page rather than
+Four change, and each for a reason the spec argues on the page rather than
 here: the Home card gains a fourth treatment and its attended treatment
 keeps an outline Tend instead of collapsing (FR-015e), the Picker gains the
-consequence line, and the sticky footer's pre-hydration reservation is
-recalculated for the footer shape that line creates.
+consequence line, the sticky footer's pre-hydration reservation is
+recalculated for the footer shape that line creates, and Week's row gains
+`Add it to Home today` — the Button primitive's existing `ghost` variant at
+`size="touch"`, so no visual value is new (FR-022c). The row becomes a
+client component, because the action dispatches.
 
 ## Complexity Tracking
 

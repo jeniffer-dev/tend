@@ -57,11 +57,11 @@ which is what the footer note has always claimed.
 | Asks | Gets |
 |---|---|
 | The heading | Today's day name |
-| The cards | Unarchived daily areas in `sortOrder`, each with a treatment and a line |
+| The cards | Unarchived areas on Home today — daily, or added today (FR-022d) — in `sortOrder`, each with a treatment and a line |
 | A card's treatment | `to-tend` · `past-rhythm` · `attended` · `tending-now` |
-| The absence note | One sentence naming the non-daily areas, or nothing |
+| The absence note | One sentence naming the areas not on Home today, or nothing |
 | The review entry | The Sunday string, the Monday string, or nothing |
-| The empty cases | The no-daily-areas note, or the all-attended note, which is withheld while a session is open |
+| The empty cases | The no-daily-areas note when Home has no card at all; or the all-attended note, which is withheld while a session is open and when no card is a daily area (FR-022e) |
 
 `tending-now` is new in 002 and exists because FR-015a made it possible to
 be attended and unfinished at once. It is a fourth treatment rather than a
@@ -152,6 +152,11 @@ states, and there is now one real clock.
 | The rows | Every unarchived area, daily or not (FR-007a), each with a sessions label and a line |
 | A row's line | Tasks on the list and sessions attended; `No tasks on the list.` and `No sessions attended.` replace a zero in either sentence |
 | The link out | `Look back on last week`, always |
+| A row's way to Home | `Add it to Home today` on a non-daily row not added today; `On Home today.` once added; nothing on a daily row (FR-022c) |
+
+The row is handed one of the two strings or neither, and a flag saying
+which, never the area's `isDaily` or `addedToHomeOn` to decide from.
+Tapping the action dispatches the twelfth transition and stays on Week.
 
 **Must not** receive minutes. Week counts in sessions (FR-007), and the
 derivation that would produce a minute total is not offered to this screen.
@@ -200,11 +205,11 @@ no figure at all — a zero would be a number where there is no measurement.
 3. Every user-facing string comes from `lib/copy.ts`. Derivations choose
    between templates and fill them; they never concatenate prose.
 4. 001's `contracts/screens.md` holds unchanged — same screens, same routes,
-   same back rule, same ordering. Three elements are added, each argued
+   same back rule, same ordering. Four elements are added, each argued
    through Article III's addition test in spec.md rather than exempted from
-   it: Week's `Look back on last week`, the Picker's line naming what
-   starting here closes, and the Tend an attended card keeps on Home. All
-   three are recorded in 001's contract, the last as superseding part of
-   001's FR-014.
+   it: Week's `Look back on last week`, Week's `Add it to Home today`, the
+   Picker's line naming what starting here closes, and the Tend an attended
+   card keeps on Home. All four are recorded in 001's contract, the last as
+   superseding part of 001's FR-014.
 5. Given `?seed=001`, every screen renders 001's approved copy character for
    character (SC-001).

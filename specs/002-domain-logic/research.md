@@ -208,7 +208,10 @@ without seeding the time would make the criterion fail every day except one.
 
 No `NEEDS CLARIFICATION` markers remain. The spec's own open list closed at
 `/speckit-clarify`, and `/speckit-analyze` closed the five it raised.
-All twenty-seven new strings are approved and recorded in spec.md
+All twenty-nine new strings are approved and recorded in spec.md
 §"Screen copy". Nothing remains in spec.md §"Open". FR-015e closed on
-2026-09-25 and the five Week and Review decisions on 2026-09-26; none
-needed research, and together they added one string.
+2026-09-25, the five Week and Review decisions on 2026-09-26, and User
+Story 6 on 2026-10-04. None needed research: User Story 6's one technical
+question — how an area leaves Home at midnight — is §2's answer again. It
+stores the moment it was added and derives "today" from `now`, so nothing
+has to run at midnight (data-model.md).

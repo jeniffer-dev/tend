@@ -93,6 +93,13 @@ moved as a block.
 > spec.md §"Why an attended area keeps its Tend" (FR-015e), not exempted
 > from it.
 
+> **Extended by feature 002 (2026-10-04).** Home shows the daily areas
+> *and* any non-daily area added to Home today from Week (002 FR-022c,
+> FR-022d). An added area is an ordinary card with nothing saying it is
+> there only today, and the absence note names only the areas left off.
+> Home's question is unchanged: an area you chose for today is what you are
+> tending today.
+
 **Must not have**: any inbox item, any week list, any history, any minute
 count other than the attended line's, any Areas entry in the bottom
 navigation (FR-029).
@@ -242,6 +249,14 @@ a target, People (clarification Q3).
 > A non-daily area keeps a weekly rhythm, and Week is where rhythms are
 > counted (002 FR-007a). A row with no sessions reads
 > `No sessions attended.` rather than a zero.
+
+> **Extended by feature 002 (2026-10-04).** A non-daily area's row gains
+> `Add it to Home today`, a quiet `ghost` action beneath its line, which
+> puts the area on Home until midnight and keeps the person on Week. Once
+> used, the row reads `On Home today.` in its place. It starts no session:
+> Home stays the one door to tending. Argued through Article III's addition
+> test in 002 spec.md §"Why a Week row can add an area to Home" (FR-022c),
+> not exempted from it.
 
 **Goes to**: `/areas` from `Change the rhythm`; back to `/`.
 

@@ -44,6 +44,7 @@ type Area = {
   isDaily: boolean
   sortOrder: number
   archivedAt: Date | null   // set by Remove the area; never deleted
+  addedToHomeOn: Date | null  // the moment it was last added to Home; null if never
 }
 ```
 
@@ -54,6 +55,14 @@ A deleted area leaves its sessions pointing at nothing.
 
 An archived area is gone from Areas, Home, Week and Capture's chips. It
 survives only as the name its old sessions resolve to.
+
+**`addedToHomeOn` is a moment, and "on Home today" is a question asked of
+it** (User Story 6, FR-022d). An area is on Home when it is daily, or when
+`addedToHomeOn` falls on the same local day as `now`. Nothing clears the
+field at midnight: tomorrow the comparison is simply false. That keeps the
+day boundary out of the reducer, where it would need a clock, and in a
+derivation, where `now` is already an argument. The field holds no
+sentence and no flag that could go stale — only when it happened.
 
 `rhythmLabel` is gone. `Three sessions a week · in Home daily` is now
 `rhythmLabel(area)`, and it is the first thing SC-001 checks.
@@ -199,6 +208,8 @@ This list is the feature.
 | `isPastRhythm(area, week)` | `sessionsInWeek > sessionsPerWeek`; the extra ones are extra |
 | `attendedToday(area, now)` | Any session **started** today, running or closed (FR-015a) |
 | `lastAttended(area, now)` | The most recent session's start, as a day name or date |
+| `onHomeToday(area, now)` | Daily, or added to Home on the same local day as `now` (FR-022d) |
+| `homeAreas(state, now)` | Unarchived areas on Home today, in `sortOrder` — what Home's cards and notes are read from (FR-022, FR-022e) |
 
 **`sessionsInWeek` counts open sessions and `minutesInWeek` does not.**
 That is not an inconsistency, it is the feature's rule: a session counts
@@ -231,7 +242,8 @@ did, and the derivations choose between them and fill them.
 
 ## State transitions
 
-The eleven transitions in the feature. Everything else is a read.
+The twelve transitions in the feature. Everything else is a read. The
+twelfth, adding an area to Home, arrived with User Story 6 on 2026-10-04.
 
 Creating and editing an area were missing from this table until after
 `/speckit-analyze`. They are not incidental: FR-016 and FR-017 are two of
@@ -250,8 +262,9 @@ and no document defines is how a reducer grows a case nobody reviewed.
 | Close as progressed | `endedAt: now`, `outcome: 'progressed'`, note saved; the task stays on the week list |
 | Remove an area | `archivedAt: now`. Its tasks get `areaId: null` and keep their titles, so they appear in the inbox. Its sessions are untouched (FR-018) |
 | Reorder areas | `sortOrder` rewritten; Home follows (FR-019) |
-| Create an area | New `Area` with a name, a colour, `sessionsPerWeek`, `isDaily`, `sortOrder` last and `archivedAt: null`. Reached from First run and from `/areas/new` (FR-016, FR-025) |
+| Create an area | New `Area` with a name, a colour, `sessionsPerWeek`, `isDaily`, `sortOrder` last, `archivedAt: null` and `addedToHomeOn: null`. Reached from First run and from `/areas/new` (FR-016, FR-025) |
 | Edit an area | The area's name, colour, `sessionsPerWeek` or `isDaily` changes in place, and every screen showing it follows (FR-017). `sortOrder` and `archivedAt` are not edited here — reordering and removal are their own transitions |
+| Add an area to Home today | `addedToHomeOn: now`, on an unarchived non-daily area. On a daily or archived area it changes nothing. It starts no session and touches no other field (FR-022c) |
 
 **Archiving is the reason the removal confirmation can be true.** It
 promises that the area's past sessions stay in Review, and Review names the

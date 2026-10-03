@@ -117,6 +117,26 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 
 ---
 
+## Phase 4b: User Story 6 — Add a non-daily area to Home for the day (Priority: P2, after US2)
+
+**Goal**: Every area has a route to a session. A non-daily area is added to Home from its Week row, is an ordinary card until midnight, and Review stops listing as unattended an area nothing could attend.
+
+**Independent test**: With a non-daily area, add it from Week, tend it from Home, confirm Review counts it, move to the next day and confirm it has left Home and the absence note names it again.
+
+**Why it is here**: decided 2026-10-04 (spec.md §"Clarifications"). 002 created the reproach — FR-007a and FR-008b put non-daily areas on Week and Review — so 002 removes it, before User Story 3 begins. Ids are suffixed rather than renumbered, so every existing reference stays true.
+
+- [ ] T038a [US6] Add `addedToHomeOn: Date | null` to `Area` in `lib/state/types.ts`, and the **twelfth transition**, `addToHomeToday`, to `lib/state/store.ts`: `addedToHomeOn: now` on an unarchived non-daily area, and no change at all on a daily or archived one (data-model.md §"State transitions"). `createArea` sets it to `null`, and `lib/seed/fixture-001.ts` leaves every area at `null`, so SC-001 parity is untouched by it. **Nothing clears it at midnight** — being on Home today is a derivation, not a state (FR-022d)
+- [ ] T038b [P] [US6] Extend `tests/unit/store.test.ts` — the transition sets `addedToHomeOn` and touches no other field; it is a no-op on a daily area and on an archived one; `createArea` starts at `null`; and the invariant that at most one session is open still holds after it
+- [ ] T038c [P] [US6] Add `onHomeToday(area, now)` and `homeAreas(state, now)` to `lib/derive/counting.ts`, comparing local dates with the existing `isSameDay` and never milliseconds. Unit-test in `tests/unit/counting.test.ts`: added today is on Home, added yesterday is not, added at 23:59 is off at 00:00, a daily area is always on, an archived one never
+- [ ] T038d [US6] Add the two approved strings to `week002` in `lib/copy.ts` — `Add it to Home today` and `On Home today.`, character-exact (strings 28 and 29). The copy lint already calls every `week002` export; confirm both are scanned
+- [ ] T038e [US6] Widen `homeView` and `weekView` in `lib/derive/screens.ts`. Home's cards come from `homeAreas`; the absence note names only areas not on Home today; `No area waits for you here…` only when Home has no card; `Every daily area was attended today…` only when at least one card is a daily area, every card is attended and no session is open (FR-022, FR-022e). Each Week row is handed `homeAction: string | null` and `onHomeNote: string | null` — at most one of them, and neither on a daily row (FR-022c). Unit-test every branch in `tests/unit/screens.test.ts`, including spec.md US6 scenarios 3, 5, 6 and 7 by moving `now` a day
+- [ ] T038f [US6] Render the action in `features/week/week-row.tsx` beneath the row's line — the Button primitive, `variant="ghost"`, `size="touch"`, so 44px and no new value (spec.md §"Screen copy" → Week). Tapping dispatches `addToHomeToday` with the day clock's moment and stays on Week; the row then renders `On Home today.` in the same place as plain `text-sm text-muted-foreground`. The row becomes a client component because it dispatches; it still decides nothing — it renders whichever string it was handed
+- [ ] T038g [US6] Write `tests/e2e/add-to-home.spec.ts`, seeded, one `goto`, then taps: Week offers `Add it to Home today` on People's row and on no daily row; tapping it leaves the URL on `/week` and the row reads `On Home today.` with no action; Home shows a People card with a Tend and no absence note; tending and closing it makes Review list People under Attended; `page.clock.fastForward` past midnight takes People off Home, brings the absence note back and restores the action. Assert the action is at least 44×44 at both widths. Covers FR-022, FR-022c, FR-022d, FR-022e, SC-011
+
+**Checkpoint**: no area can be listed as unattended in a week in which nothing could have attended it.
+
+---
+
 ## Phase 5: User Story 3 — Capture and sort for real (Priority: P3)
 
 **Goal**: Capture creates tasks; the Inbox holds what has no area; giving an area empties it.
@@ -165,7 +185,7 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 
 ## Phase 8: Polish & Cross-Cutting Concerns
 
-- [ ] T058 Write `tests/e2e/seed-001-parity.spec.ts` — with `?seed=001`, every screen renders 001's approved copy character for character. **This is the criterion the feature is judged by** (FR-002, SC-001), and it is the reason the seed sets a clock origin rather than only data. **Review is asserted with named exceptions** (spec.md §"Open", 2026-09-26): 001's fixtures disagree with themselves and the seed follows Home and Week, so Review reads `Seven sessions`, Morning pages attended, Money with three sessions, the seed's last notes and People unattended. Each exception is listed in the test by string, so a new difference fails rather than hiding among the known ones
+- [ ] T058 Write `tests/e2e/seed-001-parity.spec.ts` — with `?seed=001`, every screen renders 001's approved copy character for character. **This is the criterion the feature is judged by** (FR-002, SC-001), and it is the reason the seed sets a clock origin rather than only data. **Review is asserted with named exceptions** (spec.md §"Open", 2026-09-26): 001's fixtures disagree with themselves and the seed follows Home and Week, so Review reads `Seven sessions`, Morning pages attended, Money with three sessions, the seed's last notes and People unattended. Week, by the same rule, lists People with `One task on the list. No sessions attended.` and `Add it to Home today` (FR-007a, FR-022c). Each exception is listed in the test by string, so a new difference fails rather than hiding among the known ones
 - [ ] T059 **Seed 001's e2e specs, and confirm each screen still renders the same copy.** Every one of them navigates to `?seed=001` and then moves by tapping, never by a second `page.goto`. `tests/e2e/persistence.spec.ts` keeps its assertions unchanged: nothing may be written to `localStorage`, `sessionStorage`, IndexedDB or cookies (FR-023), and a reload still resets.
 
   **Why this changed.** It read "confirm 001's thirteen e2e specs still pass unchanged", which this feature made impossible. 001's app was its fixtures, so any visit to `/` rendered five areas; 002's app starts genuinely empty (FR-025), so an unseeded visit renders First run and every assertion about a card, a task or a row is asserting about a screen that is not there. Seventy-seven of them failed the first time the rewired screens met them, and a test that only passes because the thing it checks is absent is worse than no test.
@@ -189,7 +209,7 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 - [ ] T063 Code review against Article VI — no component performs arithmetic, comparison against a rhythm, date formatting or string assembly, and no function in `lib/derive/` reads the clock. Covers FR-001, SC-010, which are properties of how the code is written rather than of what it renders
 - [ ] T063a Review the clock subscriptions — **only the session clock subscribes to the ticking `now`**; every other screen reads the day-granularity value (plan.md §"Performance Goals"). Grep the subscribers and name them in the review. This is the only check the constraint has: a re-render count is not observable from an e2e assertion, so like SC-010 it is verified by reading the code rather than by running it
 - [ ] T064 Verify on a real device at 390px and 320px per quickstart.md, including the clock past zero, a session surviving navigation, and the week boundary
-- [ ] T065 Run Article III's addition test over all ten screens, with particular attention to Week now that it carries `Look back on last week`
+- [ ] T065 Run Article III's addition test over all ten screens, with particular attention to Week now that it carries two additions — `Look back on last week` and `Add it to Home today` — and to Home now that it can hold an area that is not daily
 
 ---
 
@@ -202,6 +222,7 @@ Phase 2 Foundational  ← blocks everything; state, time, derivations
     ↓
     ├── Phase 3 US1 (P1)  Home, Picker, Session    ← MVP
     ├── Phase 4 US2 (P2)  Week, Review
+    │     └── Phase 4b US6 (P2)  Week's row → Home   ← needs US2's Week and US1's Home
     ├── Phase 5 US3 (P3)  Capture, Inbox
     ├── Phase 6 US4 (P4)  Areas, Area edit
     └── Phase 7 US5 (P5)  First run, empty states
@@ -209,7 +230,7 @@ Phase 2 Foundational  ← blocks everything; state, time, derivations
 Phase 8 Polish  ← needs every screen rewired
 ```
 
-**Story independence**: All five stories are independently implementable once Phase 2 is done. US5's empty states touch screens the other stories build, so it reads most cleanly last — but each of its tasks is a separate branch in a screen that already works, not a rewrite of it.
+**Story independence**: US1 to US5 are independently implementable once Phase 2 is done. US6 is the exception, and says so: it adds an action to US2's Week row and a card source to US1's Home, so it follows both. US5's empty states touch screens the other stories build, so it reads most cleanly last — but each of its tasks is a separate branch in a screen that already works, not a rewrite of it.
 
 **Within-phase ordering**: derivations before the screen that reads them; the screen before its test.
 
