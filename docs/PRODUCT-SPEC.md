@@ -1,10 +1,10 @@
 # Tend — Especificación de producto
 
 **Estado:** Borrador
-**Versión:** 0.4
+**Versión:** 0.5
 **Fecha:** 2026-09-07
-**Última enmienda:** 2026-09-23 — el ritmo es `sessions_per_week` (1–5);
-`weekly_budget_minutes` sale del modelo
+**Última enmienda:** 2026-10-04 — un área no diaria se puede añadir a la
+pantalla principal por un día, y un área archivada guarda cuándo se archivó
 
 ---
 
@@ -63,13 +63,19 @@ Un ámbito de vida al que le dedico atención recurrente.
 | `sessions_per_week` | int | Ritmo semanal: entero de 1 a 5 |
 | `default_session_minutes` | int | Duración por defecto de una sesión (ej. 15) |
 | `is_daily` | bool | Si aparece en la pantalla principal cada día |
+| `added_to_home_on` | timestamp, nullable | Cuándo se añadió por última vez a la pantalla principal; nulo si nunca |
 | `sort_order` | int | |
+| `archived_at` | timestamp, nullable | Cuándo se archivó (RF-04); nulo si está activa. Un área archivada no se borra |
 
 **Restricción:** se recomiendan 3–5 áreas. La app no impone un máximo duro, pero advierte al crear la sexta.
 
 **El ritmo se cuenta en sesiones, no en minutos (enmienda 0.4).** `sessions_per_week` es un entero de 1 a 5 y sustituye a `weekly_budget_minutes`, que desaparece del modelo. Un ritmo es aquello a lo que uno se propone volver, no una cuota que se gasta.
 
 Los minutos **se siguen registrando** por sesión (`Session.actual_minutes`, §3.3) y son el dato central del sistema. Lo que cambia es que no son un presupuesto: no se suman contra un objetivo, no se comparan con nada y no producen un aviso. Aparecen en exactamente tres sitios — la revisión semanal, el reloj de la sesión y la línea de lo atendido hoy en la pantalla principal — siempre como un hecho sobre lo que pasó.
+
+**Un área no diaria se puede traer a la pantalla principal por un día (enmienda 0.5).** `is_daily` decide si un área espera en la pantalla principal cada día; un área que no es diaria aparece el día que la persona la añade, y deja de aparecer a medianoche. `added_to_home_on` guarda el momento, y "está hoy en la pantalla principal" se deriva comparándolo con la fecha actual: nada se borra a medianoche. Sin esto, un área no diaria no tendría ningún camino a una sesión y RF-16 no se cumpliría para ella.
+
+**Archivar no es borrar (enmienda 0.5).** RF-04 dice *archivar*, y `archived_at` es lo que lo hace posible: un área archivada desaparece de todas las pantallas salvo de la revisión semanal, donde sus sesiones pasadas siguen nombrándola. Borrarla dejaría esas sesiones apuntando a nada.
 
 ### 3.2 Task
 
@@ -162,7 +168,8 @@ Un bloque de tiempo trabajado contra una tarea.
 
 ### 4.6 Pantalla principal
 
-- **RF-21** LA pantalla de inicio DEBE mostrar únicamente: las áreas diarias con su sesión del día y un botón para iniciar.
+- **RF-21** LA pantalla de inicio DEBE mostrar únicamente: las áreas diarias y las que la persona añadió hoy, cada una con su sesión del día y un botón para iniciar.
+- **RF-21a** El usuario DEBE poder añadir un área no diaria a la pantalla principal para el día en curso. Añadirla no inicia ninguna sesión, y el área deja de aparecer a medianoche sin que nadie la quite.
 - **RF-22** El inbox, la lista semanal y el historial DEBEN estar en navegación secundaria.
 - **RF-23** La pantalla de inicio DEBE ser accionable en un solo toque desde el arranque de la app.
 
