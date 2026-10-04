@@ -123,6 +123,41 @@ Un bloque de tiempo trabajado contra una tarea.
 
 **Sobre `abandoned`:** el enum lo incluía en la v0.2, pero ningún flujo de la RF-19 lo produce — una sesión se cierra como `completed` o como `progressed`, y "no avancé nada" es `progressed` con una nota que lo dice. Se retira. Si la feature 003 descubre sesiones huérfanas (la app se cerró a mitad y nadie registró un resultado), se reconsidera ahí, con el caso real a la vista y no por anticipado.
 
+### 3.4 Correspondencia con el código (nota, 2026-10-04)
+
+Esta sección no cambia el modelo: dice a qué campo de `lib/state/types.ts` corresponde cada campo de §3.1–§3.3 tal como lo dejó la feature 002, y dónde difieren. Existe para que la 003 no descubra el mapeo sobre la marcha e invente nombres al persistir. Los nombres del producto están en `snake_case` porque son columnas (constitución, Artículo VI); los del código en `camelCase`. Solo se anotan las diferencias que van más allá de esa conversión.
+
+**Area** — todos los campos coinciden salvo:
+
+| Producto | Código | Diferencia |
+|---|---|---|
+| `default_session_minutes` | — | Sin campo. La 002 escribe 15 en `Session.plannedMinutes` al empezar, y ninguna pantalla lo cambia |
+| `added_to_home_on` | `addedToHomeOn` | Llega con la tarea T038a de la 002 |
+
+**Task**
+
+| Producto | Código | Diferencia |
+|---|---|---|
+| `notes` | — | Sin campo: ninguna pantalla de la 002 lo escribe |
+| `parent_id` | — | Sin campo: las subtareas están fuera del alcance de la 002 |
+| `target_date` | — | Sin campo, por la misma razón |
+| `status` (`open`, `done`, `dropped`) | `doneAt` | No hay enum. Una tarea está hecha si `doneAt` no es nulo y abierta si lo es. `dropped` no existe en la 002 |
+| `is_weekly_priority` | `onWeekList` | Mismo significado, otro nombre |
+| `created_at` | `capturedAt` | Mismo significado, otro nombre |
+| `completed_at` | `doneAt` | Mismo significado, otro nombre; además hace de `status` |
+
+**Session**
+
+| Producto | Código | Diferencia |
+|---|---|---|
+| `ended_at` | `endedAt: Date \| null` | **Nulabilidad.** El producto lo tipa obligatorio; el código lo deja nulo mientras la sesión corre. El producto describe sesiones cerradas, y el código tiene que representar la abierta |
+| `actual_minutes` | `actualMinutes: number \| null` | **Nulabilidad**, por la misma razón: se escribe una sola vez, al cerrar (FR-010a de la 002) |
+| `outcome` | `outcome: … \| null` | **Nulabilidad**, por la misma razón |
+| `progress_note` | `progressNote: string` | **Nulabilidad, al revés.** El producto lo admite nulo; el código nunca: `''` es un estado real, "atendida sin nota", distinto de no atendida |
+| `spawned_task_id` | — | Sin campo: el tercer resultado de RF-19, `progressed` con tarea nueva, no está construido |
+
+La 003 decide cómo persiste una sesión abierta, porque es donde aparece la sesión huérfana (§7). Esta tabla no lo resuelve: solo deja escrito que hoy el código la representa con tres campos nulos y el producto no la contempla.
+
 ---
 
 ## 4. Requisitos funcionales
