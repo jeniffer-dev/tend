@@ -73,15 +73,16 @@ export const isSameDay = (a: Date, b: Date) => daysBetween(a, b) === 0;
 export const dateLabel = (d: Date) => `${d.getDate()} ${MONTHS[d.getMonth()]}`;
 
 /**
- * FR-030 — a past day is named by its day name up to seven days back, and
- * by its date beyond that.
+ * FR-030 — a past day is named by its day name up to six days back, and by
+ * its date from the seventh.
  *
- * Seven days back inclusive: on a Sunday, the previous Sunday is seven days
- * ago and still carries its name, which is the boundary T015 pins.
+ * Six, not seven (amended 2026-10-05): at seven days the name is today's,
+ * so on a Sunday the previous Sunday and this one read the same. Today is
+ * still named here; a screen that says `today` chooses that template itself.
  */
 export function dayName(then: Date, now: Date): string {
   const days = daysBetween(then, now);
-  if (days <= 7) return DAYS[then.getDay()];
+  if (days <= 6) return DAYS[then.getDay()];
   return dateLabel(then);
 }
 

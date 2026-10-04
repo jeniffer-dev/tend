@@ -33,12 +33,19 @@ describe('FR-029 — words to twelve, figures from thirteen', () => {
   });
 });
 
-describe('FR-030 — day names to seven days back, dates beyond', () => {
+describe('FR-030 — day names to six days back, dates from the seventh', () => {
   const sunday = new Date(2026, 8, 13, 13, 0);
 
-  it('names the day at exactly seven days back and dates it at eight', () => {
-    expect(dayName(new Date(2026, 8, 6, 9, 0), sunday)).toBe('Sunday');
-    expect(dayName(new Date(2026, 8, 5, 9, 0), sunday)).toBe('5 September');
+  /* Amended 2026-10-05. This assertion read "seven days back" and expected
+     `Sunday` for the 6th — the same name as today. It changes because the
+     requirement changed, not to make the code pass. */
+  it('names the day at exactly six days back and dates it at seven', () => {
+    expect(dayName(new Date(2026, 8, 7, 9, 0), sunday)).toBe('Monday');
+    expect(dayName(new Date(2026, 8, 6, 9, 0), sunday)).toBe('6 September');
+  });
+
+  it('never gives a week ago the name of today', () => {
+    expect(dayName(new Date(2026, 8, 6, 23, 59), sunday)).not.toBe(dayName(sunday, sunday));
   });
 
   it('names the recent days 001 names', () => {

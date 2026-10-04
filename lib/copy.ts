@@ -311,6 +311,9 @@ export const inbox002 = {
   headingEmpty: 'Nothing unsorted',
   noteEmpty: 'Everything you captured has an area.',
   captured: (day: string) => `Captured ${day}`,
+  /** String 30, approved 2026-10-05 (FR-030): what `captured` would make
+   *  ambiguous on the day itself. */
+  capturedToday: 'Captured today',
 } as const;
 
 /** 9. Week — the heading, the row lines, the route to last week. */
