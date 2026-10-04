@@ -703,7 +703,8 @@ confirm it has left Home and the absence note names it again.
 - **`default_session_minutes` stays at fifteen.** No screen offers a control
   for it, and the approved copy names fifteen minutes in the Picker's action.
 - **Minutes are recorded but never budgeted.** `PRODUCT-SPEC.md` §3.1 as
-  amended in 0.4 governs.
+  amended in 0.4 governs, and 0.5 and 0.6 complete §3.1 with the fields
+  this feature already uses.
 - **The device's local time is the only clock.** No timezone selection, no
   server time, no travel handling.
 - **Subtasks remain out of scope.** `PRODUCT-SPEC.md` types them, no screen

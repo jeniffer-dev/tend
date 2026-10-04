@@ -88,7 +88,7 @@ transitions.
 | V — Motion | `transition-colors` only. The clock's tick changes a number, never a style. | PASS | PASS — one treatment in every clock state, as 001 established |
 | VI — Architecture | No business logic in components; domain rules pure, synchronous, unit-tested, isolated from React and persistence. | PASS — this feature is where that article finally has something to govern | PASS — see the gate below |
 | VII — Process | Reviewed spec and plan on disk; `/speckit-analyze` before `/speckit-implement`; criteria observable at 390px. | PASS — spec `d715b3a`, clarified `97f3795`/`50e2290`/`5ceee20` | PASS |
-| VIII — Amendment | Amendments committed separately from feature work. | PASS — PRODUCT-SPEC 0.4 landed alone in `5722d00`, before the spec | PASS |
+| VIII — Amendment | Amendments committed separately from feature work. | PASS — PRODUCT-SPEC 0.4 landed alone in `5722d00`, before the spec | PASS — PRODUCT-SPEC 0.5 landed alone in `d0322ca`, before User Story 6's spec fixes, and 0.6 alone after it |
 
 **No violations.** No Complexity Tracking entries: nothing is added to the
 stack, and the one dev-only dependency 001 recorded (Playwright) is already
