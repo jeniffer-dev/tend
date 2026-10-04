@@ -148,7 +148,7 @@ Frontend-only Next.js App Router at the repository root, per plan.md
 - [X] T040a [P] [US3] Amend FR-030 in `lib/derive/format.ts`: `dayName` names a day up to **six** days back and dates it from the seventh (2026-10-05). Rewrite `tests/unit/format.test.ts`'s boundary to six and seven — the assertion changes because the requirement changed, not to make it pass. Add the thirtieth string, `Captured today`, to `inbox002` in `lib/copy.ts`
 - [X] T041 [US3] Rewire `app/inbox/page.tsx` and `features/inbox/inbox-row.tsx` — tasks with no area, each with a captured label derived per FR-030 (`Captured today` on the day it was captured), and a heading carrying the count. The derivation lives in `lib/derive/screens.ts` as `inboxView`, unit-tested
 - [X] T042 [US3] Implement `Give it an area` in `features/inbox/inbox-row.tsx` per FR-021a — the button reveals the Capture chip component inside the row, one row open at a time, and tapping a chip dispatches `giveTaskAnArea`; the item leaves the inbox (FR-021). Extract the chip from `capture-form.tsx` into one shared component rather than drawing it twice
-- [ ] T043 [US3] Write `tests/e2e/capture-inbox-live.spec.ts` — capture with and without an area, give an inbox item an area through the chips, and assert both counts follow; `Capture` disabled on an empty and a whitespace-only field; a fresh capture reads `Captured today`. Covers FR-020, FR-020a, FR-021, FR-021a, FR-022a, FR-030
+- [X] T043 [US3] Write `tests/e2e/capture-inbox-live.spec.ts` — capture with and without an area, give an inbox item an area through the chips, and assert both counts follow; `Capture` disabled on an empty and a whitespace-only field; a fresh capture reads `Captured today`. Covers FR-020, FR-020a, FR-021, FR-021a, FR-022a, FR-030
 
 ---
 
