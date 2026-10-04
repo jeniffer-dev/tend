@@ -85,7 +85,8 @@ type Task = {
 attended with a note, attended without one (spec §"Screen copy").
 
 `capturedAt` is a real moment, where 001 stored `Captured Monday`. The
-formatting rule — day name to seven days back, date beyond — is a function.
+formatting rule — `today`, the day name to six days back, the date from the
+seventh — is a function.
 
 ### Session
 
@@ -226,7 +227,7 @@ Neither function returns a ratio, and neither divides anything by a rhythm.
 | Function | Answers |
 |---|---|
 | `numberWord(n)` | Words to twelve, figures from thirteen (FR-029) |
-| `dayName(then, now)` | Day name to seven days back, date beyond (FR-030) |
+| `dayName(then, now)` | Day name to six days back, date from the seventh (FR-030, amended 2026-10-05). Today is named too; the Inbox's label says `Captured today` instead, by choosing that template |
 | `joinNames(names)` | `A and B`, `A, B and C` (FR-022b) |
 | `clockString(startedAt, now)` | `14:16`, `0:00`, `+17:04` — derived, never counted (research.md §4) |
 

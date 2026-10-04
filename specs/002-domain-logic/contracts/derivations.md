@@ -141,7 +141,8 @@ states, and there is now one real clock.
 | Asks | Gets |
 |---|---|
 | The items | Tasks with no area, each with its captured label |
-| A captured label | Day name to seven days back, date beyond |
+| A captured label | `Captured today`; the day name to six days back; the date from the seventh (FR-030) |
+| Giving an item an area | The chips Capture offers — every unarchived area in `sortOrder` — revealed inside the row by `Give it an area`; one row open at a time (FR-021a) |
 | The heading | The count as a word or figure, or `Nothing unsorted` |
 
 ### `/week` — What am I committing to?

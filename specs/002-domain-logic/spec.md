@@ -4,10 +4,10 @@
 
 **Created**: 2026-09-23
 
-**Status**: Ready to implement — all twenty-nine new strings approved
+**Status**: Ready to implement — all thirty new strings approved
 (§"Screen copy"), every decision settled, and nothing open. The last to
-close was User Story 6 on 2026-10-04: a non-daily area can be added to Home
-for the day from its Week row
+close were the three Capture and Inbox decisions of 2026-10-05, before
+Phase 5
 
 **Input**: User description: "Feature 002: la lógica real detrás de las diez pantallas. Las mismas pantallas, los mismos textos, pero los valores se calculan en vez de estar escritos en el fixture, y el estado vive durante la sesión del navegador (sin persistencia todavía; eso es la 003)."
 
@@ -24,9 +24,10 @@ fail by accident, and it left this feature's job visible. This feature
 replaces those literals with functions in `lib/`, and the components mostly
 take the props they always took.
 
-**What is genuinely new is argued rather than assumed.** Twenty-nine
+**What is genuinely new is argued rather than assumed.** Thirty
 strings for states 001 never reached — empty lists, a week with nothing in
-it, a session still running, an area added to Home for the day — and four
+it, a session still running, an area added to Home for the day, something
+captured today — and four
 elements that passed Article III's addition test in writing: Week's route
 to last week, Week's way to add a non-daily area to Home for the day, the
 Picker's line naming what starting here closes, and the Tend an attended
@@ -108,6 +109,12 @@ product owner rather than resolved in code.
 - Q: Does the Home card say it is there only today? → A: No. It is an ordinary card. Home's heading is the day, so everything on Home is today's, and tomorrow the absence note explains the area again.
 - Q: Does this belong in 002? → A: Yes, as User Story 6, built before User Story 3. 002 created the reproach, so 002 removes it.
 
+### Session 2026-10-05, before Phase 5
+
+- Q: How does the person choose an area after `Give it an area`? 001's button did nothing, and no spec said. → A: The button reveals Capture's area chips inside the row — every unarchived area in the Areas order, the same component — and tapping one gives the item that area and takes it out of the Inbox. No new string: the chips are area names. Rejected: chips always visible (it removes the approved button and redraws the row), and opening Capture with the item (Capture would be editing something that exists, which is not its question).
+- Q: What does `Capture` do with an empty field? → A: It is disabled while the field holds nothing but whitespace. No string; there is nothing to capture, so nothing meaningful is blocked.
+- Q: FR-030 named a day up to seven days back, so something from today and something from exactly a week ago both read `Captured Sunday` on a Sunday, and `Last attended …` had the same ambiguity. → A: A day is named up to **six** days back and dated from the seventh, and something captured today reads `Captured today` — the thirtieth string. The seed's days sit at six and ten days back, so SC-001 parity is unaffected.
+
 ## Decisions already taken
 
 These are settled and this specification is bound by them. They are not
@@ -126,7 +133,8 @@ open for reinterpretation during planning.
   No percentages, no streaks, no scoreboards (Constitution Article I).
 - **Numbers are words up to twelve and figures from thirteen.** This is
   what lets `Three sessions` and `52 minutes` both be correct.
-- **A past day is named up to seven days back, and dated beyond that.**
+- **A past day is named up to six days back, and dated from the seventh.**
+  Seven would give today and a week ago the same name (amended 2026-10-05).
 - **An area counts as attended today as soon as a session starts**, not when
   it closes. Leaving mid-session must not erase the day.
 - **An area attended today stays tendable from Home.** Its card keeps a Tend
@@ -460,7 +468,7 @@ confirm it has left Home and the absence note names it again.
   render copy character-identical to what 001 rendered.
 - **FR-003**: Quantities and dates MUST be written the way the approved copy
   writes them. The two rules that say how are **FR-029** (words to twelve,
-  figures from thirteen) and **FR-030** (day names to seven days back, dates
+  figures from thirteen) and **FR-030** (day names to six days back, dates
   beyond); this requirement is the obligation, and those are its terms.
 - **FR-004**: The system MUST NOT show a percentage, a streak, a badge, a
   level, a scoreboard or any completion proportion, on any screen or as the
@@ -556,7 +564,14 @@ confirm it has left Home and the absence note names it again.
 - **FR-019**: Reordering areas MUST change the order on Home.
 - **FR-020**: Capturing with no area MUST place the item in the Inbox.
   Capturing with an area MUST assign it and keep it out of the Inbox.
+- **FR-020a**: `Capture` MUST be disabled while the field holds nothing but
+  whitespace, and MUST NOT show a message about it. A captured title is
+  trimmed of surrounding whitespace and otherwise kept verbatim.
 - **FR-021**: Giving an Inbox item an area MUST remove it from the Inbox.
+- **FR-021a**: `Give it an area` MUST reveal, inside that item's row, one
+  chip per unarchived area in the Areas order — the chip Capture uses.
+  Tapping a chip MUST give the item that area at once, with no second
+  step. Only one row shows its chips at a time.
 - **FR-022**: Home MUST show the daily areas and the areas added to Home
   today (FR-022c), and MUST account for every other unarchived area in a
   single sentence naming them. With none left over there is no sentence.
@@ -626,8 +641,10 @@ confirm it has left Home and the absence note names it again.
   (Constitution Article II), an emoji, an exclamation mark or an apology.
 - **FR-029**: Quantities MUST be written as words up to twelve and as
   figures from thirteen.
-- **FR-030**: A past day MUST be named by its day name up to seven days
-  back, and by its date beyond that.
+- **FR-030**: A past day MUST be named by its day name up to six days
+  back, and by its date from the seventh. Something captured today MUST read
+  `Captured today` (amended 2026-10-05; it read "seven", which gave today and
+  a week ago the same name).
 
 ### Key Entities
 
@@ -685,7 +702,7 @@ confirm it has left Home and the absence note names it again.
 
 - **001's approved copy is not rewritten, and its screens keep their
   shape.** Every sentence 001 approved says the same words here; what this
-  feature adds, it adds — twenty-nine new strings for states 001 never
+  feature adds, it adds — thirty new strings for states 001 never
   reached, four elements that passed the addition test in writing, and
   the add-to-Home behaviour 001's copy promised (User Story 6).
   Nothing approved is reworded and no screen changes the question it
@@ -742,7 +759,7 @@ feature; every other word on every screen stays exactly as 001 approved it.
 Strings are reproduced verbatim, and where a value is interpolated the
 braces mark it.
 
-**Twenty-nine strings, all approved.** The list closed at twenty-one before
+**Thirty strings, all approved.** The list closed at twenty-one before
 `/speckit-analyze`. Four were added after it and approved on 2026-09-23: one
 on Home and three on Review, all of them consequences of the decision that a
 session counts from its start and measures from its close (FR-006a). The
@@ -753,7 +770,9 @@ it runs in this one, and inside the sticky bar above the action. The
 twenty-seventh is Week's `No sessions attended.`, approved on 2026-09-26
 when putting every area on Week made a row with no sessions ordinary. The
 twenty-eighth and twenty-ninth are Week's `Add it to Home today` and
-`On Home today.`, approved on 2026-10-04 with User Story 6.
+`On Home today.`, approved on 2026-10-04 with User Story 6. The thirtieth
+is the Inbox's `Captured today`, approved on 2026-10-05 when FR-030 was
+corrected to six days.
 
 ### Areas
 
@@ -871,9 +890,20 @@ case where it is true.
 |---|---|---|
 | Nothing unsorted | Heading | `Nothing unsorted` |
 | Nothing unsorted | Note under the heading | `Everything you captured has an area.` |
+| An item captured today | Captured label | `Captured today` |
 
 The 001 footer, `An item stays here until it has an area. Nothing here
 expires.`, is unchanged and still shown.
+
+**Choosing the area** (FR-021a, 2026-10-05). `Give it an area` keeps its
+approved words and its place. Tapping it reveals Capture's chips beneath
+it in the same row — the same component, every unarchived area in the
+Areas order, at 44px — and tapping a chip gives the item that area and the
+row leaves the Inbox. This is not an addition under Article III: 001's
+contract already requires "a way to give it an area", and the chips are
+that way, made real. Nothing new is said, because every chip is an area's
+name. One row is open at a time, so the screen never becomes a wall of
+chips.
 
 ### Week
 
@@ -1045,9 +1075,14 @@ gets a worse answer.
 
 ## Open
 
-Nothing. Every decision is taken and all twenty-nine strings are approved.
+Nothing. Every decision is taken and all thirty strings are approved.
 
-The last to close was User Story 6, on 2026-10-04: the add-to-Home
+The last to close were the three Capture and Inbox decisions of
+2026-10-05: chips inside the row to give an item an area, `Capture`
+disabled on an empty field, and FR-030 corrected to six days with
+`Captured today`.
+
+Before them, User Story 6 closed on 2026-10-04: the add-to-Home
 behaviour, its two strings, their place on the row, the card saying nothing
 about today, and its addition-test argument. One thing is recorded and
 deliberately not decided — an area named "Home" reads oddly in Home's own

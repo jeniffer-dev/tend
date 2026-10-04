@@ -35,7 +35,7 @@ All 16 items pass. Six clarifications were settled on 2026-09-23 and are
 recorded in the spec's §Clarifications: an empty start with a separate
 development mode, in-memory state only, empty-state copy written by the
 product owner, numbers as words to twelve and figures from thirteen, day
-names to seven days back, and an area counting as attended from the moment
+names to six days back (seven until 2026-10-05), and an area counting as attended from the moment
 a session starts.
 
 Three further decisions were settled on 2026-09-23: the Review entry
@@ -43,7 +43,7 @@ appears Sunday and Monday with Week carrying a permanent route into the
 previous week's Review, Capture's chips are every area in the Areas order,
 and Home's absence note is one sentence naming the absent areas.
 
-All twenty-nine new strings are approved and recorded in the spec's
+All thirty new strings are approved and recorded in the spec's
 §"Screen copy". The list closed at twenty-one before
 `/speckit-analyze`, because removing an area with neither tasks nor past
 sessions is its own case, which the pending list had missed. Five were added
