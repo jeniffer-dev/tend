@@ -12,6 +12,7 @@
 import {
   areas002,
   home002 as homeCopy,
+  inbox002,
   picker002,
   review as reviewCopy,
   review002,
@@ -23,6 +24,7 @@ import {
   areaById,
   attendedToday,
   homeAreas,
+  inboxTasks,
   isPastRhythm,
   lastNoteInWeek,
   lastSessionForArea,
@@ -41,6 +43,7 @@ import {
   dateLabel,
   dayName,
   elapsedMinutes,
+  isSameDay,
   joinNames,
   numberWord,
   numberWordCapital,
@@ -277,6 +280,50 @@ export function sessionView(state: State, now: Date): SessionView | null {
     clock: clockString(running.startedAt, now, planned),
     clockNote,
     note: running.progressNote,
+  };
+}
+
+/* ------------------------------------------------------ Capture, Inbox */
+
+export type AreaChoice = { areaId: string; name: string; color: Area['color'] };
+
+/**
+ * The areas a person can give something to: every unarchived area in the
+ * Areas order, daily or not, with no cap (FR-022a). Capture's chips and the
+ * Inbox's chips are this one list (FR-021a), so the two can never disagree
+ * about which areas exist.
+ */
+export const areaChoices = (state: State): AreaChoice[] =>
+  unarchivedAreas(state).map((a) => ({ areaId: a.id, name: a.name, color: a.color }));
+
+export type InboxItem = { id: string; title: string; capturedLabel: string };
+
+export type InboxView = { heading: string; emptyNote: string | null; items: InboxItem[] };
+
+/**
+ * Inbox — what has no area yet, in the order it was captured, each with
+ * when (FR-020, FR-030). `Captured today` on the day itself; the day's name
+ * up to six days back; the date from the seventh. The count is a heading,
+ * never a backlog: it is stated, not framed.
+ *
+ * The order is the state's, which is capture order: `capture` appends. It
+ * is not re-sorted by `capturedAt`, because 001 draws the seed's
+ * 3 September item last and no rule asks for another order.
+ */
+export function inboxView(state: State, now: Date): InboxView {
+  const items = inboxTasks(state)
+    .map((t) => ({
+      id: t.id,
+      title: t.title,
+      capturedLabel: isSameDay(t.capturedAt, now)
+        ? inbox002.capturedToday
+        : inbox002.captured(dayName(t.capturedAt, now)),
+    }));
+
+  return {
+    heading: items.length === 0 ? inbox002.headingEmpty : inbox002.heading(numberWordCapital(items.length)),
+    emptyNote: items.length === 0 ? inbox002.noteEmpty : null,
+    items,
   };
 }
 

@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
-import { homeView, pickerView, reviewView, rhythmLabel, sessionView, weekView } from '@/lib/derive/screens';
+import {
+  areaChoices,
+  homeView,
+  inboxView,
+  pickerView,
+  reviewView,
+  rhythmLabel,
+  sessionView,
+  weekView,
+} from '@/lib/derive/screens';
 import { SEED_001, SEED_001_ORIGIN } from '@/lib/seed/fixture-001';
 import { reduce, type Action } from '@/lib/state/store';
 import { EMPTY_STATE, type State } from '@/lib/state/types';
@@ -494,6 +503,73 @@ describe('T038e — a non-daily area added to Home for the day (User Story 6)', 
       const view = homeView(tended, new Date(NOW.getTime() + 1_000_000));
       expect(view.cards).toMatchObject([{ areaId: 'people', treatment: 'attended' }]);
       expect(view.emptyNote).toBeNull();
+    });
+  });
+});
+
+describe('T039, T041 — Capture\'s chips and the Inbox', () => {
+  const apply = (state: State, ...actions: Action[]) => actions.reduce(reduce, state);
+
+  describe('areaChoices — every unarchived area in the Areas order (FR-022a)', () => {
+    it('offers all five seeded areas, daily or not, in sortOrder', () => {
+      expect(areaChoices(SEED_001).map((c) => c.name)).toEqual([
+        'Morning pages', 'Health', 'Home', 'People', 'Money',
+      ]);
+    });
+
+    it('follows a reorder and drops an archived area', () => {
+      const changed = apply(
+        SEED_001,
+        { type: 'reorderAreas', orderedIds: ['money', 'health', 'home', 'people', 'morning-pages'] },
+        { type: 'removeArea', now: NOW, areaId: 'home' },
+      );
+      expect(areaChoices(changed).map((c) => c.areaId)).toEqual(['money', 'health', 'people', 'morning-pages']);
+    });
+  });
+
+  describe('inboxView (FR-020, FR-030)', () => {
+    const view = inboxView(SEED_001, NOW);
+
+    it('renders 001\'s heading and labels from the seed', () => {
+      expect(view.heading).toBe('Three unsorted');
+      expect(view.emptyNote).toBeNull();
+      expect(view.items.map((i) => i.capturedLabel)).toEqual([
+        'Captured Monday', 'Captured Monday', 'Captured 3 September',
+      ]);
+    });
+
+    it('says today for something captured today', () => {
+      const fresh = apply(SEED_001, { type: 'capture', now: NOW, id: 'new', title: 'Call the bank', areaId: null });
+      const v = inboxView(fresh, NOW);
+      expect(v.heading).toBe('Four unsorted');
+      expect(v.items.find((i) => i.id === 'new')!.capturedLabel).toBe('Captured today');
+    });
+
+    it('leaves out what was captured with an area, or given one', () => {
+      const sorted = apply(
+        SEED_001,
+        { type: 'capture', now: NOW, id: 'new', title: 'Call the bank', areaId: 'money' },
+        { type: 'giveTaskAnArea', taskId: 'ask-the-dentist', areaId: 'health' },
+      );
+      const v = inboxView(sorted, NOW);
+      expect(v.heading).toBe('Two unsorted');
+      expect(v.items.map((i) => i.id)).not.toContain('new');
+      expect(v.items.map((i) => i.id)).not.toContain('ask-the-dentist');
+    });
+
+    it('is Nothing unsorted, with its note, when empty', () => {
+      const empty = apply(
+        SEED_001,
+        ...inboxView(SEED_001, NOW).items.map(
+          (i): Action => ({ type: 'giveTaskAnArea', taskId: i.id, areaId: 'health' })
+        ),
+      );
+      const v = inboxView(empty, NOW);
+      expect(v).toMatchObject({
+        heading: 'Nothing unsorted',
+        emptyNote: 'Everything you captured has an area.',
+        items: [],
+      });
     });
   });
 });
