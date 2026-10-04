@@ -335,6 +335,12 @@ export const week002 = {
   /** A tertiary text link beneath `Change the rhythm`, not a button, and
    *  present on every day (FR-019b). */
   lastWeekLink: 'Look back on last week',
+  /** Strings 28 and 29, approved 2026-10-04 (FR-022c). The action on a
+   *  non-daily area's row, and what the row says in its place once used.
+   *  The verb is Area edit's `When I add it`: the button keeps the promise
+   *  that option made, in the same word. */
+  addToHome: 'Add it to Home today',
+  onHomeToday: 'On Home today.',
 } as const;
 
 /** 10. Review — the week, the counts, the minutes, the open session.

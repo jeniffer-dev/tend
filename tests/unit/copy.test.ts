@@ -140,6 +140,11 @@ describe('the copy lint', () => {
     expect(all.some(([, text]) => text.includes('undefined'))).toBe(false);
   });
 
+  it('scans strings 28 and 29, the Week row\'s way to Home (T038d)', () => {
+    expect(all).toContainEqual(['copy.week002.addToHome', 'Add it to Home today']);
+    expect(all).toContainEqual(['copy.week002.onHomeToday', 'On Home today.']);
+  });
+
   describe('FR-026 — no word from Article II\'s forbidden lexicon', () => {
     it.each(FORBIDDEN)('never uses "%s"', (term) => {
       const pattern = new RegExp(`\\b${term}\\b`, 'i');
