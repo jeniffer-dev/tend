@@ -22,13 +22,14 @@ import {
   activeSession,
   areaById,
   attendedToday,
-  dailyAreas,
+  homeAreas,
   isPastRhythm,
   lastNoteInWeek,
   lastSessionForArea,
   lastSessionForTask,
   minutesInWeek,
   minutesToday,
+  onHomeToday,
   openSessionInWeek,
   sessionsInWeek,
   taskById,
@@ -122,24 +123,35 @@ function homeCard(state: State, area: Area, now: Date): HomeCard {
  *  sorts with the open ones: it is the area you are in the middle of. */
 const groupRank = (card: HomeCard): number => (card.treatment === 'attended' ? 1 : 0);
 
+/**
+ * Home's cards are the areas on Home today — the daily ones, and any
+ * non-daily area added today from Week (FR-022, FR-022d). An added area is
+ * an ordinary card: same treatments, same lines, same ordering.
+ *
+ * The notes follow the cards, not the daily flag (FR-022e). `No area waits…`
+ * only when there is no card at all; the all-attended note only when at
+ * least one card is a daily area, since `Every daily area…` beside nothing
+ * but added areas would be a sentence about cards that are not there.
+ */
 export function homeView(state: State, now: Date): HomeView {
-  const daily = dailyAreas(state);
-  const absent = unarchivedAreas(state).filter((a) => !a.isDaily);
+  const onHome = homeAreas(state, now);
+  const absent = unarchivedAreas(state).filter((a) => !onHomeToday(a, now));
   const running = activeSession(state);
   const sessionOpen = running !== null && running.endedAt === null;
 
-  const cards = daily
+  const cards = onHome
     .map((area) => homeCard(state, area, now))
     .sort((a, b) => groupRank(a) - groupRank(b));
 
   const allAttended = cards.length > 0 && cards.every((c) => c.treatment === 'attended');
+  const anyDaily = onHome.some((a) => a.isDaily);
 
   /* The all-attended note is withheld while a session is open: something is
      waiting, and it is the session you are in (spec.md §"Screen copy"). */
   const emptyNote =
-    daily.length === 0
+    cards.length === 0
       ? homeCopy.noDailyAreas
-      : allAttended && !sessionOpen
+      : allAttended && anyDaily && !sessionOpen
         ? homeCopy.allAttended
         : null;
 
@@ -270,9 +282,29 @@ export function sessionView(state: State, now: Date): SessionView | null {
 
 /* --------------------------------------------------------------- Week */
 
-export type WeekRow = { areaId: string; name: string; color: Area['color']; sessionsLabel: string; line: string };
+export type WeekRow = {
+  areaId: string;
+  name: string;
+  color: Area['color'];
+  sessionsLabel: string;
+  line: string;
+  /** `Add it to Home today` on a non-daily row not on Home today. */
+  homeAction: string | null;
+  /** `On Home today.` in the action's place once it is used. At most one of
+   *  the two is present, and neither on a daily row (FR-022c). */
+  onHomeNote: string | null;
+};
 
 export type WeekView = { heading: string; rows: WeekRow[]; emptyNote: string | null };
+
+/** A zero in either sentence is replaced by its `No …` form, never written
+ *  as a number (FR-007a). Four whole templates, one per case. */
+function weekRowLine(tasks: number, sessions: number): string {
+  if (tasks === 0 && sessions === 0) return week002.rowLineNothing;
+  if (tasks === 0) return week002.rowLineNoTasks(numberWordCapital(sessions));
+  if (sessions === 0) return week002.rowLineNoSessions(numberWordCapital(tasks));
+  return week002.rowLine(numberWordCapital(tasks), numberWordCapital(sessions));
+}
 
 /**
  * Week counts in sessions and **no minutes reach this screen** (FR-007).
@@ -285,29 +317,29 @@ export type WeekView = { heading: string; rows: WeekRow[]; emptyNote: string | n
  * Every unarchived area is a row, daily or not (FR-007a): a non-daily area
  * keeps a weekly rhythm, and this is where rhythms are counted. That
  * supersedes 001's clarification Q3, which kept People off this screen.
+ *
+ * A non-daily row carries its way to Home (FR-022c): the action, or, once
+ * used today, the sentence that replaces it. The row is handed whichever
+ * string applies and never `isDaily` or `addedToHomeOn` to decide from.
  */
-/** A zero in either sentence is replaced by its `No …` form, never written
- *  as a number (FR-007a). Four whole templates, one per case. */
-function weekRowLine(tasks: number, sessions: number): string {
-  if (tasks === 0 && sessions === 0) return week002.rowLineNothing;
-  if (tasks === 0) return week002.rowLineNoTasks(numberWordCapital(sessions));
-  if (sessions === 0) return week002.rowLineNoSessions(numberWordCapital(tasks));
-  return week002.rowLine(numberWordCapital(tasks), numberWordCapital(sessions));
-}
-
 export function weekView(state: State, now: Date): WeekView {
   const week = weekContaining(now);
   const areas = unarchivedAreas(state);
-  const rows = areas.map((area) => ({
-    areaId: area.id,
-    name: area.name,
-    color: area.color,
-    sessionsLabel: week002.sessionsLabel(numberWordCapital(area.sessionsPerWeek)),
-    line: weekRowLine(
-      weekListTasks(state, area.id).length,
-      sessionsInWeek(state, area.id, week)
-    ),
-  }));
+  const rows = areas.map((area) => {
+    const onHome = !area.isDaily && onHomeToday(area, now);
+    return {
+      areaId: area.id,
+      name: area.name,
+      color: area.color,
+      sessionsLabel: week002.sessionsLabel(numberWordCapital(area.sessionsPerWeek)),
+      line: weekRowLine(
+        weekListTasks(state, area.id).length,
+        sessionsInWeek(state, area.id, week)
+      ),
+      homeAction: !area.isDaily && !onHome ? week002.addToHome : null,
+      onHomeNote: onHome ? week002.onHomeToday : null,
+    };
+  });
 
   const committed = areas.reduce((total, a) => total + a.sessionsPerWeek, 0);
   const anyTasks = areas.some((a) => weekListTasks(state, a.id).length > 0);

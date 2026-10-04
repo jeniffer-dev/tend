@@ -415,3 +415,85 @@ describe('Review — what was attended, and what went unattended (T033, T035)', 
     expect(text).not.toMatch(/%|\bout of\b|\d\/\d/);
   });
 });
+
+describe('T038e — a non-daily area added to Home for the day (User Story 6)', () => {
+  const apply = (state: State, ...actions: Action[]) => actions.reduce(reduce, state);
+  const MONDAY = new Date(2026, 8, 14, 9, 0);
+  const addPeople: Action = { type: 'addToHomeToday', now: NOW, areaId: 'people' };
+  const added = apply(SEED_001, addPeople);
+  const weekRowFor = (state: State, now: Date, id: string) => weekView(state, now).rows.find((r) => r.areaId === id)!;
+
+  describe('Week offers the action on non-daily rows only (FR-022c)', () => {
+    it('offers it on People and on no daily row', () => {
+      const view = weekView(SEED_001, NOW);
+      expect(weekRowFor(SEED_001, NOW, 'people')).toMatchObject({ homeAction: 'Add it to Home today', onHomeNote: null });
+      for (const row of view.rows.filter((r) => r.areaId !== 'people')) {
+        expect(row, row.areaId).toMatchObject({ homeAction: null, onHomeNote: null });
+      }
+    });
+
+    it('once used, says so in its place and offers nothing', () => {
+      expect(weekRowFor(added, NOW, 'people')).toMatchObject({ homeAction: null, onHomeNote: 'On Home today.' });
+    });
+
+    it('offers it again the next day (scenario 5)', () => {
+      expect(weekRowFor(added, MONDAY, 'people')).toMatchObject({ homeAction: 'Add it to Home today', onHomeNote: null });
+    });
+  });
+
+  describe('Home holds it as an ordinary card (FR-022, FR-022d)', () => {
+    it('shows People as a card in the Areas order, and names no one absent (scenario 3)', () => {
+      const view = homeView(added, NOW);
+      expect(view.cards.map((c) => c.areaId)).toEqual(['morning-pages', 'health', 'people', 'money', 'home']);
+      expect(view.cards.find((c) => c.areaId === 'people')).toMatchObject({
+        treatment: 'to-tend',
+        /* The line any card would have: the seed's historical sessions put
+           People's last one on 28 August, more than seven days back. */
+        line: 'Last attended 28 August.',
+      });
+      expect(view.absenceNote).toBeNull();
+    });
+
+    it('is gone the next day, and the absence note is back (scenario 5)', () => {
+      const view = homeView(added, MONDAY);
+      expect(view.cards.map((c) => c.areaId)).not.toContain('people');
+      expect(view.absenceNote).toBe(
+        'People keeps a rhythm of one session a week. It is not a daily area, so it does not wait for you here.'
+      );
+    });
+  });
+
+  describe('Home\'s notes follow its cards (FR-022e)', () => {
+    const quiet: State = apply(
+      EMPTY_STATE,
+      { type: 'createArea', id: 'people', name: 'People', color: 'recovery', sessionsPerWeek: 1, isDaily: false },
+      { type: 'capture', now: NOW, id: 'nan', title: 'Write to Nan', areaId: 'people' },
+    );
+
+    it('says no area waits when Home has no card (scenario 7)', () => {
+      const view = homeView(quiet, NOW);
+      expect(view.cards).toEqual([]);
+      expect(view.emptyNote).toBe(
+        'No area waits for you here. You set each one to appear when you add it, so Home fills as you do.'
+      );
+    });
+
+    it('does not say it once an area is added (scenario 7)', () => {
+      const view = homeView(apply(quiet, addPeople), NOW);
+      expect(view.cards.map((c) => c.areaId)).toEqual(['people']);
+      expect(view.emptyNote).toBeNull();
+    });
+
+    it('does not say every daily area was attended when Home holds only added ones (scenario 6)', () => {
+      const tended = apply(
+        quiet,
+        addPeople,
+        { type: 'startSession', now: NOW, id: 's1', taskId: 'nan', areaId: 'people' },
+        { type: 'closeSession', now: new Date(NOW.getTime() + 900_000), outcome: 'progressed', note: '' },
+      );
+      const view = homeView(tended, new Date(NOW.getTime() + 1_000_000));
+      expect(view.cards).toMatchObject([{ areaId: 'people', treatment: 'attended' }]);
+      expect(view.emptyNote).toBeNull();
+    });
+  });
+});
