@@ -1,5 +1,5 @@
 /**
- * The reducer and its eleven transitions. T005, T006.
+ * The reducer and its twelve transitions. T005, T006, T038a.
  *
  * Everything else in the feature is a read. These are the only ways state
  * changes, and each one is data-model.md §"State transitions" in code.
@@ -33,7 +33,8 @@ export type Action =
   | { type: 'createArea'; id: string; name: string; color: AreaColor; sessionsPerWeek: Rhythm; isDaily: boolean }
   | { type: 'editArea'; areaId: string; changes: Partial<Pick<Area, 'name' | 'color' | 'sessionsPerWeek' | 'isDaily'>> }
   | { type: 'removeArea'; now: Date; areaId: string }
-  | { type: 'reorderAreas'; orderedIds: string[] };
+  | { type: 'reorderAreas'; orderedIds: string[] }
+  | { type: 'addToHomeToday'; now: Date; areaId: string };
 
 /** Close a running session in place. Used by the closing actions and by
  *  `startSession`, which closes the one before it (FR-015c). */
@@ -166,6 +167,7 @@ export function reduce(state: State, action: Action): State {
         isDaily: action.isDaily,
         sortOrder,
         archivedAt: null,
+        addedToHomeOn: null,
       };
       return { ...state, areas: [...state.areas, area] };
     }
@@ -207,5 +209,23 @@ export function reduce(state: State, action: Action): State {
           return index === -1 ? a : { ...a, sortOrder: index + 1 };
         }),
       };
+
+    /*
+     * 12 — add a non-daily area to Home for today (FR-022c, User Story 6).
+     *
+     * It records the moment and nothing else: no session starts, and no
+     * other field moves. Leaving Home at midnight is not a transition —
+     * `onHomeToday` compares this moment with `now`, so there is nothing to
+     * undo and no clock in the reducer. A daily area is always on Home and
+     * an archived one never is, so on either the action changes nothing.
+     */
+    case 'addToHomeToday': {
+      const area = state.areas.find((a) => a.id === action.areaId);
+      if (!area || area.isDaily || area.archivedAt !== null) return state;
+      return {
+        ...state,
+        areas: state.areas.map((a) => (a.id === action.areaId ? { ...a, addedToHomeOn: action.now } : a)),
+      };
+    }
   }
 }

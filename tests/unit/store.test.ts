@@ -204,3 +204,40 @@ describe('FR-015c, FR-015d — starting a session closes the one before it', () 
     expect(state.sessions.filter((s) => s.endedAt !== null).every((s) => s.actualMinutes !== null)).toBe(true);
   });
 });
+
+describe('T038b — adding an area to Home today, the twelfth transition (FR-022c)', () => {
+  const people = run(withArea, {
+    type: 'createArea', id: 'people', name: 'People', color: 'recovery', sessionsPerWeek: 1, isDaily: false,
+  });
+  const area = (state: State, id: string) => state.areas.find((a) => a.id === id)!;
+
+  it('starts every area at null', () => {
+    expect(area(people, 'people').addedToHomeOn).toBeNull();
+    expect(area(people, 'health').addedToHomeOn).toBeNull();
+  });
+
+  it('records the moment on a non-daily area, and touches nothing else', () => {
+    const added = run(people, { type: 'addToHomeToday', now: at(13, 9, 41), areaId: 'people' });
+    const { addedToHomeOn, ...rest } = area(added, 'people');
+    const { addedToHomeOn: _before, ...restBefore } = area(people, 'people');
+    expect(addedToHomeOn).toEqual(at(13, 9, 41));
+    expect(rest).toEqual(restBefore);
+    expect(added.tasks).toBe(people.tasks);
+    expect(added.sessions).toBe(people.sessions);
+    expect(added.activeSessionId).toBe(people.activeSessionId);
+  });
+
+  it('changes nothing on a daily area', () => {
+    expect(run(people, { type: 'addToHomeToday', now: at(13, 9), areaId: 'health' })).toBe(people);
+  });
+
+  it('changes nothing on an archived area', () => {
+    const archived = run(people, { type: 'removeArea', now: at(13, 8), areaId: 'people' });
+    expect(run(archived, { type: 'addToHomeToday', now: at(13, 9), areaId: 'people' })).toBe(archived);
+  });
+
+  it('starts no session, so the one-open invariant is untouched', () => {
+    const added = run(people, { type: 'addToHomeToday', now: at(13, 9), areaId: 'people' });
+    expect(added.sessions.filter((s) => s.endedAt === null)).toHaveLength(0);
+  });
+});

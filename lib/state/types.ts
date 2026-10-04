@@ -37,6 +37,10 @@ export type Area = {
    *  gone from Areas, Home, Week and Capture's chips, and survives only as
    *  the name its old sessions resolve to in Review. */
   archivedAt: Date | null;
+  /** The moment the area was last added to Home, or null if never
+   *  (FR-022c). Nothing clears it at midnight: "on Home today" is a
+   *  question asked of it with `now` (FR-022d, `onHomeToday`). */
+  addedToHomeOn: Date | null;
 };
 
 export type Task = {

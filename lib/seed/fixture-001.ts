@@ -261,7 +261,7 @@ function build(): State {
   }));
 
   return {
-    areas: AREAS.map((a, i) => ({ ...a, sortOrder: i + 1, archivedAt: null })),
+    areas: AREAS.map((a, i) => ({ ...a, sortOrder: i + 1, archivedAt: null, addedToHomeOn: null })),
     tasks,
     sessions,
     activeSessionId: null,

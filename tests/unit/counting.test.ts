@@ -25,6 +25,7 @@ const area = (sessionsPerWeek: 1 | 2 | 3 | 4 | 5): Area => ({
   isDaily: true,
   sortOrder: 1,
   archivedAt: null,
+  addedToHomeOn: null,
 });
 
 let n = 0;
