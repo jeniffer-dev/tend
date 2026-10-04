@@ -2,10 +2,12 @@ import { describe, expect, it } from 'vitest';
 
 import {
   attendedToday,
+  homeAreas,
   isPastRhythm,
   lastSessionForArea,
   minutesInWeek,
   minutesToday,
+  onHomeToday,
   openSessionInWeek,
   sessionsInWeek,
 } from '@/lib/derive/counting';
@@ -135,5 +137,50 @@ describe('the last session on an area', () => {
 
   it('is nothing when the area has never been tended', () => {
     expect(lastSessionForArea(stateWith(), 'health')).toBeNull();
+  });
+});
+
+describe('T038c — on Home today (FR-022, FR-022d)', () => {
+  const people: Area = { ...area(1), id: 'people', name: 'People', isDaily: false, sortOrder: 2 };
+  const added = (when: Date): Area => ({ ...people, addedToHomeOn: when });
+
+  it('a daily area is always on Home', () => {
+    expect(onHomeToday(area(3), SUNDAY)).toBe(true);
+  });
+
+  it('a non-daily area never added is not', () => {
+    expect(onHomeToday(people, SUNDAY)).toBe(false);
+  });
+
+  it('added today, it is on Home for the rest of the local day', () => {
+    expect(onHomeToday(added(new Date(2026, 8, 13, 8, 0)), SUNDAY)).toBe(true);
+    expect(onHomeToday(added(new Date(2026, 8, 13, 8, 0)), new Date(2026, 8, 13, 23, 59, 59))).toBe(true);
+  });
+
+  it('added at 23:59, it is gone at 00:00 — nothing clears it, the date moved', () => {
+    const lateOne = added(new Date(2026, 8, 13, 23, 59));
+    expect(onHomeToday(lateOne, new Date(2026, 8, 13, 23, 59, 30))).toBe(true);
+    expect(onHomeToday(lateOne, new Date(2026, 8, 14, 0, 0))).toBe(false);
+  });
+
+  it('added yesterday, it is not on Home today', () => {
+    expect(onHomeToday(added(new Date(2026, 8, 12, 20, 0)), SUNDAY)).toBe(false);
+  });
+
+  it('an archived area is never on Home, daily or added', () => {
+    expect(onHomeToday({ ...area(3), archivedAt: SUNDAY }, SUNDAY)).toBe(false);
+    expect(onHomeToday({ ...added(SUNDAY), archivedAt: SUNDAY }, SUNDAY)).toBe(false);
+  });
+
+  it('homeAreas lists what is on Home today, in sortOrder', () => {
+    const money: Area = { ...area(2), id: 'money', name: 'Money', sortOrder: 3 };
+    const state: State = {
+      areas: [money, added(SUNDAY), area(3)],
+      tasks: [],
+      sessions: [],
+      activeSessionId: null,
+    };
+    expect(homeAreas(state, SUNDAY).map((a) => a.id)).toEqual(['health', 'people', 'money']);
+    expect(homeAreas(state, new Date(2026, 8, 14, 9, 0)).map((a) => a.id)).toEqual(['health', 'money']);
   });
 });

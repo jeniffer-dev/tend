@@ -98,6 +98,23 @@ export const dailyAreas = (state: State): Area[] =>
   unarchivedAreas(state).filter((a) => a.isDaily);
 
 /**
+ * FR-022d — whether an area is on Home on the local day of `now`: daily,
+ * or added to Home that same day. Never archived.
+ *
+ * Leaving Home at midnight is this comparison turning false, not a
+ * transition that clears `addedToHomeOn`. The day is compared by local
+ * date parts (`isSameDay`), never by milliseconds, for the reason
+ * research.md §3 gives about weeks.
+ */
+export const onHomeToday = (area: Area, now: Date): boolean =>
+  area.archivedAt === null &&
+  (area.isDaily || (area.addedToHomeOn !== null && isSameDay(area.addedToHomeOn, now)));
+
+/** FR-022 — the areas Home's cards and notes are read from, in `sortOrder`. */
+export const homeAreas = (state: State, now: Date): Area[] =>
+  unarchivedAreas(state).filter((a) => onHomeToday(a, now));
+
+/**
  * Every lookup of an area is one of two questions, and the distinction is
  * load-bearing (data-model.md):
  *
