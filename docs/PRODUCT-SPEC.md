@@ -1,10 +1,11 @@
 # Tend — Especificación de producto
 
 **Estado:** Borrador
-**Versión:** 0.5
+**Versión:** 0.6
 **Fecha:** 2026-09-07
-**Última enmienda:** 2026-10-04 — un área no diaria se puede añadir a la
-pantalla principal por un día, y un área archivada guarda cuándo se archivó
+**Última enmienda:** 2026-10-04 — un área lleva un color de la paleta
+(0.6); antes, el mismo día, un área no diaria se puede añadir a la pantalla
+principal por un día y un área archivada guarda cuándo se archivó (0.5)
 
 ---
 
@@ -60,6 +61,7 @@ Un ámbito de vida al que le dedico atención recurrente.
 |---|---|---|
 | `id` | uuid | |
 | `name` | string | Ej: "Personal / alma", "Admin life", "Crecimiento profesional" |
+| `color` | enum | Uno de los cinco tokens de marca: `soft`, `recovery`, `primary`, `load`, `peak`. Marca el área; nunca un estado |
 | `sessions_per_week` | int | Ritmo semanal: entero de 1 a 5 |
 | `default_session_minutes` | int | Duración por defecto de una sesión (ej. 15) |
 | `is_daily` | bool | Si aparece en la pantalla principal cada día |
@@ -76,6 +78,8 @@ Los minutos **se siguen registrando** por sesión (`Session.actual_minutes`, §3
 **Un área no diaria se puede traer a la pantalla principal por un día (enmienda 0.5).** `is_daily` decide si un área espera en la pantalla principal cada día; un área que no es diaria aparece el día que la persona la añade, y deja de aparecer a medianoche. `added_to_home_on` guarda el momento, y "está hoy en la pantalla principal" se deriva comparándolo con la fecha actual: nada se borra a medianoche. Sin esto, un área no diaria no tendría ningún camino a una sesión y RF-16 no se cumpliría para ella.
 
 **Archivar no es borrar (enmienda 0.5).** RF-04 dice *archivar*, y `archived_at` es lo que lo hace posible: un área archivada desaparece de todas las pantallas salvo de la revisión semanal, donde sus sesiones pasadas siguen nombrándola. Borrarla dejaría esas sesiones apuntando a nada.
+
+**El color es del área, no de su estado (enmienda 0.6).** Cada área lleva uno de los cinco tokens de marca del sistema de diseño (§2) y se ve como punto y barra; las pastillas de texto usan su tinte. El color identifica el área en todas las pantallas y no dice nada sobre ella: no hay rojo para lo atrasado, y `--destructive` queda reservado para las acciones destructivas (constitución, Artículo IV). La feature 001 lo construyó así sin que este modelo lo recogiera.
 
 ### 3.2 Task
 
